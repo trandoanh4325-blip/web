@@ -1,0 +1,64 @@
+
+.title-product {
+  color: #00b4d8; 
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+/* ===== Ô SELECT VÀ INPUT ===== */
+select,
+input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+/* Hiệu ứng hover/focus */
+select:hover,
+input:hover,
+select:focus,
+input:focus {
+  border-color: #4ea1ff;
+  box-shadow: 0 0 4px #4ea1ff;
+}
+
+/* ===== NÚT BẤM ===== */
+button {
+  background-color: #fd6e43ff;
+  color: white;
+  border: none;
+  padding: 9px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: rgb(253, 129, 67);
+}
+.Doanh form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin: 150px auto 10px;  
+  padding: 10px 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+}
+.bo-loc {
+  justify-content: space-between;
+  width: 90%;
+  margin: 0 auto;
+}

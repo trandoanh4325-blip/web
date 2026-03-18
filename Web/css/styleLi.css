@@ -1,0 +1,67 @@
+body{
+    background:url("../Image/S1.jpg");
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-size:cover;
+    background-repeat:no repeat;
+    background-position:center;
+}
+
+
+.Logo{
+    width:150px;
+    height:auto;
+    position: fixed;
+    top:10px;
+    left:10px;
+}
+button {
+      padding: 10px;
+      font-size: 15px;
+      border: none;
+      border-radius: 6px;
+      background: #4facfe;
+      color: black;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #00c6ff;
+    }
+input{
+   border: none;
+   border-radius: 10px; 
+   font-size:20px;
+   width:250px;
+   height:25px;
+   margin-bottom: 10px;
+}
+.login{
+   border: none;
+   border-radius: 10px; 
+   font-size:20px;
+   width:250px;
+   height:40px;
+   margin-bottom: 15px;
+}
+.box {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 30px;
+  border-radius: 12px;
+  width: 350px;
+  margin: 100px auto;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+.QTV{
+    text-decoration:none;
+    color:violet;
+}
+.QTV:hover{
+    text-decoration:underline;
+}

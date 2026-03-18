@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Giá Bán</title>
+    <link rel="stylesheet" href="../css/styleAdmin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <img src="../Image/logostore-Photoroom.png" alt="Logo" />
+      </div>
+
+      <div class="header-right">
+        <a class="chucnang-item active" href="giaban.html">Quản lý giá bán</a>
+        <a class="chucnang-item" href="sanpham.html">Quản lý sản phẩm</a>
+        <a class="chucnang-item" href="phieunhap.html">Quản lý phiếu nhập</a>
+        <a class="chucnang-item" href="donhang.html">Quản lý đơn hàng</a>
+        <a class="chucnang-item" href="khovan.html">Quản lý kho vận</a>
+    <a class="chucnang-item" href="khachhang.html">Quản lý khách hàng</a>
+    <a class="chucnang-item" href="../Login.html">Đăng xuất</a>
+      </div>
+    </header>
+
+    <div id="giaban" class="tab-content active">
+      <div class="content">
+        <div class="container">
+          <h2>
+            <i style="font-size: 24px" class="fas">&#xf155;</i> Lợi nhuận & Giá bán
+          </h2>
+          <label for="loaiSanPham">Loại sản phẩm</label>
+          <select id="loaiSanPham">
+            <option value="Quà Lưu Niệm">Quà Lưu Niệm</option>
+            <option value="Quà Tặng">Quà Tặng</option>
+            <option value="Hoa Tươi">Hoa Tươi</option>
+            <option value="Đồ Trang Trí">Đồ Trang Trí</option>
+            <option value="Thiệp và Phụ kiện">Thiệp và Phụ kiện</option>
+            <option value="Set Quà Tặng">Set Quà Tặng</option>
+            <option value="Handmade">Handmade</option>
+            <option value="Hoa Giấy">Hoa Giấy</option>
+          </select>
+
+          <label for="loiNhuanTheoLoai">Lợi nhuận theo loại (%)</label>
+          <input type="number" id="loiNhuanTheoLoai" placeholder="vd: 30%" />
+          <p>
+            <i
+              >*Lợi nhuận theo loại = % lời chung cho tất cả sản phẩm thuộc loại đó*</i
+            >
+          </p>
+
+          <label for="tenSanPham">Tên sản phẩm</label>
+          <input type="text" id="tenSanPham" placeholder="Tên sản phẩm" />
+
+          <label for="giaVon">Giá vốn</label>
+          <input type="number" id="giaVon" placeholder="vd: 12000" />
+
+          <label for="loiNhuanTheoSanPham">Lợi nhuận (%)</label>
+          <input type="number" id="loiNhuanTheoSanPham" placeholder="vd: 30% (ưu tiên nếu có)" />
+          <p><i>*Lợi nhuận sản phẩm = % lời riêng của sản phẩm*</i></p>
+
+          <button>SỬA</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Phiếu Nhập</title>
+    <link rel="stylesheet" href="../css/styleAdmin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <img src="../Image/logostore-Photoroom.png" alt="Logo" />
+      </div>
+
+      <div class="header-right">
+        <a class="chucnang-item" href="giaban.html">Quản lý giá bán</a>
+        <a class="chucnang-item" href="sanpham.html">Quản lý sản phẩm</a>
+        <a class="chucnang-item active" href="phieunhap.html">Quản lý phiếu nhập</a>
+        <a class="chucnang-item" href="donhang.html">Quản lý đơn hàng</a>
+        <a class="chucnang-item" href="khovan.html">Quản lý kho vận</a>
+        <a class="chucnang-item" href="khachhang.html">Quản lý khách hàng</a>
+        <a class="chucnang-item" href="../Login.html">Đăng xuất</a>
+      </div>
+    </header>
+    
+<!-- Quản lý phiếu nhập -->
+       <div id="phieunhap" class="tab-content active">
+        <div class="content">
+          <div class="container-phieunhap">
+            <!--Tìm và hiển thị phiếu nhập hàng-->
+            <section>
+            <h2><i style="font-size:24px" class="fas fa-search"></i> Tìm và hiển thị danh mục phiếu nhập hàng</h2>
+            <div class="search">
+            <input type="text" id="timKiemPhieu" placeholder=" Tìm theo mã phiếu hoặc tên sản phẩm...">
+            <button class="btn-them">Tìm kiếm</button>
+            </div>
+              
+            <h2><i style="font-size:24px" class="fas fa-clipboard-list"></i> Danh mục phiếu nhập tìm kiếm</h2>
+            <div class="DanhMucTimPhieu">
+            <table>
+            <thead>
+              <tr>
+              <th>Mã phiếu</th>
+              <th>Ngày nhập</th>
+              <th>Tên sản phẩm</th>
+              <th>Giá nhập</th>
+              <th>Số lượng</th>
+              <th>Thành tiền</th>
+              </tr>
+            
+            </thead>
+            <tbody>
+              <tr>
+                <td>MPH1</td>
+                <td>29/9/2025</td>
+                <td>Hoa Tươi</td>
+                <td>5.000đ</td>
+                <td>100</td>
+                <td>500.000đ</td>         
+            </tr>
+            <tr>
+                <td>MPH4</td>
+                <td>19/9/2025</td>
+                <td>Set Quà Tặng Sinh Nhật</td>
+                <td>30.000đ</td>
+                <td>30</td>
+                <td>900.000đ</td>   
+            </tr>
+            </tbody>
+            </div>
+            </table>
+
+            </section>
+
+            <section>
+            <h2><i style="font-size:24px" class="fas fa-file-invoice-dollar"></i> Phiếu nhập hàng</h2>
+            <form id="formPhieu">
+            <input type="hidden" id="chiSoSuaPhieu">
+            <label for="ngayNhap">Chọn hoặc nhập ngày nhập hàng</label>
+            <input type="date" id="ngayNhap" required>
+            <label for="formTenSP">Nhập tên sản phẩm </label> <input type="text" placeholder="Nhập tên sản phẩm" id="tenSP">
+            <label for="giaNhap">Giá nhập</label>
+            <input type="number" id="giaNhap" placeholder="Nhập giá nhập hàng, vd:29999 => 29.999 đ" min="0" required>
+            <label for="soLuong">Số lượng nhập</label>
+            <input type="number" id="soLuong" placeholder="Nhập số lượng hàng nhập, vd:19]" min="1" required>
+            <div class="btn-wrapper">
+            <button type="submit" class="btn-them">Thêm phiếu</button>
+            </div>
+            </form>
+            </section>
+
+            <section>
+
+            <h2><i style="font-size:24px" class="fas fa-clipboard-check"></i> Danh mục phiếu nhập</h2>
+            <table>
+            <thead>
+              <tr>
+              <th>Mã phiếu</th>
+              <th>Ngày nhập</th>
+              <th>Tên sản phẩm</th>
+              <th>Giá nhập</th>
+              <th>Số lượng</th>
+              <th>Thành tiền</th>
+              <th>Trạng thái</th>
+              <th>Chức năng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>MPH1</td>
+                <td>29/9/2025</td>
+                <td>Hoa Tươi</td>
+                <td>5.000đ</td>
+                <td>100</td>
+                <td>500.000đ</td>
+                <td>Hoàn thành</td>
+                <td>
+                    <button class="btn-xoa1">Xóa</button>
+                </td>              
+            </tr>
+            <tr>
+                <td>MPH2</td>
+                <td>18/9/2025</td>
+                <td>Hoa Cẩm Chướng</td>
+                <td>7.000đ</td>
+                <td>80</td>
+                <td>420.000đ</td>
+                <td>Chưa hoàn thành</td>
+                <td>
+                    <button class='btn-sua1'>Sửa</button>
+                    <button class="btn-xoa1">Xóa</button>
+                </td>              
+            </tr>
+            <tr>
+                <td>MPH3</td>
+                <td>15/9/2025</td>
+                <td>Gấu Bông</td>
+                <td>12.000đ</td>
+                <td>60</td>
+                <td>720.000đ</td>
+                <td>Chưa hoàn thành</td>
+                <td>
+                    <button class='btn-sua1'>Sửa</button>
+                    <button class="btn-xoa1">Xóa</button>
+                </td>              
+            </tr>
+            <tr>
+                <td>MPH4</td>
+                <td>19/9/2025</td>
+                <td>Set Quà Tặng Sinh Nhật</td>
+                <td>30.000đ</td>
+                <td>30</td>
+                <td>900.000đ</td>
+                <td>Hoàn thành</td>
+                <td>
+                    <button class="btn-xoa1">Xóa</button>
+                </td>              
+            </tr>
+            </tbody>
+          </table>
+          </section>
+          </div>
+        </div>
+       </div>
+       </body>
+      </html>

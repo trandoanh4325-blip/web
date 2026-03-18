@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Sản Phẩm</title>
+    <link rel="stylesheet" href="../css/styleAdmin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <img src="../Image/logostore-Photoroom.png" alt="Logo" />
+      </div>
+
+      <div class="header-right">
+        <a class="chucnang-item" href="giaban.html">Quản lý giá bán</a>
+        <a class="chucnang-item active" href="sanpham.html">Quản lý sản phẩm</a>
+        <a class="chucnang-item" href="phieunhap.html">Quản lý phiếu nhập</a>
+        <a class="chucnang-item" href="donhang.html">Quản lý đơn hàng</a>
+        <a class="chucnang-item" href="khovan.html">Quản lý kho vận</a>
+        <a class="chucnang-item" href="khachhang.html">Quản lý khách hàng</a>
+        <a class="chucnang-item" href="../Login.html">Đăng xuất</a>
+      </div>
+    </header>
+    
+<!-- Quản lý sản phẩm -->
+      <div id="sanpham" class="tab-content active">
+  <div class="sanpham-container">
+   
+    <!-- ========== THÊM SẢN PHẨM ========== -->
+    <section>
+      <h2><i style="font-size:24px" class="	fas fa-plus-square"></i> Sửa sản phẩm</h2>
+      <form id="formThemSanPham">
+        <div id="formMaSP">
+          <label>Mã sản phẩm</label>
+          <input type="text" placeholder="thêm mã sản phẩm" id="maSP" />
+        </div>
+
+        <div id="formTenSP">
+          <label>Tên sản phẩm</label>
+          <input type="text" placeholder="thêm sản phẩm" id="tenSP" />
+        </div>
+
+         <div id="formLoaiSP">
+          <label>Loại sản phẩm</label>
+          <select id="loaiSP">
+            <option>Quà lưu niệm</option>
+            <option>Quà tặng</option>
+            <option>Hoa tươi</option>
+            <option>Đồ trang trí</option>
+            <option>Thiệp và phụ kiện</option>
+            <option>Set quà tặng </option>
+            <option>Handmade</option>
+            <option>Hoa giấy</option>
+          </select>
+        </div>
+
+        <div id="formHinhAnh">
+          <label>Hình ảnh</label>
+          <input type="file" id="hinhAnh" />
+        </div>
+
+        <div id="formMoTa">
+          <label>Mô tả</label>
+          <textarea id="moTa" placeholder="thêm mô tả"></textarea>
+        </div>
+
+        <button>Sửa</button>
+      </form>
+    </section>
+
+    <br><br>
+  </div>
+</div>
+</body>
+</html>
