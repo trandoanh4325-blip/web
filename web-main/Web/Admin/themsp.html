@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Sản Phẩm</title>
+    <link rel="stylesheet" href="../css/styleAdmin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <img src="../Image/logostore-Photoroom.png" alt="Logo" />
+      </div>
+
+      <div class="header-right">
+        <a class="chucnang-item" href="giaban.html">Quản lý giá bán</a>
+        <a class="chucnang-item active" href="sanpham.html">Quản lý sản phẩm</a>
+        <a class="chucnang-item" href="phieunhap.html">Quản lý phiếu nhập</a>
+        <a class="chucnang-item" href="donhang.html">Quản lý đơn hàng</a>
+        <a class="chucnang-item" href="khovan.html">Quản lý kho vận</a>
+        <a class="chucnang-item" href="khachhang.html">Quản lý khách hàng</a>
+        <a class="chucnang-item" href="../Login.html">Đăng xuất</a>
+      </div>
+    </header>
+    <div id="sanpham" class="tab-content active">
+  <div class="sanpham-container">
+    <!-- ========== LOẠI SẢN PHẨM ========== -->
+    <section>
+      <h2><i style="font-size:24px" class="	fas fa-plus-circle"></i> Loại sản phẩm</h2>
+      <form id="formLoaiSanPham">
+        <input type="text" id="tenLoai" placeholder="Nhập tên loại sản phẩm" required>
+      </form>
+      <form class="tonkho-filter-form">
+              <div class="tonkho-form-row">
+                <label for="tungay">Ngày thêm</label>
+                <input type="date" id="tungay" />
+                <button type="button">Thêm</button>
+              </div>
+            </form>
+    </section>
+   
+  </div>
+</div>
+</body>
+</html>

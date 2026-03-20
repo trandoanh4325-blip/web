@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tìm Kiếm</title>
+  <link rel="stylesheet" href="../css/Search.css"/>
+  <link rel="stylesheet" href="../css/styleUser.css" />
+  <link rel="stylesheet" href="../css/HienThi.css" />
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+</head>
+
+<body>
+  <!-- ========== HEADER ========== -->
+  <div class="header">
+    <div class="logo">
+      <img src="../Image/logostore-Photoroom.png" alt="Logo" />
+    </div>
+    <div class="others">
+      <form action="Searchcp.html" method="get" class="search-form">
+      <div class="search-box">
+        <input type="search" name="query" placeholder="Tìm kiếm sản phẩm..." required/>
+        <button type="submit" title="Tìm kiếm">
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
+    </form>
+      <ul><a class="fa fa-user" href="../Login.html"></a></ul>
+      <ul><a class="fa fa-shopping-bag" href="../Login.html"></a></ul>
+      <ul><a href="../Main.html" class="fa fa-home"> </a> </ul>
+    </div>
+  </div>
+
+ <!-- Thanh lọc sản phẩm -->
+  <div class="Doanh">
+<form class="filter-bar">
+  <h2 class="title-product">BỘ LỌC TÌM KIẾM: </h2>
+  <label for="city"></label>
+  <select id="city" name="city">
+    <option value="">-- Chọn thành phố --</option>
+    <option value="hcm">TP. Hồ Chí Minh</option>
+    <option value="hanoi">Hà Nội</option>
+    <option value="danang">Đà Nẵng</option>
+    <option value="dalat">Đà Lạt</option>
+    <option value="vungtau">Vũng Tàu</option>
+  </select>
+
+  <label for="category"></label>
+  <select id="category" name="category">
+    <option value="">-- Chọn loại sản phẩm --</option>
+    <option value="thiep">Thiệp</option>
+    <option value="phukien">Phụ kiện</option>
+    <option value="qua">Quà tặng</option>
+    <option value="qua">Handmade</option>
+    <option value="qua">Lưu niệm</option>
+    <option value="qua">Hoa giả</option>
+    <option value="qua">Đồ trang trí</option>
+    <option value="qua">Hoa thật</option>
+  </select>
+
+  <label for="price"></label>
+  <select id="price" name="price">
+    <option value="">-- Chọn mức giá --</option>
+    <option value="low">Dưới 100.000đ</option>
+    <option value="medium">100.000đ - 500.000đ</option>
+    <option value="high">Trên 500.000đ</option>
+    <option value="veryhigh">500.000đ - 1.000.000đ</option>
+    <option value="superhigh">Trên 1.000.000đ</option>
+  </select>
+
+  <button class="btn-apdung">Áp dụng</button>
+</form>
+</div>
+
+  <!-- ========== DANH MỤC SẢN PHẨM ========== -->
+<section class="product-section">
+  <!-- Radio phân trang -->
+  <input type="radio" id="page1" name="pages" checked>
+  <input type="radio" id="page2" name="pages">
+  <input type="radio" id="page3" name="pages">
+  <input type="radio" id="page4" name="pages">
+  <input type="radio" id="page5" name="pages">
+  <input type="radio" id="page6" name="pages">
+  <input type="radio" id="page7" name="pages">
+  <input type="radio" id="page8" name="pages">
+
+  <!-- Tiêu đề động (phải nằm NGAY SAU radio) -->
+    <h2>Sản Phẩm</h2>
+  <!-- Các trang sản phẩm -->
+  <div class="content">
+    <div class="page p1">
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+    </div>
+    <div class="page p2">
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+    </div>
+    <div class="page p3">
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+    </div>
+      <div class="page p4">
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+    </div>
+      <div class="page p5">
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+    </div>
+    <div class="page p6">
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+    </div>
+    <div class="page p7">
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+    </div>
+    <div class="page p8">
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">25.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">35.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">40.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+      <div class="sp-card"><a href="../Chitietcp.html"><img src="../Image/S2.jpg"></a><div class="ten-sp">Sản Phẩm</div><div class="gia-sp">30.000đ</div><a href="../Login.html"><i class="fas fa-shopping-cart"></i></a></div>
+    </div>
+  </div>
+
+  <!-- Phân trang -->
+  <div class="pagination">
+    <label for="page1">1</label>
+    <label for="page2">2</label>
+    <label for="page3">3</label>
+    <label for="page4">4</label>
+    <label for="page5">5</label>
+    <label for="page6">6</label>
+    <label for="page7">7</label>
+    <label for="page8">8</label>
+  </div>
+</section>
+
+
+  <!-- ========== LIÊN HỆ ========== -->
+  <div class="contact">
+    <h3>Liên hệ với chúng tôi</h3>
+    <div class="icons">
+      <i class="fa-brands fa-facebook"></i>
+      <i class="fa-brands fa-instagram"></i>
+      <i class="fa-brands fa-tiktok"></i>
+      <i class="fa-brands fa-facebook-messenger"></i>
+      <i class="fa-brands fa-zalo"></i>
+      <i class="fa-solid fa-phone"></i>
+      <i class="fa-solid fa-envelope"></i>
+    </div>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <div class="footer-wrapper">
+    <footer class="footer-box">
+      <div class="footer-container">
+        <div class="footer-column">
+          <h3>FLORENTINO SHOP </h3>
+          <p>Trụ sở chính: 123 An Dương Vương, Phường 3, Quận 5, TP Hồ Chí Minh</p>
+          <p>Văn phòng: Tầng 60, Tòa nhà Lankmark 81, số 208 đường Nguyễn Hữu Cảnh, P.22, Q.Bình Thạnh, TP.HCM.</p>
+          <p>Chịu trách nhiệm nội dung: <b>HDQH</b></p>
+          <p>Số Điện Thoại: 0123 456 789 </p>
+          <p>Email: FlorentinoShop@gmai.com</p>
+        </div>
+        <div class="footer-column">
+          <h3>HỖ TRỢ KHÁCH HÀNG</h3>
+          <p><a href="#">Điều khoản sử dụng</a></p>
+          <p><a href="#">Chính sách thành viên</a></p>
+          <p><a href="#">Chính sách bảo mật</a></p>
+        </div>
+        <div class="footer-column">
+          <h3>GIẤY PHÉP & BẢN QUYỀN</h3>
+          <p>Đã đăng ký Bộ Công Thương</p>
+          <img src="http://dangkywebvoibocongthuong.com/wp-content/uploads/2021/11/logo-da-thong-bao-bo-cong-thuong.png" alt="Bộ Công Thương 1" class="conthuong_img"></a>
+          <img src="http://dangkywebvoibocongthuong.com/wp-content/uploads/2021/11/logo-da-dang-ky-bo-cong-thuong.png" alt="Bộ Công Thương 2" class="conthuong_img"></a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

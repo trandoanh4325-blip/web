@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Đơn Hàng</title>
+    <link rel="stylesheet" href="../css/styleAdmin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <img src="../Image/logostore-Photoroom.png" alt="Logo" />
+      </div>
+
+      <div class="header-right">
+        <a class="chucnang-item" href="giaban.html">Quản lý giá bán</a>
+        <a class="chucnang-item" href="sanpham.html">Quản lý sản phẩm</a>
+        <a class="chucnang-item" href="phieunhap.html">Quản lý phiếu nhập</a>
+        <a class="chucnang-item active" href="donhang.html">Quản lý đơn hàng</a>
+        <a class="chucnang-item" href="khovan.html">Quản lý kho vận</a>
+        <a class="chucnang-item" href="khachhang.html">Quản lý khách hàng</a>
+        <a class="chucnang-item" href="../Login.html">Đăng xuất</a>
+      </div>
+    </header>
+<div id="donhang" class="tab-content active">
+        <div class="content">
+          <div class="container">
+            <h2><i style="font-size: 24px" class="fas">&#xf6d1;</i> Quản lý đơn hàng</h2>
+            <div class="table-donhang">
+              <table class="order-table">
+                <thead>
+                  <tr>
+                    <th>
+                      <i style="font-size: 24px" class="fas">&#xf02a;</i> Mã đơn
+                    </th>
+                    <th>
+                      <i style="font-size: 24px" class="fas">&#xf2c2;</i> Khách hàng
+                    </th>
+                    <th>
+                      <i style="font-size: 24px" class="far">&#xf073;</i> Ngày đặt
+                    </th>
+                    <th>
+                      <i style="font-size: 24px" class="fas">&#xf133;</i> Hoạt động
+                    </th>
+                    <th>
+                      <i style="font-size: 24px" class="fas">&#xf0eb;</i> Trạng thái
+                    </th>
+                    <th>
+                      <i style="font-size: 24px" class="fas">&#xf0ca;</i> Chi tiết
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>C2001</td>
+                    <td>Trần Đình Bảo Quốc</td>
+                    <td>19/10/2025</td>
+                    <td>Đã xác nhận</td>
+                    <td>Giao hàng thành công</td>
+                    <td><a href="#popup-suasp"><button class="btn-sua">Xem</button></a></td>
+                  </tr>
+                  <tr>
+                    <td>C2002</td>
+                    <td>Trần Văn Võ Doanh</td>
+                    <td>19/10/2025</td>
+                    <td>Đã xác nhận</td>
+                    <td>Đang vận chuyển</td>
+                    <td><button class="btn-xem">Xem</button></td>
+                  </tr>
+                  <tr>
+                    <td>C2003</td>
+                    <td>Phan Lê Minh Huy</td>
+                    <td>20/10/2025</td>
+                    <td>Đã xác nhận</td>
+                    <td>Đang chuẩn bị hàng</td>
+                    <td><button class="btn-xem">Xem</button></td>
+                  </tr>
+                  <tr>
+                    <td>C2004</td>
+                    <td>Hoàng Đăng Hậu</td>
+                    <td>20/10/2025</td>
+                    <td>Đã xử lý</td>
+                    <td>Đã hủy</td>
+                    <td><button class="btn-xem">Xem</button></td>
+                  </tr>
+                  <tr>
+                    <td>C2005</td>
+                    <td>Nguyễn Văn A</td>
+                    <td>20/10/2025</td>
+                    <td>Chưa xác nhận</td>
+                    <td>Đang chờ</td>
+                    <td><a href="#popup-suasp"><button class="btn-sua">Xem</button></a></td>
+                  </tr>
+                </tbody>
+              </table>
+
+               <h2><i style="font-size:24px" class="	fas fa-plus-circle"></i> Tra cứu theo ngày đặt / theo tình trạng </h2>
+      <form id="formLoaiSanPham">
+        <input type="text" id="tenLoai" placeholder="Nhập ngày đặt / tình trạng" required>
+        <button type="submit" class="btn-them">Tìm kiếm</button>
+      </form>
+      <div class="table-donhang">
+              <table class="order-table">
+                <thead>
+                  <tr>
+                    <th>
+                      <i style="font-size: 24px" class="fas">&#xf02a;</i> Mã đơn
+                    </th>
+                    <th>
+                      <i style="font-size: 24px" class="fas">&#xf2c2;</i> Khách hàng
+                    </th>
+                    <th>
+                      <i style="font-size: 24px" class="far">&#xf073;</i> Ngày đặt
+                    </th>
+                    <th>
+                      <i style="font-size: 24px" class="fas">&#xf133;</i> Hoạt động
+                    </th>
+                    <th>
+                      <i style="font-size: 24px" class="fas">&#xf0eb;</i> Trạng thái
+                    </th>
+                    <th>
+                      <i style="font-size: 24px" class="fas">&#xf0ca;</i> Chi tiết
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>C2003</td>
+                    <td>Phan Lê Minh Huy</td>
+                    <td>20/10/2025</td>
+                    <td>Đã xác nhận</td>
+                    <td>Đang chuẩn bị hàng</td>
+                    <td><button class="btn-xem">Xem</button></td>
+                  </tr>
+                  <tr>
+                    <td>C2004</td>
+                    <td>Hoàng Đăng Hậu</td>
+                    <td>20/10/2025</td>
+                    <td>Đã xử lý</td>
+                    <td>Đã hủy</td>
+                    <td><button class="btn-xem">Xem</button></td>
+                  </tr>
+                </tbody>
+              </table>
+      </div>
+            </div>
+
+              <!-- Chi tiết đơn hàng -->
+       <div class="box-container">
+        <div class="box">
+                  <div class="chon-tinhtrang">
+                        <h3>Trạng thái đơn hàng</h3>
+  <label>
+    <input type="radio" name="tinhtrang" value="dangChuanBi">
+    Đang chuẩn bị hàng
+  </label>
+  <label>
+    <input type="radio" name="tinhtrang" value="choLayHang">
+    Chờ lấy hàng
+  </label>
+  <label>
+    <input type="radio" name="tinhtrang" value="choGiaoHang">
+    Chờ giao hàng
+  </label>
+  <label>
+    <input type="radio" name="tinhtrang" value="daGiao">
+    Đã giao
+  </label>
+  <label>
+    <input type="radio" name="tinhtrang" value="traHang">
+    Trả hàng
+  </label>
+  <label>
+    <input type="radio" name="tinhtrang" value="daHuy">
+    Đã hủy
+  </label>
+  <button class="xacnhan">Cập Nhật</button>
+</div>
+</div>
+
+              
+
+ 
+</div>
+                
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div id="popup-suasp" class="overlay">
+  <a href="#" class="overlay-bg"></a>
+  <div class="popup-box">
+
+        <div class="box">
+    <tr>
+      <h4>Bạn có đơn hàng chưa xử lý!</h4>
+      <label >
+        <input type="radio" name="hoatdong" value="xuly">Đã xác nhận
+      </label>
+      <a href="#popup-suasp"><button class="btn-sua">cập nhật</button></a>
+    </tr>
+  </div>  
+
+    <a href="#" class="close">Đóng</a>
+  </div>
+</div>
+
+
+
+  </body>
+</html>
