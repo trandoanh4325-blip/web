@@ -91,9 +91,7 @@
                     </button>
                   </td>
                   <td>
-                    <a href="suaGB.html"><button class="btn-sua">
-                      <i class="fa fa-pen"></i>
-                    </button></a>
+                    <a href="#popup-suasp"><button class="btn-sua"><i class="fa fa-pen"></i></button></a>
                   </td>
                 </tr>
                 <tr>
@@ -108,9 +106,7 @@
                     </button>
                   </td>
                    <td>
-                     <a href="suaGB.html"><button class="btn-sua">
-                      <i class="fa fa-pen"></i>
-                    </button></a>
+                     <a href="#popup-suasp"><button class="btn-sua"><i class="fa fa-pen"></i></button></a>
                   </td>
                 </tr>
                 <tr>
@@ -125,9 +121,7 @@
                     </button>
                   </td>
                    <td>
-                     <a href="suaGB.html"><button class="btn-sua">
-                      <i class="fa fa-pen"></i>
-                    </button></a>
+                     <a href="#popup-suasp"><button class="btn-sua"><i class="fa fa-pen"></i></button></a>
                   </td>
                 </tr>
                 <tr>
@@ -142,9 +136,7 @@
                     </button>
                   </td>
                    <td>
-                     <a href="suaGB.html"><button class="btn-sua">
-                      <i class="fa fa-pen"></i>
-                    </button></a>
+                    <a href="#popup-suasp"><button class="btn-sua"><i class="fa fa-pen"></i></button></a>
                   </td>
                 </tr>
               </tbody>
@@ -224,5 +216,48 @@
         </div>
       </div>
     </div>
+             
+
+  <div id="popup-suasp" class="overlay">
+  <a href="#" class="overlay-bg"></a>
+  <div class="popup-box">
+
+          <label for="loaiSanPham">Loại sản phẩm</label>
+          <select id="loaiSanPham">
+            <option value="Quà Lưu Niệm">Quà Lưu Niệm</option>
+            <option value="Quà Tặng">Quà Tặng</option>
+            <option value="Hoa Tươi">Hoa Tươi</option>
+            <option value="Đồ Trang Trí">Đồ Trang Trí</option>
+            <option value="Thiệp và Phụ kiện">Thiệp và Phụ kiện</option>
+            <option value="Set Quà Tặng">Set Quà Tặng</option>
+            <option value="Handmade">Handmade</option>
+            <option value="Hoa Giấy">Hoa Giấy</option>
+          </select>
+
+          <label for="loiNhuanTheoLoai">Lợi nhuận theo loại (%)</label>
+          <input type="number" id="loiNhuanTheoLoai" placeholder="vd: 30%" />
+          <p>
+            <i
+              >*Lợi nhuận theo loại = % lời chung cho tất cả sản phẩm thuộc loại đó*</i
+            >
+          </p>
+
+          <label for="tenSanPham">Tên sản phẩm</label>
+          <input type="text" id="tenSanPham" placeholder="Tên sản phẩm" />
+
+          <label for="giaVon">Giá vốn</label>
+          <input type="number" id="giaVon" placeholder="vd: 12000" />
+
+          <label for="loiNhuanTheoSanPham">Lợi nhuận (%)</label>
+          <input type="number" id="loiNhuanTheoSanPham" placeholder="vd: 30% (ưu tiên nếu có)" />
+          <p><i>*Lợi nhuận sản phẩm = % lời riêng của sản phẩm*</i></p>
+
+          <button>SỬA</button>
+
+    <a href="#" class="close">Đóng</a>
+  </div>
+</div>
+
+
   </body>
 </html>
