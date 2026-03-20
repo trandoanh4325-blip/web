@@ -61,7 +61,7 @@
                     <td>19/10/2025</td>
                     <td>Đã xác nhận</td>
                     <td>Giao hàng thành công</td>
-                    <td><button class="btn-xem">Xem</button></td>
+                    <td><a href="#popup-suasp"><button class="btn-sua">Xem</button></a></td>
                   </tr>
                   <tr>
                     <td>C2002</td>
@@ -86,6 +86,14 @@
                     <td>Đã xử lý</td>
                     <td>Đã hủy</td>
                     <td><button class="btn-xem">Xem</button></td>
+                  </tr>
+                  <tr>
+                    <td>C2005</td>
+                    <td>Nguyễn Văn A</td>
+                    <td>20/10/2025</td>
+                    <td>Chưa xác nhận</td>
+                    <td>Đang chờ</td>
+                    <td><a href="#popup-suasp"><button class="btn-sua">Xem</button></a></td>
                   </tr>
                 </tbody>
               </table>
@@ -142,44 +150,8 @@
             </div>
 
               <!-- Chi tiết đơn hàng -->
-              <div class="detail-section">
-                <h2>
-                  <i style="font-size: 24px" class="fas">&#xf218;</i> Chi tiết đơn hàng
-                </h2>
-                <div class="box-container">
-                  <div class="box">
-                    <h3>
-                      <i style="font-size: 24px" class="fas">&#xf187;</i> Thông tin đơn 1
-                    </h3>
-                    <p><b>Mã đơn:</b> C2001</p>
-                    <p><b>Ngày đặt:</b> 19/10/2025</p>
-                    <p><b>Trạng thái:</b> Giao hàng thành công</p>
-                  </div>
-
-                  <div class="box">
-                    <h3>
-                      <i style="font-size: 24px" class="fas">&#xf2c2;</i> Khách hàng
-                    </h3>
-                    <p><b>Họ tên:</b> Trần Đình Bảo Quốc</p>
-                    <p><b>SĐT:</b> 0987654321</p>
-                    <p>
-                      <b>Địa chỉ:</b> 123 Bà  Huyện Thanh Quan, phường Xuân Hòa, HCM
-                    </p>
-                  </div>
-
-                  <div class="box">
-                    <h3>
-                      <i style="font-size: 24px" class="fas">&#xf788;</i> Sản phẩm
-                    </h3>
-                    <p><b>Tên:</b> Set quà tặng</p>
-                    <p><b>Số lượng:</b> 1</p>
-                    <p><b>Tổng tiền:</b> 200.000đ</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="box-container">
-                <div class="box">
+       <div class="box-container">
+        <div class="box">
                   <div class="chon-tinhtrang">
                         <h3>Trạng thái đơn hàng</h3>
   <label>
@@ -207,23 +179,41 @@
     Đã hủy
   </label>
   <button class="xacnhan">Cập Nhật</button>
-  <div class="box">
-    <tr>
-      <h4>Bạn có đơn hàng chưa xử lý!</h4>
-      <label >
-        <input type="radio" name="hoatdong" value="xuly">Đã xác nhận
-      </label>
-      <button class="xacnhan">Cập Nhật</button>
-    </tr>
-  </div>
 </div>
-                  </div>
+</div>
+
+              
+
+ 
+</div>
+                
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+
+      <div id="popup-suasp" class="overlay">
+  <a href="#" class="overlay-bg"></a>
+  <div class="popup-box">
+
+        <div class="box">
+    <tr>
+      <h4>Bạn có đơn hàng chưa xử lý!</h4>
+      <label >
+        <input type="radio" name="hoatdong" value="xuly">Đã xác nhận
+      </label>
+      <a href="#popup-suasp"><button class="btn-sua">cập nhật</button></a>
+    </tr>
+  </div>  
+
+    <a href="#" class="close">Đóng</a>
+  </div>
+</div>
+
+
 
   </body>
 </html>
