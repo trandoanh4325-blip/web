@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quản Lý Sản Phẩm</title>
-    <link rel="stylesheet" href="../css/styleAdmin.css" />
+    <link rel="stylesheet" href="../cssAdmin/SanPham.css" />
+    <link rel="stylesheet" href="../cssAdmin/styleAdmin.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
@@ -32,17 +33,17 @@
   <div class="sanpham-container">
     <!-- ========== LOẠI SẢN PHẨM ========== -->
     <section>
-      <h2><i style="font-size:24px" class="	fas fa-plus-circle"></i> Loại sản phẩm</h2>
+      <h2><i style="font-size:24px" class="fas fa-plus-circle"></i> Loại sản phẩm</h2>
       <form id="formLoaiSanPham">
-        <input type="text" id="tenLoai" placeholder="Nhập tên loại sản phẩm" required>
+        <input type="text" id="tenLoai" placeholder="Nhập tên loại sản phẩm" required />
+        <div class="loai-date-row">
+          <label for="tungay">Ngày thêm</label>
+          <input type="date" id="tungay" />
+        </div>
+        <div class="loai-btn-row">
+          <button type="button">Thêm</button>
+        </div>
       </form>
-      <form class="tonkho-filter-form">
-              <div class="tonkho-form-row">
-                <label for="tungay">Ngày thêm</label>
-                <input type="date" id="tungay" />
-                <button type="button">Thêm</button>
-              </div>
-            </form>
       <h2><i class="fa-solid fa-list"></i> Danh sách loại</h2>
       <div class="bang-loai-wrapper">
       <table id="danhSachLoai">

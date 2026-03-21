@@ -1,0 +1,155 @@
+/* ===============================
+   KHOVAN.HTML - Quản lý kho vận
+   =============================== */
+
+.tonkho-container {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: #f4f6f9;
+  color: #222;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+  margin-bottom: 60px;
+}
+
+.tonkho-header {
+  background-color: #2a6fb2;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  border-radius: 8px 8px 0 0;
+}
+
+.tonkho-main {
+  width: 90%;
+  max-width: 1000px;
+  margin: 25px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tonkho-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.tonkho-card h2 {
+  margin-top: 80px;
+  color: black;
+  border-bottom: 2px solid black;
+  padding-bottom: 5px;
+}
+
+/* Form lọc/tìm kiếm trong kho vận */
+.tonkho-filter-form {
+  margin: 15px 0;
+}
+
+.tonkho-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.tonkho-form-row label {
+  font-weight: 600;
+}
+
+.tonkho-form-row select,
+.tonkho-form-row input[type="date"],
+.tonkho-form-row input[type="text"] {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  min-width: 130px;
+}
+
+.tonkho-form-row button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.tonkho-form-row button:hover {
+  background-color: #ed0b0b9c;
+}
+
+/* Bảng tồn kho */
+.tonkho-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.tonkho-table th,
+.tonkho-table td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+.tonkho-table th {
+  background-color: #e9f1fa;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Badge trạng thái */
+.tonkho-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.tonkho-ok {
+  background-color: #27ae60;
+}
+
+.tonkho-low {
+  background-color: #f39c12;
+}
+
+.tonkho-out {
+  background-color: #e74c3c;
+}
+
+/* Cảnh báo tồn kho */
+.tonkho-alert-box {
+  background-color: #fff8e1;
+  border-left: 5px solid #f39c12;
+  padding: 10px 15px;
+  border-radius: 6px;
+}
+
+/* Box cảnh báo dùng trong khovan */
+.box {
+  flex: 1 1 300px;
+  min-width: 300px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.chon-tinhtrang {
+  background: #fff;
+  border: 1px dashed #ccc;
+  padding: 14px 18px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 380px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  margin: 0 auto;
+}

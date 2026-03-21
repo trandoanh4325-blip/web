@@ -1,0 +1,164 @@
+/* ===============================
+   PHIEUNHAP.HTML - Quản lý phiếu nhập
+   =============================== */
+
+/* Khung chính */
+.container-phieunhap {
+  width: 90%;
+  margin: 30px auto;
+  background-color: #ffffff85;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #cdd9ea;
+}
+
+.container-phieunhap h2 {
+  color: black;
+  border-bottom: 2px solid black;
+  padding-bottom: 5px;
+  margin-bottom: 20px;
+  text-align: left;
+  font-weight: bold;
+}
+
+/* Thanh tìm kiếm */
+.search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search input {
+  width: 550px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #050505;
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.search input:focus {
+  border-color: #000000;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.search button {
+  background-color: red;
+  color: white;
+  border: none;
+  width: 150px;
+  padding: 8px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+/* Danh mục tìm phiếu */
+.DanhMucTimPhieu {
+  border-bottom: 2px dashed #333;
+  padding-bottom: 15px;
+}
+
+/* Bảng danh mục */
+.container-phieunhap table {
+  width: 90%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: #ffffff;
+}
+
+.container-phieunhap th,
+.container-phieunhap td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+.container-phieunhap th {
+  background-color: #eaf3ff;
+  color: #000000;
+}
+
+.container-phieunhap tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+/* Form nhập phiếu */
+#formPhieu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 55%;
+  margin: 0 auto 25px auto;
+  height: 475px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid #000000;
+  position: relative;
+}
+
+#formPhieu label {
+  font-weight: 600;
+  color: #333;
+  align-self: flex-start;
+}
+
+#formPhieu input,
+#formPhieu select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+#formPhieu .btn-wrapper {
+  position: absolute;
+  bottom: 15px;
+  right: 20px;
+}
+
+#formPhieu button.btn-them {
+  background-color: #ff0000;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+  width: 150px;
+  padding: 8px 0;
+}
+
+#formPhieu button.btn-them:hover {
+  background-color: #ff6464;
+}
+
+/* Nút Sửa / Xóa trong bảng */
+.btn-sua1,
+.btn-xoa1 {
+  background-color: red;
+  border: none;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 5px 10px;
+  transition: all 0.25s ease;
+}
+
+.btn-sua1:hover,
+.btn-xoa1:hover {
+  background-color: #cc0000;
+  transform: scale(1.05);
+}

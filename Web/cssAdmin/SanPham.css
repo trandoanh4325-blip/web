@@ -1,0 +1,277 @@
+/* ===============================
+   SANPHAM.HTML - Quản lý sản phẩm
+   =============================== */
+
+.sanpham-container {
+  background-color: #ffffffb3;
+  padding: 30px 20px;
+  margin: 80px auto;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 950px;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.sanpham-container h2 {
+  color: black;
+  border-bottom: 2px solid black;
+  padding-bottom: 5px;
+  margin-bottom: 20px;
+  text-align: left;
+  font-weight: bold;
+}
+
+/* Form loại sản phẩm */
+#formLoaiSanPham {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 auto 24px auto;
+  max-width: 600px;
+  background: #fff;
+  border: 1px solid #000000;
+  border-radius: 12px;
+  padding: 20px 24px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
+#formLoaiSanPham input[type="text"],
+#formLoaiSanPham input[type="date"] {
+  display: block;
+  width: 100% !important;
+  padding: 9px 12px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+  margin: 0 !important;
+  background: #fafafa;
+  transition: border-color 0.2s;
+}
+
+#formLoaiSanPham input[type="text"]:focus,
+#formLoaiSanPham input[type="date"]:focus {
+  border-color: #0195b2;
+  outline: none;
+  background: #fff;
+}
+
+#formLoaiSanPham .loai-date-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#formLoaiSanPham .loai-date-row label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #444;
+  margin: 0;
+}
+
+#formLoaiSanPham .loai-btn-row {
+  display: flex !important;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+#formLoaiSanPham .loai-btn-row button {
+  display: inline-block !important;
+  width: 110px !important;
+  margin: 0 !important;
+  padding: 9px 0;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+#formLoaiSanPham .loai-btn-row button:hover {
+  background-color: #cc0000;
+  transform: scale(1.03);
+}
+
+/* Bảng danh sách loại */
+.bang-loai-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border-bottom: 2px dashed #333;
+  padding-bottom: 15px;
+}
+
+#danhSachLoai {
+  width: 100%;
+  margin: 0 auto 20px auto;
+  border-collapse: collapse;
+  font-size: 14px;
+  max-width: 800px;
+}
+
+#danhSachLoai th,
+#danhSachLoai td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+#danhSachLoai th {
+  background-color: #e9f1fa;
+  font-weight: 700;
+  color: black;
+}
+
+#danhSachLoai td {
+  background-color: #fff;
+}
+
+/* Nút Sửa / Xóa trong bảng */
+.btn-sua1,
+.btn-xoa1 {
+  background-color: red;
+  border: none;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 5px 10px;
+  transition: all 0.25s ease;
+}
+
+.btn-sua1:hover,
+.btn-xoa1:hover {
+  background-color: #cc0000;
+  transform: scale(1.05);
+}
+
+/* Form thêm sản phẩm */
+#formThemSanPham {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  background: #fff;
+  padding: 20px;
+  padding-bottom: 75px;
+  border-radius: 15px;
+  border: 1px solid #000000;
+}
+
+#formThemSanPham label {
+  font-weight: 600;
+  color: #333;
+}
+
+#formThemSanPham input[type="text"],
+#formThemSanPham select,
+#formThemSanPham textarea,
+#formThemSanPham input[type="file"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+#formMaSP   { grid-column: 1; }
+#formTenSP  { grid-column: 2; }
+#formLoaiSP { grid-column: 3; }
+
+#formHinhAnh { grid-column: 1 / span 1; }
+#formMoTa    { grid-column: 2 / span 2; height: 70px; resize: vertical; }
+
+#formThemSanPham button {
+  position: absolute;
+  right: 20px;
+  bottom: 15px;
+  background-color: red;
+  color: white;
+  border: none;
+  width: 150px;
+  padding: 8px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+#formThemSanPham button:hover {
+  background-color: #ed0b0b9c;
+}
+
+/* Ảnh sản phẩm */
+.S1, .S2 {
+  width: 70px;
+  height: 70px;
+}
+
+/* Popup overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+  z-index: 999;
+}
+
+.overlay:target {
+  opacity: 1;
+  visibility: visible;
+}
+
+.popup-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  background: white;
+  padding: 25px;
+  width: 500px;
+  border-radius: 12px;
+  transition: 0.3s;
+}
+
+.overlay:target .popup-box {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.popup-box input {
+  width: 100%;
+  padding: 8px;
+  margin: 6px 0;
+}
+
+.popup-box button {
+  width: auto;
+  padding: 10px 15px;
+  background: rgb(255, 0, 0);
+}
+
+.close {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.overlay-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
