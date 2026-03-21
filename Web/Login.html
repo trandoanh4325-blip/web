@@ -5,26 +5,25 @@
     <meta charset="UTF-8">
     <title>Đăng Nhập Người Dùng</title>
     <link rel="stylesheet" href="css/styleLi.css">
-   
 </head>
 <body>
+  <div class="header">
+    <div class="logo">
+      <a href="#"><img src="Image/logostore-Photoroom.png" alt="Logo" /></a>
+    </div>
+  </div>
 
     <div class="box">
-        <input type="text" id="email" placeholder="Email..." style="font-size:15px" required>
-        <input type="password" id="password" placeholder="Password..." style="font-size:15px" required>
+        <input type="text" id="email" placeholder="Email..." style="font-size:17px" required>
+        <input type="password" id="password" placeholder="Password..." style="font-size:17px" required>
 
         <button onclick="login()" class="login">Đăng nhập</button>
         <button onclick="window.location.href='Register.html'" class="login">Đăng ký</button>
 
         <p id="error" style="color:red; font-size:16px; display:none;">Sai email hoặc mật khẩu!</p>
 
-    
     </div>
-
-    <img src="Image/logostore-Photoroom.png" class="Logo">
-
     <script src="js/script.js">
     </script>
-
 </body>
 </html>
