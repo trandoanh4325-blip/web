@@ -586,7 +586,7 @@ body {
   overflow: hidden;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  margin: 50px auto; /* căn giữa toàn bộ thanh tìm kiếm */
+  margin: 68px auto 50px auto;/* căn giữa toàn bộ thanh tìm kiếm */
 }
 
 /* Khi hover hoặc focus vào input */

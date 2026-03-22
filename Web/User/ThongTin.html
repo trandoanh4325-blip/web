@@ -4,34 +4,121 @@
     <meta charset="UTF-8">
     <title>Thông tin cá nhân</title>
     <link rel="stylesheet" href="../css/styleTT.css">
-    <link rel="stylesheet" href="../css/styleUser.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+   <!-- <link rel="stylesheet" href="../css/styleUser.css" />-->
 </head>
 <body>
     <!-- Header -->
     <div class="header">
         <div class="logo">
-            <img src="../Image/logostore-Photoroom.png" alt="Logo">
+            <a href="User.html">
+                <!-- Fallback logo nếu lỗi đường dẫn cục bộ -->
+                <img src="../Image/logostore-Photoroom.png" alt="Logo">
+            </a>
         </div>
-        <div class="header-right">
-            <a href="User.html">Trở lại trang chủ</a>
-            <a href="DoiTT.html">Đổi thông tin</a>
-            <button onclick="window.location.href='../Main.html'">Đăng xuất</button>
+
+        <div class="others">
+            <!-- 1. Nút Trở Về (Có icon mũi tên hoặc ngôi nhà) -->
+            <ul>
+                <a class="header-icon" href="User.html" title="Trở về trang chủ">
+                    <i class="fa-solid fa-house-chimney"></i>
+                </a>
+            </ul>
+
+            <!-- 3. Giỏ Hàng -->
+            <ul>
+                <a class="header-icon" href="giohang.html" title="Giỏ hàng">
+                    <i class="fa-solid fa-shopping-bag"></i>
+                </a>
+            </ul>
+
+            <!-- 4. Đăng Xuất (Nút gradient ngoài cùng) -->
+            <ul>
+                <a href="../Main.html" style="text-decoration: none;">
+                    <button><i class="fa-solid fa-right-from-bracket" style="margin-right: 5px;"></i> Đăng Xuất</button>
+                </a>
+            </ul>
         </div>
     </div>
 
-    <!-- Nội dung -->
+    <!-- ==================== NỘI DUNG THÔNG TIN CÁ NHÂN ==================== -->
     <div class="content">
-        <h1>Thông Tin Người Dùng</h1>
-        <div class="info-card">
-            <p><strong>👤 Username:</strong> DangHau</p>
-            <p><strong>📝 Họ và tên:</strong> Hoàng Đăng Hậu</p>
-            <p><strong>📞 Số điện thoại:</strong> 090987654321</p>
-            <p><strong>🏠 Địa chỉ:</strong> 21/18B, Bình Lợi, P13, Bình Thạnh, TP.HCM</p>
-            <p><strong>📧 Email:</strong> Hoangdanghau@gmail.com</p>
+        <div class="profile-card">
+            
+            <!-- Phần nền Header của Card -->
+            <div class="profile-header-bg">
+                <div class="profile-avatar" id="avatar-container" title="Nhấn để thay đổi ảnh đại diện">
+                    <i class="fa-solid fa-user-tie" id="default-avatar-icon"></i>
+                    <img id="avatar-image" src="" alt="Avatar" style="display: none;">
+                    
+                    <!-- Nút Gỡ Avatar (Chỉ hiện khi có ảnh) -->
+                    <div class="avatar-remove-badge" id="remove-avatar-btn" title="Gỡ ảnh đại diện" style="display: none;">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </div>
+
+                    <!-- Nút Thay Đổi Avatar -->
+                    <div class="avatar-edit-badge" title="Thay đổi ảnh đại diện">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thẻ input ẩn để chọn file ảnh -->
+            <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+
+            <!-- Phần hiển thị thông tin chi tiết -->
+            <div class="profile-body">
+                <h2 class="profile-name">Hoàng Đăng Hậu</h2>
+                <p class="profile-role">Khách Hàng Thành Viên</p>
+
+                <div class="info-list">
+                    <!-- Username -->
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-id-card"></i></div>
+                        <div class="info-text">
+                            <label>Tên đăng nhập (Username)</label>
+                            <span>DangHau</span>
+                        </div>
+                    </div>
+
+                    <!-- Số điện thoại -->
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
+                        <div class="info-text">
+                            <label>Số điện thoại</label>
+                            <span>0909 876 543</span>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-envelope"></i></div>
+                        <div class="info-text">
+                            <label>Email liên hệ</label>
+                            <span>Hoangdanghau@gmail.com</span>
+                        </div>
+                    </div>
+
+                    <!-- Địa chỉ -->
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
+                        <div class="info-text">
+                            <label>Địa chỉ giao hàng</label>
+                            <span>21/18B, Bình Lợi, P.13, Bình Thạnh, TP.HCM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nút chuyển tới trang cập nhật nằm ngay trong thẻ -->
+                <button class="btn-edit-profile" onclick="window.location.href='DoiTT.html'">
+                    <i class="fa-solid fa-arrows-rotate"></i> Cập Nhật Thông Tin
+                </button>
+            </div>
         </div>
     </div>
      
-     <div class="contact">
+    <!-- ==================== LIÊN HỆ ==================== -->
+    <div class="contact">
       <div class="icons">
         <i class="fa-brands fa-facebook"></i>
         <i class="fa-brands fa-instagram"></i>
@@ -43,32 +130,33 @@
       </div>
     </div>
 
-      <div class="footer-wrapper">
-    <footer class="footer-box">
-      <div class="footer-container">
-        <div class="footer-column">
-          <h3>FLORENTINO SHOP </h3>
-          <p>Trụ sở chính: 123 An Dương Vương, Phường 3, Quận 5, TP Hồ Chí Minh</p>
-          <p>Văn phòng: Tầng 60, Tòa nhà Lankmark 81, số 208 đường Nguyễn Hữu Cảnh, P.22, Q.Bình Thạnh, TP.HCM.</p>
-          <p>Chịu trách nhiệm nội dung: <b>HDQH</b></p>
-          <p>Số Điện Thoại: 0123 456 789 </p>
-          <p>Email: FlorentinoShop@gmai.com</p>
-        </div>
-        <div class="footer-column">
-          <h3>HỖ TRỢ KHÁCH HÀNG</h3>
-          <p><a href="#">Điều khoản sử dụng</a></p>
-          <p><a href="#">Chính sách thành viên</a></p>
-          <p><a href="#">Chính sách bảo mật</a></p>
-        </div>
-        <div class="footer-column">
-          <h3>GIẤY PHÉP & BẢN QUYỀN</h3>
-          <p>Đã đăng ký Bộ Công Thương</p>
-          <img src="http://dangkywebvoibocongthuong.com/wp-content/uploads/2021/11/logo-da-thong-bao-bo-cong-thuong.png" alt="Bộ Công Thương 1" class="conthuong_img"></a>
-          <img src="http://dangkywebvoibocongthuong.com/wp-content/uploads/2021/11/logo-da-dang-ky-bo-cong-thuong.png" alt="Bộ Công Thương 2" class="conthuong_img"></a>
-        </div>
-      </div>
-    </footer>
-  </div>
-
+    <!-- ==================== FOOTER ==================== -->
+    <div class="footer-wrapper">
+        <footer class="footer-box">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>FLORENTINO SHOP </h3>
+                    <p>Trụ sở chính: 123 An Dương Vương, Phường 3, Quận 5, TP Hồ Chí Minh</p>
+                    <p>Văn phòng: Tầng 60, Tòa nhà Lankmark 81, số 208 đường Nguyễn Hữu Cảnh, P.22, Q.Bình Thạnh, TP.HCM.</p>
+                    <p>Chịu trách nhiệm nội dung: <b>HDQH</b></p>
+                    <p>Số Điện Thoại: 0123 456 789 </p>
+                    <p>Email: FlorentinoShop@gmai.com</p>
+                </div>
+                <div class="footer-column">
+                    <h3>HỖ TRỢ KHÁCH HÀNG</h3>
+                    <p><a href="#">Điều khoản sử dụng</a></p>
+                    <p><a href="#">Chính sách thành viên</a></p>
+                    <p><a href="#">Chính sách bảo mật</a></p>
+                </div>
+                <div class="footer-column">
+                    <h3>GIẤY PHÉP & BẢN QUYỀN</h3>
+                    <p>Đã đăng ký Bộ Công Thương</p>
+                    <img src="http://dangkywebvoibocongthuong.com/wp-content/uploads/2021/11/logo-da-thong-bao-bo-cong-thuong.png" alt="Bộ Công Thương 1" class="conthuong_img">
+                    <img src="http://dangkywebvoibocongthuong.com/wp-content/uploads/2021/11/logo-da-dang-ky-bo-cong-thuong.png" alt="Bộ Công Thương 2" class="conthuong_img">
+                </div>
+            </div>
+        </footer>
+    </div>
+<script src="../js/Thongtin.js"></script>
 </body>
 </html>
