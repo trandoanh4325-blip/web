@@ -70,8 +70,7 @@ body {
 }
 
 .others button {
-  background: #ff891bff;
-  color: white;
+  background: linear-gradient(90deg, #b22d01, #ed5402);
   border: none;
   padding: 8px 15px;
   border-radius: 15px;
@@ -82,90 +81,107 @@ body {
 }
 
 .others button:hover {
-  background: #e45f06ff;
+  box-shadow: 0 5px 15px rgba(178, 7, 1, 0.4);
 }
 .fa-user {
-  color: #fd6e43ff;
+  color: #ed5402;
   font-size: 35px;
 }
 
 .fa-shopping-bag {
-  color: #fd6e43ff;
+  color: #ed5402;
   font-size: 35px;
 }
 .fa-search {
   font-size: 20px;
 }
 .slideshow-container {
-  width: 80%;
-  aspect-ratio: 2048 / 739;
-  max-height: 350px;
-  position: relative;
-  margin: 130px auto 0 auto;
-  overflow: hidden;
-  border-radius: 15px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-}
+        width: 80%;
+        max-width: 1200px;
+        max-height: 400px;
+        position: relative;
+        margin: 130px auto 0 auto;
+        overflow: hidden;
+        border-radius: 15px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+      }
 
+      .mySlides {
+        display: none; /* Ẩn tất cả slide mặc định */
+        width: 100%;
+        height: 100%;
+      }
 
-.mySlides {
-  display: none; /* ẩn mặc định */
-}
+      .mySlides img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover; /* Giữ tỷ lệ ảnh đẹp */
+        border-radius: 15px;
+      }
 
-.mySlides.active {
-  display: block; /* hiển thị ảnh cố định */
-}
+      /* Nút điều hướng */
+      .prev, .next {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: auto;
+        padding: 16px;
+        color: white;
+        font-weight: bold;
+        font-size: 24px;
+        transition: 0.3s;
+        user-select: none;
+        background-color: rgba(0,0,0,0.3);
+        text-decoration: none;
+      }
 
-.mySlides img {
-  width: 100%;
-  height: 400px;
-  object-fit: cover;
-  border-radius: 10px;
-}
+      .next {
+        right: 0;
+        border-radius: 3px 0 0 3px;
+      }
 
-/* Nút điều hướng */
-.prev, .next {
-  cursor: pointer;
-  position: absolute;
-  top: 50%;
-  width: auto;
-  padding: 16px;
-  color: white;
-  font-weight: bold;
-  font-size: 18px;
-  transition: 0.3s;
-  user-select: none;
-  border-radius: 0 3px 3px 0;
-  background-color: rgba(0,0,0,0.3);
-}
+      .prev {
+        left: 0;
+        border-radius: 0 3px 3px 0;
+      }
 
-.next {
-  right: 0;
-  border-radius: 3px 0 0 3px;
-}
+      .prev:hover, .next:hover {
+        background-color: rgba(0,0,0,0.8);
+      }
 
-.prev:hover, .next:hover {
-  background-color: rgba(0,0,0,0.6);
-}
+      /* Các chấm tròn dot */
+      .dot-container {
+        text-align: center;
+        margin-top: 15px;
+      }
 
-/* Các chấm tròn dot */
-.dot-container {
-  text-align: center;
-  margin-top: 10px;
-}
+      .dot {
+        cursor: pointer;
+        height: 12px;
+        width: 12px;
+        margin: 0 5px;
+        background-color: #bbb;
+        border-radius: 50%;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+      }
 
-.dot {
-  height: 12px;
-  width: 12px;
-  margin: 0 4px;
-  background-color: #bbb;
-  border-radius: 50%;
-  display: inline-block;
-}
+      .dot.active, .dot:hover {
+        background-color: #ff891b; /* Màu cam đồng bộ với theme */
+        transform: scale(1.2);
+      }
 
-.dot:hover {
-  background-color: #717171;
-}
+      /* Hiệu ứng Fade mượt mà */
+      .fade {
+        animation-name: fade;
+        animation-duration: 1.5s;
+      }
+
+      @keyframes fade {
+        from {opacity: .4} 
+        to {opacity: 1}
+      }
 /* Product grid */
 .product-container {
   display: grid;
@@ -570,7 +586,7 @@ body {
   overflow: hidden;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  margin: 0 auto; /* căn giữa toàn bộ thanh tìm kiếm */
+  margin: 50px auto; /* căn giữa toàn bộ thanh tìm kiếm */
 }
 
 /* Khi hover hoặc focus vào input */

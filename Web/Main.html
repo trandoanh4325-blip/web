@@ -38,21 +38,46 @@
 
   
     <div class="slideshow-container">
-    <div class="mySlides fade active">
-      <img src="Image/slide4.jpg" alt="Banner cố định">
+      
+      <!-- Slide 1 -->
+      <div class="mySlides fade">
+        <img src="Image/slide1.jpg" alt="Banner 1">
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="mySlides fade">
+        <img src="Image/slide2.jpg" alt="Banner 2">
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="mySlides fade">
+        <img src="Image/slide3.png" alt="Banner 3">
+      </div>
+
+      <!-- Slide 4 -->
+      <div class="mySlides fade">
+        <img src="Image/slide4.jpg" alt="Banner 4">
+      </div>
+
+      <!-- Slide 5 -->
+      <div class="mySlides fade">
+        <img src="Image/slide5.jpg" alt="Banner 5">
+      </div>
+
+      <!-- Nút Tới/Lui -->
+      <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+      <a class="next" onclick="plusSlides(1)">&#10095;</a>
     </div>
 
-    <a class="prev">&#10094;</a>
-    <a class="next">&#10095;</a>
-  </div>
+    <!-- Nút Chấm (Dots) -->
+    <div class="dot-container">
+      <span class="dot" onclick="currentSlide(1)"></span> 
+      <span class="dot" onclick="currentSlide(2)"></span> 
+      <span class="dot" onclick="currentSlide(3)"></span> 
+      <span class="dot" onclick="currentSlide(4)"></span> 
+      <span class="dot" onclick="currentSlide(5)"></span> 
+    </div>
 
-  <div class="dot-container" style="text-align:center">
-    <span class="dot"></span> 
-    <span class="dot"></span> 
-    <span class="dot"></span> 
-    <span class="dot"></span> 
-    <span class="dot"></span> 
-  </div>
 
     
     <div class="main-container">
@@ -199,8 +224,8 @@
         </div>
 
         <div class="sp-card"> <a href="Chitietcp.html">
-          <img src="https://img.alicdn.com/imgextra/i1/2203759486/O1CN012JwdYA1zXcQL9LU_!!2203759486.jpg_400x400.jpg_.webp"alt="SP 2"/></a>
-          <p class="ten-sp">Hoa hồng</p>
+          <img src="Image/HoDiep.jpg"alt="SP 2"/></a>
+          <p class="ten-sp">Hoa hồ điệp</p>
           <p class="gia-sp">200.000đ</p>
          <a href="Login.html"> <i style="font-size: 24px" class="fas">&#xf217;</i></onclick></a>
         </div>
@@ -374,5 +399,6 @@
       </div>
     </footer>
   </div>
+  <script src="js/Main.js"></script>
   </body>
 </html>
