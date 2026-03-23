@@ -1,24 +1,69 @@
+/* ===== POPUP NỀN ===== */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: 999;
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ===== KHUNG POPUP ===== */
+.popup-content {
+  width: 950px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: fadeIn 0.3s ease;
+  position: relative;
+}
+
+/* NÚT X */
+.close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 28px;
+  color: white;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ===== KHUNG THANH TOÁN ===== */
 .payment-container {
   max-width: 900px;
-  margin: 40px auto;
+  margin: 0 auto;
   background: white;
   padding: 25px 30px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
+
 .payment-container h2 {
   color: #007bff;
   text-align: center;
   margin-bottom: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
   font-weight: 600;
 }
 
-/* ===== FORM THANH TOÁN ===== */
+/* ===== FORM ===== */
 .payment-form label {
   display: block;
   margin-bottom: 5px;
@@ -31,12 +76,12 @@
 .payment-form textarea,
 .payment-form select {
   width: 100%;
-  padding: 7px 10px;
+  padding: 8px 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   font-size: 14px;
-  transition: border 0.2s, box-shadow 0.2s;
+  transition: 0.2s;
 }
 
 .payment-form input:focus,
@@ -47,20 +92,59 @@
   outline: none;
 }
 
+/* TEXTAREA */
 .payment-form textarea {
-  resize: none;
   height: 60px;
-  overflow-y: auto;
+  resize: none;
 }
 
+/* SELECT */
 .payment-form select {
-  height: 36px;
-  line-height: 1.4;
+  height: 38px;
 }
 
-/* ===== NÚT HÀNH ĐỘNG ===== */
+/* ===== RADIO ===== */
+.address-options {
+  margin-bottom: 15px;
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.address-options input[type="radio"] {
+  margin-right: 6px;
+}
+
+.address-options label {
+  cursor: pointer;
+}
+
+.address-options label strong {
+  display: block;
+  font-weight: normal;
+  margin-top: 3px;
+}
+
+/* ===== FORM ĐỊA CHỈ MỚI ===== */
+.new-address {
+  display: none;
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #f9f9f9;
+}
+
+#useNew:checked ~ .new-address {
+  display: block;
+}
+
+/* ===== BUTTON ===== */
 .form-buttons {
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
   margin-top: 20px;
 }
 
@@ -69,28 +153,26 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: 500;
   font-size: 15px;
-  transition: background-color 0.2s;
+  font-weight: 500;
 }
 
 .btn-cancel {
-  background-color: #6c757d;
+  background: #6c757d;
   color: white;
-  margin-right: 10px;
 }
 
 .btn-cancel:hover {
-  background-color: #5a6268;
+  background: #5a6268;
 }
 
 .btn-confirm {
-  background-color: #28a745;
+  background: #28a745;
   color: white;
 }
 
 .btn-confirm:hover {
-  background-color: #218838;
+  background: #218838;
 }
 
 /* ===== DANH SÁCH SẢN PHẨM ===== */
@@ -104,7 +186,7 @@
 
 .order-summary h4 {
   color: #007bff;
-  margin: 0 0 12px 0;
+  margin-bottom: 12px;
   font-weight: 600;
 }
 
@@ -126,74 +208,34 @@
 .order-item p {
   margin: 0;
   font-size: 14px;
-  color: #333;
 }
 
 .total-popup {
   text-align: right;
   font-weight: bold;
   color: #d9534f;
-  margin-top: 6px;
+  margin-top: 8px;
   border-top: 1px dashed #ccc;
   padding-top: 8px;
 }
-
-/* ===== FOOTER ===== */
-.footer {
-  background-color: #0077b6;
-  color: white;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 600;
-  padding: 25px 0;
-  border-top: 4px solid #ff891b;
-  box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.15);
-  letter-spacing: 0.5px;
-  margin-top: 40px;
-}
-
-/* ===== RADIO BUTTON VÀ ẨN/HIỆN FORM ===== */
-.address-options {
-  margin-bottom: 15px;
-}
-
-.address-options input[type="radio"],
-.address-options label[for] {
-  display: inline-block;
-  vertical-align: top;
-  margin-top: 10px;
-}
-
-.address-options input[type="radio"]:first-child {
-  margin-top: 0;
-}
-
-.address-options input[type="radio"] {
-  clear: left;
-  margin-right: 8px;
-}
-
-.address-options label strong {
-  display: block;
-  margin-left: 0px;
-  font-weight: normal;
-  color: black;
-}
-
-.new-address {
+.popup {
   display: none;
-  margin-top: 10px;
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  background-color: #f9f9f9;
-}
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 
-#useNew:checked ~ .new-address {
-  display: block;
-}
+  /* nền mờ full */
+  background: rgba(0,0,0,0.5);
 
-.new-address label {
-  font-weight: normal;
-  margin-top: 8px;
+  /* QUAN TRỌNG */
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#popup {
+  display: none;
 }
