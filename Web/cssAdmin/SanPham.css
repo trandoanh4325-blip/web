@@ -109,16 +109,25 @@
   margin: 0 auto 20px auto;
   border-collapse: collapse;
   font-size: 14px;
-  max-width: 800px;
+  table-layout: fixed;
 }
 
 #danhSachLoai th,
 #danhSachLoai td {
   border: 1px solid #ccc;
-  padding: 10px;
+  padding: 8px 16px;
   text-align: center;
   vertical-align: middle;
 }
+
+#danhSachLoai th:nth-child(1),
+#danhSachLoai td:nth-child(1) { width: 60px; }
+
+#danhSachLoai th:nth-child(3),
+#danhSachLoai td:nth-child(3) { width: 140px; }
+
+#danhSachLoai th:nth-child(4),
+#danhSachLoai td:nth-child(4) { width: 130px; white-space: nowrap; }
 
 #danhSachLoai th {
   background-color: #e9f1fa;
@@ -130,18 +139,26 @@
   background-color: #fff;
 }
 
+/* Bỏ gạch chân của thẻ <a> bao nút Sửa trong bảng */
+#danhSachLoai a,
+#bangSanPham a {
+  text-decoration: none;
+}
+
 /* Nút Sửa / Xóa trong bảng */
 .btn-sua1,
 .btn-xoa1 {
+  display: block;
   background-color: red;
   border: none;
   color: white;
-  padding: 6px 14px;
+  padding: 6px 0;
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  margin: 5px 10px;
+  width: 80px;
+  margin: 4px auto;
   transition: all 0.25s ease;
 }
 
@@ -149,6 +166,19 @@
 .btn-xoa1:hover {
   background-color: #cc0000;
   transform: scale(1.05);
+}
+
+/* Căn giữa cột chức năng */
+#danhSachLoai td:last-child,
+#bangSanPham td:last-child {
+  text-align: center;
+  vertical-align: middle;
+}
+
+#danhSachLoai td:last-child a,
+#bangSanPham td:last-child a {
+  display: block;
+  text-decoration: none;
 }
 
 /* Form thêm sản phẩm */
@@ -258,16 +288,64 @@
   margin: 6px 0;
 }
 
-.popup-box button {
-  width: auto;
-  padding: 10px 15px;
-  background: rgb(255, 0, 0);
+/* Nút trong popup: nằm bên phải */
+.popup-box .popup-btn-row {
+  display: flex !important;
+  justify-content: flex-end !important;
+  margin-top: 12px;
 }
 
+.popup-box .popup-btn-row button {
+  display: inline-block !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 10px 24px;
+  background: rgb(255, 0, 0);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.popup-box .popup-btn-row button:hover {
+  background-color: #cc0000;
+}
+
+/* Input bên trong popup */
+.popup-box input[type="text"],
+.popup-box input[type="date"] {
+  display: block;
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+  margin: 6px 0 10px;
+  background: #fafafa;
+}
+
+.popup-box label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #444;
+  margin: 0;
+}
+
+/* Bỏ gạch chân chữ Đóng */
 .close {
   display: block;
   margin-top: 10px;
   text-align: center;
+  text-decoration: none;
+  color: #e74c3c;
+}
+
+.close:hover {
+  text-decoration: underline;
 }
 
 .overlay-bg {

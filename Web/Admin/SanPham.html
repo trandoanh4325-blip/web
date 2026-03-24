@@ -106,17 +106,13 @@
   <div class="popup-box">
     <h2><i style="font-size:24px" class="	fas fa-plus-circle"></i> Loại sản phẩm</h2>
 
-    <form>
-      <form id="formLoaiSanPham">
-        <input type="text" id="tenLoai" placeholder="Nhập tên loại sản phẩm" required>
-      </form>
-      <form class="tonkho-filter-form">
-              <div class="tonkho-form-row">
-                <label for="tungay">Ngày thêm</label>
-                <input type="date" id="tungay" />
-                <button type="button">Sửa</button>
-              </div>
-            </form>
+    <form id="formLoaiSanPhamPopup">
+      <input type="text" placeholder="Nhập tên loại sản phẩm" required>
+      <label for="tungayPopup">Ngày thêm</label>
+      <input type="date" id="tungayPopup" />
+      <div class="popup-btn-row">
+        <button type="button">Sửa</button>
+      </div>
     </form>
 
     <a href="#" class="close">Đóng</a>

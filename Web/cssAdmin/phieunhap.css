@@ -71,6 +71,7 @@
   border-collapse: collapse;
   font-size: 14px;
   background: #ffffff;
+  table-layout: fixed;
 }
 
 .container-phieunhap th,
@@ -78,6 +79,7 @@
   border: 1px solid #ccc;
   padding: 10px;
   text-align: center;
+  vertical-align: middle;
 }
 
 .container-phieunhap th {
@@ -87,6 +89,12 @@
 
 .container-phieunhap tbody tr:nth-child(even) {
   background-color: #ffffff;
+}
+
+/* Cố định độ rộng cột chức năng */
+.container-phieunhap td:last-child,
+.container-phieunhap th:last-child {
+  width: 120px;
 }
 
 /* Form nhập phiếu */
@@ -145,15 +153,17 @@
 /* Nút Sửa / Xóa trong bảng */
 .btn-sua1,
 .btn-xoa1 {
+  display: block;
   background-color: red;
   border: none;
   color: white;
-  padding: 6px 14px;
+  padding: 6px 0;
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  margin: 5px 10px;
+  width: 75px;
+  margin: 4px auto;
   transition: all 0.25s ease;
 }
 
@@ -161,4 +171,123 @@
 .btn-xoa1:hover {
   background-color: #cc0000;
   transform: scale(1.05);
+}
+
+/* ========== POPUP SỬA PHIẾU NHẬP ========== */
+.overlay-phieu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+  z-index: 999;
+}
+
+.overlay-phieu:target {
+  opacity: 1;
+  visibility: visible;
+}
+
+.overlay-phieu .popup-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  background: white;
+  padding: 28px 30px 20px;
+  width: 480px;
+  border-radius: 14px;
+  transition: 0.3s;
+}
+
+.overlay-phieu:target .popup-box {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.overlay-phieu .popup-box h2 {
+  color: black;
+  border-bottom: 2px solid black;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.overlay-phieu .popup-box label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  color: #444;
+  margin: 10px 0 4px;
+}
+
+.overlay-phieu .popup-box input,
+.overlay-phieu .popup-box select {
+  display: block;
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+  background: #fafafa;
+  margin: 0;
+}
+
+.overlay-phieu .popup-box input:focus,
+.overlay-phieu .popup-box select:focus {
+  border-color: #0195b2;
+  outline: none;
+  background: #fff;
+}
+
+/* Nút Sửa trong popup: bên phải */
+.overlay-phieu .popup-btn-row {
+  display: flex !important;
+  justify-content: flex-end !important;
+  margin-top: 16px;
+}
+
+.overlay-phieu .popup-btn-row button {
+  display: inline-block !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 10px 28px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.overlay-phieu .popup-btn-row button:hover {
+  background-color: #cc0000;
+}
+
+/* Nút Đóng */
+.overlay-phieu .close {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  text-decoration: none;
+  color: #e74c3c;
+  font-size: 14px;
+}
+
+.overlay-phieu .close:hover {
+  text-decoration: underline;
+}
+
+.overlay-phieu .overlay-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
