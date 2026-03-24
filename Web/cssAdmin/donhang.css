@@ -31,8 +31,13 @@
   cursor: pointer;
 }
 
+a {
+  text-decoration: none;
+}
+
 .btn-xem:hover {
   background-color: #ed0b0b9c;
+  
 }
 
 /* Nút Sửa trong bảng */
@@ -201,16 +206,61 @@
   margin: 6px 0;
 }
 
+.popup-box .box {
+  text-align: center;
+}
+
+.popup-box .box h4 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.popup-box .box label {
+  display: block;
+  margin: 10px 0;
+  cursor: pointer;
+  font-size: 15px;
+  color: #444;
+}
+
+.popup-box .box input[type="radio"] {
+  margin-right: 8px;
+  accent-color: #0077b6;
+}
+
 .popup-box button {
   width: auto;
   padding: 10px 15px;
   background: rgb(255, 0, 0);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 15px;
+  transition: all 0.25s ease;
+}
+
+.popup-box button:hover {
+  background-color: #cc0000;
+  transform: scale(1.05);
 }
 
 .close {
   display: block;
-  margin-top: 10px;
+  margin-top: 15px;
   text-align: center;
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.close:hover {
+  color: red;
 }
 
 .overlay-bg {
