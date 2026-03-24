@@ -2,7 +2,7 @@
 $host = "localhost";
 $user = "root"; // Tên user MySQL của bạn (thường ở XAMPP là root)
 $pass = ""; // Mật khẩu MySQL (thường ở XAMPP là rỗng)
-$db_name = "shop_hoa_"; // Đổi thành tên database bạn vừa tạo
+$db_name = "shop_hoa_db"; // Đổi thành tên database bạn vừa tạo
 
 $conn = new mysqli($host, $user, $pass, $db_name);
 

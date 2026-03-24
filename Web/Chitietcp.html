@@ -8,15 +8,34 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
 </head>
 <body>
-  <a href="Main.html" class="back-button">
-  <i class="fa-solid fa-arrow-left"></i> Trở lại</a>
+  <!-- ========== HEADER ========== -->
+  <div class="header">
+    <div class="logo">
+      <a href="Main.html">
+        <img src="Image/logostore-Photoroom.png" alt="Logo" onerror="this.src='https://placehold.co/200x100?text=Logo'"/>
+      </a>
+    </div>
+    <div class="others">
+      <form action="User/Searchcp.html" method="get" class="search-form">
+        <div class="search-box">
+          <input type="search" name="query" placeholder="Tìm kiếm sản phẩm..." required/>
+          <button type="submit" title="Tìm kiếm">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+      </form>
+      <ul><a class="fa fa-user require-login" href="#"></a></ul>
+      <ul><a class="fa fa-shopping-bag require-login" href="#"></a></ul>
+      <ul><a href="Main.html" class="fa fa-home"> </a> </ul>
+    </div>
+  </div>
   <div class="product-detail">
     <div class="image-section">
-      <img id="mainImage" src="Image/sp.jpg" alt="Sản phẩm" class="main-img">
+      <img id="mainImage" src="Image/sp.jpg" alt="Sản phẩm" class="main-img" onerror="this.src='https://placehold.co/400x400?text=Sản+Phẩm'">
       <div class="thumbnail-container">
-        <img src="Image/sp.jpg" class="thumbnail">
-        <img src="Image/sp.jpg" class="thumbnail" >
-        <img src="Image/sp.jpg" class="thumbnail">
+        <img src="Image/sp.jpg" class="thumbnail" onerror="this.src='https://placehold.co/100x100'">
+        <img src="Image/sp.jpg" class="thumbnail" onerror="this.src='https://placehold.co/100x100'">
+        <img src="Image/sp.jpg" class="thumbnail" onerror="this.src='https://placehold.co/100x100'">
       </div>
     </div>
 
@@ -43,16 +62,16 @@
       </div>
 
       <div class="buttons">
-        <a href="Login.html"  > <button class="add-cart">Thêm vào giỏ hàng</button></a>
-        <a href="Login.html"> <button class="buy-now" href="Login.html">Mua ngay</button></a>
+        <a href="#" class="require-login"><button class="add-cart">Thêm vào giỏ hàng</button></a>
+        <a href="#" class="require-login"><button class="buy-now">Mua ngay</button></a>
       </div>
       <div class="short-desc">
   <p>Sản phẩm được làm thủ công tỉ mỉ, mang phong cách thanh lịch, phù hợp làm quà tặng cho người thân và bạn bè.</p>
-</div>
-<div class="shop-info">
-  <img src="Image/logostore-Photoroom.png" alt="Logo shop">
-  <h3>Florentino - Gifts That Bloom</h3>
-</div>
+      </div>
+      <div class="shop-info">
+        <img src="Image/logostore-Photoroom.png" alt="Logo shop" onerror="this.src='https://placehold.co/50x50'">
+        <h3>Florentino - Gifts That Bloom</h3>
+      </div>
     </div>
   </div>
 
@@ -96,7 +115,7 @@
     </div>
   </div>
 
-    <div class="footer-wrapper">
+  <div class="footer-wrapper">
     <footer class="footer-box">
       <div class="footer-container">
         <div class="footer-column">
@@ -116,12 +135,28 @@
         <div class="footer-column">
           <h3>GIẤY PHÉP & BẢN QUYỀN</h3>
           <p>Đã đăng ký Bộ Công Thương</p>
-          <img src="http://dangkywebvoibocongthuong.com/wp-content/uploads/2021/11/logo-da-thong-bao-bo-cong-thuong.png" alt="Bộ Công Thương 1" class="conthuong_img"></a>
-          <img src="http://dangkywebvoibocongthuong.com/wp-content/uploads/2021/11/logo-da-dang-ky-bo-cong-thuong.png" alt="Bộ Công Thương 2" class="conthuong_img"></a>
+          <img src="http://dangkywebvoibocongthuong.com/wp-content/uploads/2021/11/logo-da-thong-bao-bo-cong-thuong.png" alt="Bộ Công Thương 1" class="conthuong_img">
+          <img src="http://dangkywebvoibocongthuong.com/wp-content/uploads/2021/11/logo-da-dang-ky-bo-cong-thuong.png" alt="Bộ Công Thương 2" class="conthuong_img">
         </div>
       </div>
     </footer>
-  </div>
 
+    <script src="js/popup.js"></script>
+    
+  </div>
+<div id="loginPopup" class="popup-overlay">
+  <div class="popup-content">
+    <span class="close-btn" id="closePopupBtn">&times;</span>
+    <div class="popup-icon">
+      <i class="fa-solid fa-circle-exclamation"></i>
+    </div>
+    <h3>Yêu cầu đăng nhập</h3>
+    <p>Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng hoặc mua hàng.</p>
+    <div class="popup-actions">
+      <button class="btn-cancel" id="cancelPopupBtn">Hủy</button>
+      <a href="Login.html" class="btn-login">Đăng nhập ngay</a>
+    </div>
+  </div>
+</div>
 </body>
 </html>
