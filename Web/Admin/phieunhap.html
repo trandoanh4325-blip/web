@@ -132,7 +132,7 @@
                 <td>420.000đ</td>
                 <td>Chưa hoàn thành</td>
                 <td>
-                    <button class='btn-sua1'>Sửa</button>
+                    <a href='#popup-suaphieu' style='text-decoration:none'><button class='btn-sua1'>Sửa</button></a>
                     <button class="btn-xoa1">Xóa</button>
                 </td>              
             </tr>
@@ -145,7 +145,7 @@
                 <td>720.000đ</td>
                 <td>Chưa hoàn thành</td>
                 <td>
-                    <button class='btn-sua1'>Sửa</button>
+                    <a href='#popup-suaphieu' style='text-decoration:none'><button class='btn-sua1'>Sửa</button></a>
                     <button class="btn-xoa1">Xóa</button>
                 </td>              
             </tr>
@@ -167,5 +167,32 @@
           </div>
         </div>
        </div>
-       </body>
+       
+    <!-- POPUP SỬA PHIẾU NHẬP -->
+    <div id="popup-suaphieu" class="overlay-phieu">
+      <a href="#" class="overlay-bg"></a>
+      <div class="popup-box">
+        <h2><i class="fas fa-edit" style="font-size:20px"></i> Sửa phiếu nhập</h2>
+        <form id="formSuaPhieu">
+          <label for="suaNgayNhap">Ngày nhập</label>
+          <input type="date" id="suaNgayNhap" />
+
+          <label for="suaTenSP">Tên sản phẩm</label>
+          <input type="text" id="suaTenSP" placeholder="Nhập tên sản phẩm" />
+
+          <label for="suaGiaNhap">Giá nhập</label>
+          <input type="number" id="suaGiaNhap" placeholder="Nhập giá nhập hàng" min="0" />
+
+          <label for="suaSoLuong">Số lượng nhập</label>
+          <input type="number" id="suaSoLuong" placeholder="Nhập số lượng" min="1" />
+
+          <div class="popup-btn-row">
+            <button type="button">Lưu</button>
+          </div>
+        </form>
+        <a href="#" class="close">Đóng</a>
+      </div>
+    </div>
+
+</body>
       </html>
