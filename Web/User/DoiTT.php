@@ -1,3 +1,19 @@
+<?php
+session_start();
+// Kiểm tra đăng nhập
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../Login.html");
+    exit();
+}
+
+// Kết nối database
+require_once '../includes/db_connect.php';
+
+$user_id = $_SESSION['user_id'];
+$sql = "SELECT * FROM users WHERE id = '$user_id'";
+$result = $conn->query($sql);
+$user = $result->fetch_assoc();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,8 +21,7 @@
     <link rel="stylesheet" href="../css/styleTT.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
 </head>
-<>
-    <!-- Header -->
+<body>
     <div class="header">
         <div class="logo">
             <a href="User.html">
@@ -33,7 +48,6 @@
         </div>
     </div>
 
-    <!-- ==================== NỘI DUNG ĐỔI THÔNG TIN ==================== -->
     <div class="content">
         <div class="edit-card">
             <h2><i class="fa-solid fa-user-pen"></i> Cập Nhật Thông Tin</h2>
@@ -41,37 +55,36 @@
             <form onsubmit="handleSaveInfo(event)">
                 <div class="input-group">
                     <i class="fa-solid fa-id-card"></i>
-                    <input type="text" placeholder="Tên đăng nhập (Username)..." required>
+                    <input type="text" id="upd-username" placeholder="<?php echo htmlspecialchars($user['username']); ?>">
                 </div>
                 
                 <div class="input-group">
                     <i class="fa-solid fa-user"></i>
-                    <input type="text" placeholder="Họ và tên..." required>
+                    <input type="text" id="upd-fullname" placeholder="<?php echo htmlspecialchars($user['full_name']); ?>">
                 </div>
                 
                 <div class="input-group">
                     <i class="fa-solid fa-phone"></i>
-                    <input type="tel" placeholder="Số điện thoại..." required>
+                    <input type="tel" id="upd-phone" placeholder="<?php echo htmlspecialchars($user['phone']); ?>">
                 </div>
                 
                 <div class="input-group">
                     <i class="fa-solid fa-location-dot"></i>
-                    <input type="text" placeholder="Địa chỉ giao hàng..." required>
+                    <input type="text" id="upd-address" placeholder="<?php echo htmlspecialchars($user['address']); ?>">
                 </div>
                 
                 <div class="input-group">
                     <i class="fa-solid fa-envelope"></i>
-                    <input type="email" placeholder="Email liên hệ..." required>
+                    <input type="email" id="upd-email" placeholder="<?php echo htmlspecialchars($user['email']); ?>">
                 </div>
                 
                 <div class="input-group">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="Mật khẩu xác nhận..." required>
+                    <input type="password" id="upd-password" placeholder="Nhập mật khẩu mới nếu muốn đổi...">
                 </div>
 
-                <!-- Nhóm 2 nút bấm -->
                 <div class="action-buttons">
-                    <a href="ThongTin.html" class="btn-back">
+                    <a href="ThongTin.php" class="btn-back">
                         <i class="fa-solid fa-arrow-left"></i> Quay lại
                     </a>
                     <button type="submit" class="btn-save">
@@ -82,7 +95,6 @@
         </div>
     </div>
 
-    <!-- ==================== MODAL THÔNG BÁO ==================== -->
     <div id="custom-modal">
         <div class="modal-content" id="modal-content-box">
             <div class="modal-icon">
@@ -94,7 +106,6 @@
         </div>
     </div>
      
-    <!-- ==================== LIÊN HỆ ==================== -->
     <div class="contact">
       <div class="icons">
         <i class="fa-brands fa-facebook"></i>
@@ -107,7 +118,6 @@
       </div>
     </div>
 
-    <!-- ==================== FOOTER ==================== -->
     <div class="footer-wrapper">
         <footer class="footer-box">
             <div class="footer-container">

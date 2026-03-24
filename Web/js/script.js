@@ -71,45 +71,102 @@
             }, 300);
         }
 
-        // Xử lý logic Đăng nhập từ script.js
-        function handleLogin(e) {
-            e.preventDefault(); 
-            const emailInput = document.getElementById('login-email').value.trim();
-            const passwordInput = document.getElementById('login-password').value.trim();
-            
-            // Tài khoản cố định
-            const EMAIL_CONST = "Hoangdanghau@gmail.com";
-            const PASSWORD_CONST = "1911";
+        // Xử lý logic Đăng nhập kết nối với Database
+function handleLogin(e) {
+    e.preventDefault(); 
+    const emailInput = document.getElementById('login-email').value.trim();
+    const passwordInput = document.getElementById('login-password').value.trim();
 
-            if (!emailInput || !passwordInput) {
-                showModal("Lỗi", "⚠️ Vui lòng nhập đầy đủ email và mật khẩu.", "error");
-            } else if (emailInput === EMAIL_CONST && passwordInput === PASSWORD_CONST) {
-                showModal("Thành công!", "🎉 Đăng nhập thành công!", "success");
-                setTimeout(function() {
-                    window.location.href = "User/User.html";
-                }, 2000);
-            } else {
-                showModal("Thất bại", "❌ Sai email hoặc mật khẩu!", "error");
-            }
+    if (!emailInput || !passwordInput) {
+        showModal("Lỗi", "⚠️ Vui lòng nhập đầy đủ email và mật khẩu.", "error");
+        return;
+    }
+
+    // Đóng gói dữ liệu gửi đi
+    const loginData = {
+        email: emailInput,
+        password: passwordInput
+    };
+
+    // Gửi yêu cầu kiểm tra đăng nhập bằng Fetch API
+    fetch('process_login.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showModal("Thành công!", data.message, "success");
+            
+            // Chuyển hướng trang sau 2 giây
+            setTimeout(function() {
+                window.location.href = data.redirect; // Lấy đường dẫn từ PHP trả về
+            }, 2000);
+        } else {
+            showModal("Thất bại", "❌ " + data.message, "error");
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showModal("Lỗi", "⚠️ Không thể kết nối đến máy chủ.", "error");
+    });
+}
 
-        // Xử lý logic Đăng ký từ jsRegister.js
         function handleRegister(e) {
-            e.preventDefault();
-            const username = document.getElementById('reg-username').value.trim();
-            const name = document.getElementById('reg-name').value.trim();
-            const phone = document.getElementById('reg-phone').value.trim();
-            const address = document.getElementById('reg-address').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const password = document.getElementById('reg-password').value.trim();
-            
-            if (username && name && phone && address && email && password) {
-                showModal("Thành công!", "🎉 Đăng ký thành công! Mời bạn đăng nhập.", "success");
+    e.preventDefault();
+    
+    const username = document.getElementById('reg-username').value.trim();
+    const name = document.getElementById('reg-name').value.trim();
+    const phone = document.getElementById('reg-phone').value.trim();
+    const address = document.getElementById('reg-address').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value.trim();
+    
+    if (username && name && phone && address && email && password) {
+        // Đóng gói dữ liệu thành Object
+        const userData = {
+            username: username,
+            name: name,
+            phone: phone,
+            address: address,
+            email: email,
+            password: password
+        };
+
+        // Gửi dữ liệu qua PHP bằng Fetch API
+        fetch('process_register.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Gọi Modal của bạn với thông báo từ PHP
+                showModal("Thành công!", data.message, "success");
+                
+                // Tự động chuyển sang tab đăng nhập sau 2s
                 setTimeout(function() {
                     closeModal();
+                    document.getElementById('form-register').reset(); // Xóa trắng form
                     switchTab('login');
                 }, 2000);
             } else {
-                showModal("Lỗi", "⚠️ Vui lòng nhập đầy đủ thông tin.", "error");
+                // Gọi Modal báo lỗi từ PHP (VD: Trùng email)
+                showModal("Lỗi", "⚠️ " + data.message, "error");
             }
-        }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showModal("Lỗi", "⚠️ Không thể kết nối đến máy chủ.", "error");
+        });
+
+    } else {
+        showModal("Lỗi", "⚠️ Vui lòng điền đầy đủ thông tin.", "error");
+    }
+}
