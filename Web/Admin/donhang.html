@@ -62,7 +62,7 @@
                     <td>19/10/2025</td>
                     <td>Đã xác nhận</td>
                     <td>Giao hàng thành công</td>
-                    <td><a href="#popup-suasp"><button class="btn-sua">Xem</button></a></td>
+                    <td><a href="#popup-thanhcong"><button class="btn-sua">Xem</button></a></td>
                   </tr>
                   <tr>
                     <td>C2002</td>
@@ -70,7 +70,7 @@
                     <td>19/10/2025</td>
                     <td>Đã xác nhận</td>
                     <td>Đang vận chuyển</td>
-                    <td><button class="btn-xem">Xem</button></td>
+                     <td><a href="#popup-vanchuyen"><button class="btn-sua">Xem</button></a></td>
                   </tr>
                   <tr>
                     <td>C2003</td>
@@ -78,7 +78,7 @@
                     <td>20/10/2025</td>
                     <td>Đã xác nhận</td>
                     <td>Đang chuẩn bị hàng</td>
-                    <td><button class="btn-xem">Xem</button></td>
+                    <td><a href="#popup-trangthai"><button class="btn-sua">Xem</button></a></td>
                   </tr>
                   <tr>
                     <td>C2004</td>
@@ -86,7 +86,7 @@
                     <td>20/10/2025</td>
                     <td>Đã xử lý</td>
                     <td>Đã hủy</td>
-                    <td><button class="btn-xem">Xem</button></td>
+                    <td><a href="#popup-dahuy"><button class="btn-sua">Xem</button></a></td>
                   </tr>
                   <tr>
                     <td>C2005</td>
@@ -94,7 +94,7 @@
                     <td>20/10/2025</td>
                     <td>Chưa xác nhận</td>
                     <td>Đang chờ</td>
-                    <td><a href="#popup-suasp"><button class="btn-sua">Xem</button></a></td>
+                    <td><a href="#popup-xuly"><button class="btn-sua">Xem</button></a></td>
                   </tr>
                 </tbody>
               </table>
@@ -135,7 +135,7 @@
                     <td>20/10/2025</td>
                     <td>Đã xác nhận</td>
                     <td>Đang chuẩn bị hàng</td>
-                    <td><button class="btn-xem">Xem</button></td>
+                    <td><a href="#popup-trangthai"><button class="btn-sua">Xem</button></a></td>
                   </tr>
                   <tr>
                     <td>C2004</td>
@@ -143,46 +143,14 @@
                     <td>20/10/2025</td>
                     <td>Đã xử lý</td>
                     <td>Đã hủy</td>
-                    <td><button class="btn-xem">Xem</button></td>
+                    <td><a href="#popup-dahuy"><button class="btn-sua">Xem</button></a></td>
                   </tr>
                 </tbody>
               </table>
-      </div>
+             </div>
             </div>
 
-              <!-- Chi tiết đơn hàng -->
-       <div class="box-container">
-        <div class="box">
-                  <div class="chon-tinhtrang">
-                        <h3>Trạng thái đơn hàng</h3>
-  <label>
-    <input type="radio" name="tinhtrang" value="dangChuanBi">
-    Đang chuẩn bị hàng
-  </label>
-  <label>
-    <input type="radio" name="tinhtrang" value="choLayHang">
-    Chờ lấy hàng
-  </label>
-  <label>
-    <input type="radio" name="tinhtrang" value="choGiaoHang">
-    Chờ giao hàng
-  </label>
-  <label>
-    <input type="radio" name="tinhtrang" value="daGiao">
-    Đã giao
-  </label>
-  <label>
-    <input type="radio" name="tinhtrang" value="traHang">
-    Trả hàng
-  </label>
-  <label>
-    <input type="radio" name="tinhtrang" value="daHuy">
-    Đã hủy
-  </label>
-  <button class="xacnhan">Cập Nhật</button>
-</div>
-</div>
-</div>
+              
                 
                 </div>
               </div>
@@ -191,40 +159,87 @@
         </div>
       </div>
 
+<!--popup-xử lý-->
+  <div id="popup-xuly" class="overlay">
+    <a href="#" class="overlay-bg"></a>
+    <div class="popup-box">
 
-      <div id="popup-suasp" class="overlay">
+      <div class="box">
+      <h4>Bạn có đơn hàng chưa xử lý!</h4>
+      <a href="#popup-trangthai"><button class="btn-sua">Xác Nhận Đơn Hàng</button></a>
+    </div>  
+
+    </div>
+  </div>
+
+<!-- popup của trạng thái-->
+<div id="popup-trangthai" class="overlay">
   <a href="#" class="overlay-bg"></a>
   <div class="popup-box">
 
-        <div class="box">
-      <h4>Bạn có đơn hàng chưa xử lý!</h4>
-      <label >
-        <input type="radio" name="hoatdong" value="xuly"> Đã xác nhận
-      </label>
-      <a href="#"><button class="btn-sua">cập nhật</button></a>
+  <div class="box-container">
+    <div class="box">
+      <tr> 
+        <td>Mã đơn: C2003</td>
+        <td>Ngày đặt: 20/10/2025</td>
+      </tr>
+      <label> <input type="radio" name="tinhtrang" value="dangChuanBi"> Đang chuẩn bị hàng</label>
+      <label> <input type="radio" name="tinhtrang" value="choLayHang"> Chờ lấy hàng</label>
+      <label> <input type="radio" name="tinhtrang" value="choGiaoHang"> Chờ giao hàng</label>
+      <label> <input type="radio" name="tinhtrang" value="daGiao"> Đã giao</label>
+      <label> <input type="radio" name="tinhtrang" value="traHang"> Trả hàng</label>
+      <label> <input type="radio" name="tinhtrang" value="daHuy"> Đã hủy</label>
+      <button class="xacnhan">Cập Nhật</button>
+
+    </div>
+  </div>
+
+  <a href="#" class="close">Đóng</a>
+  </div>
+</div>
+
+<!-- popup giao hàng thành công-->
+ <div id="popup-thanhcong" class="overlay">
+  <a href="#" class="overlay-bg"></a>
+  <div class="popup-box">
+
+      <div class="box">
+      <h4>Giao hàng thành công</h4>
+      
   </div>  
 
     <a href="#" class="close">Đóng</a>
   </div>
 </div>
 
-
-<div id="popup-suasp" class="overlay">
+<!-- popup đã hủy-->
+ <div id="popup-dahuy" class="overlay">
   <a href="#" class="overlay-bg"></a>
   <div class="popup-box">
 
-        <div class="box">
-      <h4>Bạn có đơn hàng chưa xử lý!</h4>
-      <label >
-        <input type="radio" name="hoatdong" value="xuly"> Đã xác nhận
-      </label>
-      <a href="#"><button class="btn-sua">cập nhật</button></a>
-  </div>  
+      <div class="box">
+      <h4>Đơn hàng đã bị hủy</h4>
+      <textarea placeholder="Lý do hủy đơn hàng" rows="4"></textarea>
+    
+      </div>  
 
     <a href="#" class="close">Đóng</a>
   </div>
 </div>
 
+<!-- popup đang vận chuyển-->
+ <div id="popup-vanchuyen" class="overlay">
+  <a href="#" class="overlay-bg"></a>
+  <div class="popup-box">
+
+    <div class="box">
+      <h4>Đơn hàng đang trên đường tới người nhận</h4>
+      
+    </div>  
+
+    <a href="#" class="close">Đóng</a>
+  </div>
+</div>
 
   </body>
 </html>
