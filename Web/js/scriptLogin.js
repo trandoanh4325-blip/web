@@ -1,76 +1,78 @@
-// Tài khoản admin có sẵn
-const adminEmail = "Hoangdanghau@gmail.com";
-const adminPassword = "1911";
+// Xử lý nếu ảnh logo bị lỗi đường dẫn
+        function handleImageError(imgElement) {
+            imgElement.style.display = 'none';
+            document.getElementById('logoFallback').style.display = 'block';
+        }
 
-function login() {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
+        // Logic Xử lý Form Đăng Nhập
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Ngăn chặn form tải lại trang
 
-  // Tạo popup nếu chưa có
-  let popup = document.getElementById("custom-popup");
-  if (!popup) {
-    popup = document.createElement("div");
-    popup.id = "custom-popup";
-    popup.style.position = "fixed";
-    popup.style.top = "50%";
-    popup.style.left = "50%";
-    popup.style.transform = "translate(-50%, -50%)";
-    popup.style.backgroundColor = "#fff";
-    popup.style.border = "1px solid #ccc";
-    popup.style.borderRadius = "10px";
-    popup.style.padding = "20px";
-    popup.style.boxShadow = "0 4px 15px rgba(0,0,0,0.3)";
-    popup.style.zIndex = "2000";
-    popup.style.textAlign = "center";
-    popup.style.fontSize = "18px";
-    popup.style.fontFamily = "Arial, sans-serif";
-    document.body.appendChild(popup);
-  }
+            const emailInput = document.getElementById('email').value.trim();
+            const passwordInput = document.getElementById('password').value.trim();
+            const loginBtn = document.getElementById('loginBtn');
 
-  popup.style.display = "block";
+            // Kiểm tra rỗng
+            if(emailInput === '' || passwordInput === '') {
+                showToast('Lỗi xác thực', 'Vui lòng điền đầy đủ Email và Mật khẩu.', 'error');
+                return;
+            }
 
-  if (!email && !password) {
-    popup.innerHTML = "⚠️ Vui lòng nhập email và mật khẩu.";
-    setTimeout(function() {
-      popup.style.display = "none";
-    }, 2000);
-  } else if (!email) {
-    popup.innerHTML = "⚠️ Vui lòng nhập email.";
-    setTimeout(function() {
-      popup.style.display = "none";
-    }, 2000);
-  } else if (!password) {
-    popup.innerHTML = "⚠️ Vui lòng nhập mật khẩu.";
-    setTimeout(function() {
-      popup.style.display = "none";
-    }, 2000);
-  } else if (email === adminEmail && password === adminPassword) {
-    popup.innerHTML = "🎉 Đăng nhập thành công!";
-    setTimeout(function() {
-      window.location.href = "Admin.html";
-    }, 2000);
-  } else {
-    popup.innerHTML = "❌ Sai email hoặc mật khẩu!";
-    setTimeout(function() {
-      popup.style.display = "none";
-    }, 2000);
-  }
-}
+            // Hiệu ứng đang tải cho nút bấm (tuỳ chọn thêm)
+            const originalBtnText = loginBtn.innerText;
+            loginBtn.innerText = 'Đang xử lý...';
+            loginBtn.disabled = true;
 
-// Thêm event listener cho Enter key trên các input
-document.addEventListener('DOMContentLoaded', function() {
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
+            // Giả lập gọi API kiểm tra đăng nhập (delay 1 giây)
+            setTimeout(() => {
+                loginBtn.innerText = originalBtnText;
+                loginBtn.disabled = false;
 
-  emailInput.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-      login();
-    }
-  });
 
-  passwordInput.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-      login();
-    }
-  });
-});
+                if (emailInput === 'hoangdanghau@gmail.com' && passwordInput === '12345') {
+                    // Thành công
+                    showToast('Thành công', 'Đăng nhập thành công! Đang chuyển hướng...', 'success');
+                    
+                    // Chuyển hướng sang trang Admin.html sau 1.5 giây
+                    setTimeout(() => { window.location.href = "Admin.html"; }, 1000);
+                } else {
+                    // Thất bại
+                    showToast('Đăng nhập thất bại', 'Sai email hoặc mật khẩu. Vui lòng thử lại!', 'error');
+                }
+            }, 1000);
+        });
+
+        // Hàm tạo và hiển thị Toast Popup
+        function showToast(title, message, type = 'error') {
+            const container = document.getElementById('toastContainer');
+            
+            // Tạo element toast
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            // Cấu trúc HTML của toast
+            toast.innerHTML = `
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-msg">${message}</div>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+            `;
+            
+            // Thêm vào container
+            container.appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10); // Cần 1 khoảng trễ nhỏ để CSS transition hoạt động
+
+            // Tự động tắt sau 4 giây
+            setTimeout(() => {
+                toast.classList.remove('show');
+                // Xoá element sau khi transition kết thúc
+                setTimeout(() => {
+                    toast.remove();
+                }, 400); 
+            }, 4000);
+        }

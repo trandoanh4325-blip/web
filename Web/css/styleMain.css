@@ -593,7 +593,7 @@ body {
   overflow: hidden;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  margin: 68px auto 50px auto; /*  căn giữa toàn bộ thanh tìm kiếm */
+  margin: 60px auto 60px auto; /*  căn giữa toàn bộ thanh tìm kiếm */
 }
 
 /* Khi hover hoặc focus vào input */
@@ -639,6 +639,111 @@ body {
 /* Đảm bảo icon nằm giữa */
 .search-box button i {
   line-height: 1;
+}
+/* ================= CSS CHO POPUP ================= */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: none; /* Mặc định ẩn */
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.popup-overlay.show {
+  display: flex;
+  opacity: 1;
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 350px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  transform: translateY(-20px);
+  transition: transform 0.3s ease;
+}
+
+.popup-overlay.show .popup-content {
+  transform: translateY(0);
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  color: #888;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+.popup-icon {
+  font-size: 50px;
+  color: #e74c3c; /* Màu đỏ cảnh báo */
+  margin-bottom: 15px;
+}
+
+.popup-content h3 {
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: #333;
+}
+
+.popup-content p {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.btn-cancel, .btn-login {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.btn-cancel {
+  background-color: #ddd;
+  color: #333;
+}
+
+.btn-cancel:hover {
+  background-color: #ccc;
+}
+
+.btn-login {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+.btn-login:hover {
+  background-color: #c0392b;
 }
 
 

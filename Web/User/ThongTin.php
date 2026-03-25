@@ -1,3 +1,19 @@
+<?php
+session_start();
+// Kiểm tra nếu chưa đăng nhập thì đuổi về trang Login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../Login.html"); 
+    exit();
+}
+
+// Kết nối database
+require_once '../includes/db_connect.php'; 
+
+$user_id = $_SESSION['user_id'];
+$sql = "SELECT * FROM users WHERE id = '$user_id'";
+$result = $conn->query($sql);
+$user = $result->fetch_assoc();
+?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -5,34 +21,25 @@
     <title>Thông tin cá nhân</title>
     <link rel="stylesheet" href="../css/styleTT.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
-   <!-- <link rel="stylesheet" href="../css/styleUser.css" />-->
 </head>
 <body>
-    <!-- Header -->
     <div class="header">
         <div class="logo">
             <a href="User.html">
-                <!-- Fallback logo nếu lỗi đường dẫn cục bộ -->
                 <img src="../Image/logostore-Photoroom.png" alt="Logo">
             </a>
         </div>
-
         <div class="others">
-            <!-- 1. Nút Trở Về (Có icon mũi tên hoặc ngôi nhà) -->
             <ul>
                 <a class="header-icon" href="User.html" title="Trở về trang chủ">
                     <i class="fa-solid fa-house-chimney"></i>
                 </a>
             </ul>
-
-            <!-- 3. Giỏ Hàng -->
             <ul>
                 <a class="header-icon" href="giohang.html" title="Giỏ hàng">
                     <i class="fa-solid fa-shopping-bag"></i>
                 </a>
             </ul>
-
-            <!-- 4. Đăng Xuất (Nút gradient ngoài cùng) -->
             <ul>
                 <a href="../Main.html" style="text-decoration: none;">
                     <button><i class="fa-solid fa-right-from-bracket" style="margin-right: 5px;"></i> Đăng Xuất</button>
@@ -41,83 +48,71 @@
         </div>
     </div>
 
-    <!-- ==================== NỘI DUNG THÔNG TIN CÁ NHÂN ==================== -->
     <div class="content">
         <div class="profile-card">
             
-            <!-- Phần nền Header của Card -->
             <div class="profile-header-bg">
                 <div class="profile-avatar" id="avatar-container" title="Nhấn để thay đổi ảnh đại diện">
                     <i class="fa-solid fa-user-tie" id="default-avatar-icon"></i>
                     <img id="avatar-image" src="" alt="Avatar" style="display: none;">
                     
-                    <!-- Nút Gỡ Avatar (Chỉ hiện khi có ảnh) -->
                     <div class="avatar-remove-badge" id="remove-avatar-btn" title="Gỡ ảnh đại diện" style="display: none;">
                         <i class="fa-solid fa-trash-can"></i>
                     </div>
 
-                    <!-- Nút Thay Đổi Avatar -->
                     <div class="avatar-edit-badge" title="Thay đổi ảnh đại diện">
                         <i class="fa-solid fa-camera"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- Thẻ input ẩn để chọn file ảnh -->
             <input type="file" id="avatar-input" accept="image/*" style="display: none;">
 
-            <!-- Phần hiển thị thông tin chi tiết -->
             <div class="profile-body">
-                <h2 class="profile-name">Hoàng Đăng Hậu</h2>
+                <h2 class="profile-name"><?php echo $user['full_name']; ?></h2>
                 <p class="profile-role">Khách Hàng Thành Viên</p>
 
                 <div class="info-list">
-                    <!-- Username -->
                     <div class="info-item">
                         <div class="info-icon"><i class="fa-solid fa-id-card"></i></div>
                         <div class="info-text">
                             <label>Tên đăng nhập (Username)</label>
-                            <span>DangHau</span>
+                            <span><?php echo $user['username']; ?></span>
                         </div>
                     </div>
 
-                    <!-- Số điện thoại -->
                     <div class="info-item">
                         <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
                         <div class="info-text">
                             <label>Số điện thoại</label>
-                            <span>0909 876 543</span>
+                            <span><?php echo $user['phone']; ?></span>
                         </div>
                     </div>
 
-                    <!-- Email -->
                     <div class="info-item">
                         <div class="info-icon"><i class="fa-solid fa-envelope"></i></div>
                         <div class="info-text">
                             <label>Email liên hệ</label>
-                            <span>Hoangdanghau@gmail.com</span>
+                            <span><?php echo $user['email']; ?></span>
                         </div>
                     </div>
 
-                    <!-- Địa chỉ -->
                     <div class="info-item">
                         <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
                         <div class="info-text">
                             <label>Địa chỉ giao hàng</label>
-                            <span>21/18B, Bình Lợi, P.13, Bình Thạnh, TP.HCM</span>
+                            <span><?php echo $user['address']; ?></span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Nút chuyển tới trang cập nhật nằm ngay trong thẻ -->
-                <button class="btn-edit-profile" onclick="window.location.href='DoiTT.html'">
+                <button class="btn-edit-profile" onclick="window.location.href='DoiTT.php'">
                     <i class="fa-solid fa-arrows-rotate"></i> Cập Nhật Thông Tin
                 </button>
             </div>
         </div>
     </div>
      
-    <!-- ==================== LIÊN HỆ ==================== -->
     <div class="contact">
       <div class="icons">
         <i class="fa-brands fa-facebook"></i>
@@ -130,7 +125,6 @@
       </div>
     </div>
 
-    <!-- ==================== FOOTER ==================== -->
     <div class="footer-wrapper">
         <footer class="footer-box">
             <div class="footer-container">

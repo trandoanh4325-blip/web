@@ -8,8 +8,28 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
 </head>
 <body>
-  <a href="User/User.html" class="back-button">
-  <i class="fa-solid fa-arrow-left"></i> Trở Lại Trang Chủ</a>
+  <!-- ========== HEADER ========== -->
+  <div class="header">
+    <div class="logo">
+      <a href="User/User.html">
+        <img src="Image/logostore-Photoroom.png" alt="Logo"/>
+      </a>
+    </div>
+    <div class="others">
+      <form action="User/Searchcp.html" method="get" class="search-form">
+        <div class="search-box">
+          <input type="search" name="query" placeholder="Tìm kiếm sản phẩm..." required/>
+          <button type="submit" title="Tìm kiếm">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+      </form>
+      <ul><a class="fa fa-user" href="User/ThongTin.php"></a></ul>
+      <ul><a class="fa fa-shopping-bag" href="User/giohang.html"></a></ul>
+      <ul><a href="Main.html" class="fa fa-home"> </a> </ul>
+    </div>
+  </div>
+
   <div class="product-detail">
     <div class="image-section">
       <img id="mainImage" src="Image/sp.jpg" alt="Sản phẩm" class="main-img">
