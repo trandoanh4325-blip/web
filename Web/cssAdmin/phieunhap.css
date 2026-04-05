@@ -1,12 +1,11 @@
 /* ===============================
-   PHIEUNHAP.HTML - Quản lý phiếu nhập
+   phieunhap.css  –  Quan ly Phieu Nhap
    =============================== */
 
-/* Khung chính */
 .container-phieunhap {
-  max-width: 1000px;
+  max-width: 1060px;
   margin: 0 auto;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.95);
   padding: 30px;
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
@@ -14,208 +13,182 @@
 }
 
 .container-phieunhap h2 {
-  color: black;
-  border-bottom: 2px solid black;
-  padding-bottom: 5px;
-  margin-bottom: 20px;
+  color: #111;
+  border-bottom: 2px solid #111;
+  padding-bottom: 6px;
+  margin-bottom: 18px;
   text-align: left;
   font-weight: bold;
+  font-size: 17px;
 }
 
-/* Thanh tìm kiếm */
+/* Thanh tim kiem */
 .search {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
-
 .search input {
-  width: 550px;
-  padding: 8px 12px;
+  width: 520px;
+  padding: 9px 14px;
   font-size: 14px;
-  border: 1px solid #050505;
+  border: 1px solid #333;
   border-radius: 8px;
   outline: none;
-  transition: all 0.3s ease;
+  transition: box-shadow .2s;
 }
-
 .search input:focus {
-  border-color: #000000;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 5px rgba(0,0,0,.25);
 }
-
-.search button {
+.btn-them {
   background-color: red;
   color: white;
   border: none;
-  width: 150px;
-  padding: 8px 0;
-  border-radius: 6px;
+  min-width: 130px;
+  padding: 9px 18px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  transition: 0.2s;
+  font-size: 14px;
+  transition: background .2s;
 }
+.btn-them:hover { background-color: #cc0000; }
 
-/* Danh mục tìm phiếu */
+/* Phan chia tim kiem */
 .DanhMucTimPhieu {
-  border-bottom: 2px dashed #333;
-  padding-bottom: 15px;
+  border-bottom: 2px dashed #aaa;
+  padding-bottom: 16px;
+  margin-bottom: 8px;
 }
 
-/* Bảng danh mục */
+/* Bang chung */
 .container-phieunhap table {
-  width: 90%;
-  margin: 20px auto;
+  width: 100%;
   border-collapse: collapse;
   font-size: 14px;
-  background: #ffffff;
-  table-layout: fixed;
+  background: #fff;
 }
-
 .container-phieunhap th,
 .container-phieunhap td {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: center;
+  border: 1px solid #ddd;
+  padding: 9px 12px;
+  text-align: left;
   vertical-align: middle;
 }
-
 .container-phieunhap th {
   background-color: #eaf3ff;
-  color: #000000;
+  color: #111;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.container-phieunhap tbody tr:hover {
+  background: #f5faff;
 }
 
-.container-phieunhap tbody tr:nth-child(even) {
-  background-color: #ffffff;
-}
-
-/* Cố định độ rộng cột chức năng */
-.container-phieunhap td:last-child,
-.container-phieunhap th:last-child {
-  width: 120px;
-}
-
-/* Form nhập phiếu */
-#formPhieu {
+/* Form tao phieu */
+#formTaoPhieu {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 55%;
-  margin: 0 auto 25px auto;
-  height: 475px;
+  width: 480px;
+  max-width: 100%;
+  margin: 0 auto 20px auto;
   background: #fff;
-  padding: 20px;
-  border-radius: 15px;
-  border: 1px solid #000000;
+  padding: 20px 24px 60px;
+  border-radius: 12px;
+  border: 1px solid #000;
   position: relative;
 }
-
-#formPhieu label {
+#formTaoPhieu label {
   font-weight: 600;
   color: #333;
-  align-self: flex-start;
+  font-size: 14px;
 }
-
-#formPhieu input,
-#formPhieu select {
+#formTaoPhieu input {
   width: 100%;
-  padding: 8px 10px;
+  padding: 9px 12px;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 7px;
   font-size: 14px;
   box-sizing: border-box;
 }
-
-#formPhieu .btn-wrapper {
+#formTaoPhieu input:focus {
+  border-color: #0195b2;
+  outline: none;
+}
+#formTaoPhieu .btn-wrapper {
   position: absolute;
-  bottom: 15px;
+  bottom: 14px;
   right: 20px;
 }
 
-#formPhieu button.btn-them {
-  background-color: #ff0000;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.3s;
-  width: 150px;
-  padding: 8px 0;
-}
-
-#formPhieu button.btn-them:hover {
-  background-color: #ff6464;
-}
-
-/* Nút Sửa / Xóa trong bảng */
+/* Nut Sua / Xoa trong bang */
 .btn-sua1,
 .btn-xoa1 {
-  display: block;
+  display: inline-block;
   background-color: red;
   border: none;
   color: white;
-  padding: 6px 0;
+  padding: 5px 0;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  width: 75px;
-  margin: 4px auto;
-  transition: all 0.25s ease;
+  width: 70px;
+  margin: 2px 1px;
+  transition: all 0.2s ease;
 }
-
 .btn-sua1:hover,
 .btn-xoa1:hover {
   background-color: #cc0000;
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
-/* ========== POPUP SỬA PHIẾU NHẬP ========== */
+/* POPUP */
 .overlay-phieu {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
   opacity: 0;
   visibility: hidden;
-  transition: 0.3s;
+  transition: .3s;
   z-index: 999;
 }
-
 .overlay-phieu:target {
   opacity: 1;
   visibility: visible;
 }
-
 .overlay-phieu .popup-box {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.8);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  background: white;
-  padding: 28px 30px 20px;
-  width: 480px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.85);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  background: #fff;
+  padding: 26px 28px 18px;
+  width: 520px;
+  max-width: 96vw;
   border-radius: 14px;
-  transition: 0.3s;
+  transition: .3s;
 }
-
 .overlay-phieu:target .popup-box {
   transform: translate(-50%, -50%) scale(1);
 }
 
 .overlay-phieu .popup-box h2 {
-  color: black;
-  border-bottom: 2px solid black;
+  color: #111;
+  border-bottom: 2px solid #111;
   padding-bottom: 8px;
-  margin-bottom: 16px;
-  font-size: 18px;
+  margin-bottom: 14px;
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .overlay-phieu .popup-box label {
@@ -225,7 +198,6 @@
   color: #444;
   margin: 10px 0 4px;
 }
-
 .overlay-phieu .popup-box input,
 .overlay-phieu .popup-box select {
   display: block;
@@ -236,9 +208,7 @@
   font-size: 14px;
   box-sizing: border-box;
   background: #fafafa;
-  margin: 0;
 }
-
 .overlay-phieu .popup-box input:focus,
 .overlay-phieu .popup-box select:focus {
   border-color: #0195b2;
@@ -246,17 +216,12 @@
   background: #fff;
 }
 
-/* Nút Sửa trong popup: bên phải */
 .overlay-phieu .popup-btn-row {
-  display: flex !important;
-  justify-content: flex-end !important;
+  display: flex;
+  justify-content: flex-end;
   margin-top: 16px;
 }
-
 .overlay-phieu .popup-btn-row button {
-  display: inline-block !important;
-  width: auto !important;
-  margin: 0 !important;
   padding: 10px 28px;
   background: red;
   color: white;
@@ -265,26 +230,21 @@
   cursor: pointer;
   font-weight: bold;
   font-size: 14px;
-  transition: 0.2s;
+  transition: .2s;
 }
-
 .overlay-phieu .popup-btn-row button:hover {
   background-color: #cc0000;
 }
 
-/* Nút Đóng */
 .overlay-phieu .close {
   display: block;
-  margin-top: 10px;
+  margin-top: 12px;
   text-align: center;
   text-decoration: none;
   color: #e74c3c;
   font-size: 14px;
 }
-
-.overlay-phieu .close:hover {
-  text-decoration: underline;
-}
+.overlay-phieu .close:hover { text-decoration: underline; }
 
 .overlay-phieu .overlay-bg {
   position: absolute;

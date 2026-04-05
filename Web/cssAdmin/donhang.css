@@ -17,11 +17,13 @@ a { text-decoration: none; }
 
 /* ===== LAYOUT CHÍNH — đẩy nội dung xuống dưới header cố định 90px ===== */
 .tab-content {
-  padding-top: 110px; /* header 90px + 20px thở */
+  padding-top: 100px; /* header 90px + 10px thở */
   min-height: 100vh;
 }
 
-.content {
+/* Override margin-top từ styleAdmin.css để tránh cộng dồn khoảng cách */
+.tab-content .content {
+  margin-top: 0 !important;
   width: 100%;
   padding: 0 20px;
 }
@@ -273,27 +275,25 @@ a { text-decoration: none; }
 }
 
 /* ===== OVERLAY & MODAL ===== */
-.modal-overlay {
+.modal {
+  display: none;
   position: fixed;
   inset: 0;
   background: rgba(15, 15, 30, 0.55);
   backdrop-filter: blur(6px);
-  z-index: 2000; /* cao hơn header (1000) */
-  display: flex;
+  z-index: 2000;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.28s ease, visibility 0.28s ease;
   padding: 16px;
+  opacity: 0;
+  transition: opacity 0.28s ease;
 }
 
-.modal-overlay.active {
+.modal.open {
   opacity: 1;
-  visibility: visible;
 }
 
-.modal-box {
+.modal-content {
   background: #fff;
   border-radius: 18px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.25);
@@ -303,11 +303,9 @@ a { text-decoration: none; }
   overflow-y: auto;
   transform: translateY(30px) scale(0.96);
   transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
-  scrollbar-width: thin;
-  scrollbar-color: #e74c3c #f0f0f0;
 }
 
-.modal-overlay.active .modal-box {
+.modal.open .modal-content {
   transform: translateY(0) scale(1);
 }
 

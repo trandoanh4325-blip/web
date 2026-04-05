@@ -32,8 +32,8 @@ $result = $conn->query($sql);
       <div class="header-right">
         <a class="chucnang-item" href="Admin.html"><i class="fas fa-home"></i> Tổng quan</a>
         <a class="chucnang-item" href="giaban.html"><i class="fas fa-tags"></i> Giá bán</a>
-        <a class="chucnang-item" href="sanpham.html"><i class="fas fa-box-open"></i> Sản phẩm</a>
-        <a class="chucnang-item" href="phieunhap.html"><i class="fas fa-file-invoice"></i> Phiếu nhập</a>
+        <a class="chucnang-item" href="SanPham.php"><i class="fas fa-box-open"></i> Sản phẩm</a>
+        <a class="chucnang-item" href="phieunhap.php"><i class="fas fa-file-invoice"></i> Phiếu nhập</a>
         <a class="chucnang-item" href="donhang.html"><i class="fas fa-shopping-cart"></i> Đơn hàng</a>
         <a class="chucnang-item" href="khovan.html"><i class="fas fa-truck-loading"></i> Kho vận</a>
         <a class="chucnang-item active" href="Khachhang.php"><i class="fas fa-users"></i> Khách hàng</a>

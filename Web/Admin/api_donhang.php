@@ -1,8 +1,4 @@
 <?php
-// ============================================================
-//  api_donhang.php  —  Đặt cùng thư mục donhang.html
-//  Database: shop_hoa_db
-// ============================================================
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
@@ -25,96 +21,63 @@ function db(): PDO {
     }
     return $pdo;
 }
-function ok($data)           { echo json_encode(['ok'=>true,'data'=>$data],JSON_UNESCAPED_UNICODE); exit; }
+function ok($data) { echo json_encode(['ok'=>true,'data'=>$data],JSON_UNESCAPED_UNICODE); exit; }
 function err($msg,$code=400) { http_response_code($code); echo json_encode(['ok'=>false,'message'=>$msg],JSON_UNESCAPED_UNICODE); exit; }
 
 $action = $_GET['action'] ?? '';
 
 try {
     switch ($action) {
-    case 'get_all':
-        ok(db()->query('SELECT * FROM v_don_hang')->fetchAll());
-        break; // Dừng lại sau khi lấy tất cả
+        case 'get_all':
+            $sql = "SELECT dh.*, u.full_name AS ten_khach_hang 
+                    FROM don_hang dh 
+                    LEFT JOIN users u ON dh.id_khach_hang = u.id 
+                    ORDER BY dh.ngay_dat DESC";
+            ok(db()->query($sql)->fetchAll());
+            break;
 
-    case 'search':
-        $where = []; 
-        $params = [];
-        
-        if (!empty($_GET['tu_ngay'])) { 
-            $where[] = 'ngay_dat >= :tu'; 
-            $params[':tu'] = $_GET['tu_ngay']; 
-        }
-        if (!empty($_GET['den_ngay'])) { 
-            $where[] = 'ngay_dat <= :den'; 
-            $params[':den'] = $_GET['den_ngay']; 
-        }
-        if (!empty($_GET['trang_thai'])) { 
-            $where[] = 'hoat_dong = :tt'; // Đổi từ trang_thai thành hoat_dong cho khớp SQL
-            $params[':tt'] = $_GET['trang_thai']; 
-        }
-        if (!empty($_GET['phuong'])) { 
-            $where[] = 'phuong LIKE :ph'; 
-            $params[':ph'] = '%' . $_GET['phuong'] . '%'; 
-        }
-        
-        $sql = 'SELECT * FROM v_don_hang';
-        if ($where) {
-            $sql .= ' WHERE ' . implode(' AND ', $where);
-        }
-        
-        $st = db()->prepare($sql); 
-        $st->execute($params); 
-        ok($st->fetchAll());
-        break; // Dừng lại sau khi tìm kiếm
+        case 'search':
+            $where = []; $params = [];
+            if (!empty($_GET['tu_ngay'])) { $where[] = 'dh.ngay_dat >= :tu'; $params[':tu'] = $_GET['tu_ngay']; }
+            if (!empty($_GET['den_ngay'])) { $where[] = 'dh.ngay_dat <= :den'; $params[':den'] = $_GET['den_ngay']; }
+            if (!empty($_GET['trang_thai'])) { $where[] = 'dh.hoat_dong = :tt'; $params[':tt'] = $_GET['trang_thai']; }
+            if (!empty($_GET['phuong'])) { $where[] = 'dh.phuong LIKE :ph'; $params[':ph'] = '%' . $_GET['phuong'] . '%'; }
+            if (!empty($_GET['thanh_pho'])) { $where[] = 'dh.thanh_pho LIKE :tp'; $params[':tp'] = '%' . $_GET['thanh_pho'] . '%'; }
+            
+            $sql = "SELECT dh.*, u.full_name AS ten_khach_hang FROM don_hang dh LEFT JOIN users u ON dh.id_khach_hang = u.id";
+            if ($where) { $sql .= " WHERE " . implode(" AND ", $where); }
+            $st = db()->prepare($sql); 
+            $st->execute($params); 
+            ok($st->fetchAll());
+            break;
 
-    case 'get_detail':
-        $id = (int)($_GET['id'] ?? 0); 
-        if (!$id) err('Thieu ID don hang');
-        
-        $st = db()->prepare('SELECT * FROM v_don_hang WHERE id = :id');
-        $st->execute([':id' => $id]);
-        $row = $st->fetch(); 
-        
-        if (!$row) err('Khong tim thay don hang', 404);
-        ok($row);
-        break; // Dừng lại sau khi lấy chi tiết
+        case 'get_detail':
+            $id = (int)($_GET['id'] ?? 0); 
+            $st = db()->prepare("SELECT dh.*, u.full_name AS ten_khach_hang FROM don_hang dh LEFT JOIN users u ON dh.id_khach_hang = u.id WHERE dh.id = :id");
+            $st->execute([':id' => $id]);
+            $row = $st->fetch(); 
+            if (!$row) err('Không tìm thấy đơn hàng');
+            ok($row);
+            break;
 
-    case 'update_status':
-        $b = json_decode(file_get_contents('php://input'), true) ?? [];
-        $id = (int)($b['id'] ?? 0);
-        $ht = trim($b['hoat_dong'] ?? ''); // Trạng thái hoạt động (dang_cho, da_huy...)
-        $tt = trim($b['trang_thai_tt'] ?? ''); // Trạng thái thanh toán
-        
-        // Mảng cho phép phải khớp 100% với ENUM trong SQL
-        $allowedHT = ['dang_cho', 'dang_chuan_bi', 'cho_lay_hang', 'dang_van_chuyen', 'giao_thanh_cong', 'da_huy'];
-        $allowedTT = ['chua_thanh_toan', 'da_thanh_toan', 'hoan_tien'];
-        
-        if (!$id) err('Thiếu ID để cập nhật');
-        if ($ht && !in_array($ht, $allowedHT)) err('Hoat dong khong hop le');
-        if ($tt && !in_array($tt, $allowedTT)) err('Thanh toan khong hop le');
-        
-        $sets = []; 
-        $params = [':id' => $id];
-        
-        if ($ht) { $sets[] = 'hoat_dong = :ht'; $params[':ht'] = $ht; }
-        if ($tt) { $sets[] = 'trang_thai_tt = :tt'; $params[':tt'] = $tt; }
-        
-        // Nếu là đã hủy, bắt buộc hoặc cho phép lưu lý do
-        if ($ht === 'da_huy' && !empty($b['ly_do_huy'])) {
-            $sets[] = 'ly_do_huy = :ly';
-            $params[':ly'] = $b['ly_do_huy'];
-        }
-        
-        if (!$sets) err('Khong co gi de cap nhat');
-        
-        $st = db()->prepare('UPDATE don_hang SET ' . implode(', ', $sets) . ' WHERE id = :id');
-        $st->execute($params); 
-        ok(['updated' => $st->rowCount()]);
-        break; // Dừng lại sau khi cập nhật
+        case 'get_items':
+            // Lấy danh sách sản phẩm trong 1 đơn hàng (JOIN với bảng san_pham)
+            $id = (int)($_GET['id'] ?? 0);
+            $st = db()->prepare("
+                SELECT ct.*, sp.ten_sp, sp.ma_sp, sp.hinh_anh
+                FROM chi_tiet_don_hang ct
+                LEFT JOIN san_pham sp ON ct.id_san_pham = sp.id
+                WHERE ct.id_don_hang = :id
+            ");
+            $st->execute([':id' => $id]);
+            ok($st->fetchAll());
+            break;
 
-    default: 
-        err('Khong ton tai', 404);
-        break;
-}
-} catch(PDOException $e){err('DB: '.$e->getMessage(),500);}
-  catch(Throwable $e){err('Server: '.$e->getMessage(),500);}
+        case 'update_status':
+            $b = json_decode(file_get_contents('php://input'), true);
+            $st = db()->prepare("UPDATE don_hang SET hoat_dong = :ht, ly_do_huy = :ly WHERE id = :id");
+            $st->execute([':ht' => $b['hoat_dong'], ':ly' => $b['ly_do_huy'] ?? '', ':id' => $b['id']]);
+            ok(['updated' => true]);
+            break;
+    }
+} catch(Exception $e){err($e->getMessage(),500);}
