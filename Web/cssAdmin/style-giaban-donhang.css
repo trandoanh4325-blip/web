@@ -1,0 +1,453 @@
+/**
+ * CSS BỔ SUNG CHO QUẢN LÝ GIÁ BÁN VÀ ĐƠN HÀNG
+ * Thêm vào file styleAdmin.css hoặc giaban.css / donhang.css
+ */
+
+/* ==================== BADGE & LABEL ==================== */
+
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.badge-status {
+    background-color: #f39c12;
+    color: white;
+}
+
+.badge-success {
+    background-color: #27ae60;
+    color: white;
+}
+
+.badge-success i {
+    margin-right: 4px;
+}
+
+.badge-danger {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.badge-danger i {
+    margin-right: 4px;
+}
+
+.badge-info {
+    background-color: #3498db;
+    color: white;
+}
+
+.badge-info i {
+    margin-right: 4px;
+}
+
+.badge-pending {
+    background-color: #95a5a6;
+    color: white;
+}
+
+.badge-pending i {
+    margin-right: 4px;
+}
+
+.badge-warning {
+    background-color: #e67e22;
+    color: white;
+}
+
+/* ==================== NÚT TÀI TRỢ ==================== */
+
+.btn-sua, .btn-xoa {
+    padding: 8px 12px;
+    margin: 2px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-sua {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-sua:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+.btn-sua i {
+    margin-right: 4px;
+}
+
+.btn-xoa {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-xoa:hover {
+    background-color: #c0392b;
+    transform: scale(1.05);
+}
+
+.btn-xoa i {
+    margin-right: 4px;
+}
+
+.btn-them {
+    background-color: #27ae60;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-them:hover {
+    background-color: #229954;
+    transform: translateY(-2px);
+}
+
+/* ==================== FORM & INPUT ==================== */
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="tel"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 8px 0;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.3s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* ==================== BẢNG ==================== */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+thead {
+    background-color: #34495e;
+    color: white;
+}
+
+th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #2c3e50;
+}
+
+tbody tr {
+    border-bottom: 1px solid #ecf0f1;
+    transition: background-color 0.3s ease;
+}
+
+tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+td {
+    padding: 12px;
+    font-size: 14px;
+}
+
+td img {
+    max-width: 50px;
+    height: auto;
+}
+
+/* ==================== MODAL & POPUP ==================== */
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9000;
+}
+
+.overlay.active {
+    display: flex;
+}
+
+.overlay-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.popup-box {
+    position: relative;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+    z-index: 9001;
+}
+
+.popup-box h2,
+.popup-box h3 {
+    margin-top: 0;
+    color: #2c3e50;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 12px;
+}
+
+.popup-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.close {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #7f8c8d;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #e74c3c;
+}
+
+/* ==================== THÔNG BÁO ==================== */
+
+.notification {
+    padding: 15px 20px;
+    margin: 10px 0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.notification.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.notification.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.notification.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+.notification.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.notification i {
+    font-size: 18px;
+}
+
+/* ==================== ANIMATION ==================== */
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* ==================== KHÁC ==================== */
+
+.search {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.search input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+}
+
+.search button {
+    padding: 10px 20px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.search button:hover {
+    background-color: #229954;
+}
+
+.xacnhan {
+    background-color: #27ae60;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+.xacnhan:hover {
+    background-color: #229954;
+    transform: translateY(-2px);
+}
+
+.box {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+    margin: 15px 0;
+    border-left: 4px solid #3498db;
+}
+
+.box h4 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+    .popup-box {
+        max-width: 90%;
+        padding: 20px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    .btn-sua, .btn-xoa {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .search {
+        flex-direction: column;
+    }
+
+    .search button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .popup-box {
+        width: 95%;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+}

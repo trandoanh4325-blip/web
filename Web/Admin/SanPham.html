@@ -160,7 +160,22 @@
           <textarea id="moTa"></textarea>
         </div>
 
-        <button>Thêm sản phẩm</button>
+        <div id="formGiaVon">
+          <label>Giá vốn</label>
+          <input type="number" id="giaVon" step="0.01" />
+        </div>
+
+        <div id="formGiaBan">
+          <label>Giá bán</label>
+          <input type="number" id="giaBan" step="0.01" />
+        </div>
+
+        <div id="formSoLuong">
+          <label>Số lượng tồn</label>
+          <input type="number" id="soLuongTon" />
+        </div>
+
+        <button type="submit">Thêm sản phẩm</button>
       </form>
     </section>
 
@@ -177,45 +192,14 @@
             <th>Mã</th>
             <th>Tên</th>
             <th>Loại</th>
+            <th>Số lượng</th>
+            <th>Giá vốn</th>
+            <th>Giá bán</th>
             <th>Mô tả</th>
             <th>Chức năng</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td><img src="../Image/S1.jpg" alt="Hoa Hồng" class="S1"></td>
-            <td>DMSP1</td>
-            <td>Hoa Hồng</td>
-            <td>Hoa Tươi</td>
-            <td>
-              <p>
-                Hoa hồng tượng trưng cho tình yêu và vẻ đẹp vĩnh cửu. 
-                Với cánh hoa mềm mại và hương thơm dịu nhẹ, hoa hồng mang đến cảm giác sang trọng và lãng mạn.
-              </p>
-            </td>
-            <td>
-            <a href="#popup-suasp"><button class="btn-sua1">Sửa</button></a>
-              <button class="btn-xoa1">Xóa</button>
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td><img src="../Image/S2.jpg" alt="Hoa Cẩm Chướng" class="S2"></td>
-            <td>DMSP2</td>
-            <td>Hoa Cẩm Chướng</td>
-            <td>Hoa Giấy</td>
-            <td>
-              <p>
-                Hoa cẩm chướng tượng trưng cho lòng biết ơn và tình yêu trong sáng.
-                Với sắc hồng, đỏ, trắng hay tím, loài hoa này luôn gợi sự thanh lịch và ấm áp.
-              </p>
-            </td>
-            <td>
-               <a href="#popup-suasp"><button class="btn-sua1">Sửa</button></a>
-              <button class="btn-xoa1">Xóa</button>
-            </td>
-          </tr>
+        <tbody id="tableProductBody">
         </tbody>
       </table>
     </section>
@@ -261,7 +245,22 @@
           <textarea id="moTa" placeholder="thêm mô tả"></textarea>
         </div>
 
-        <button>Sửa</button>
+        <div id="formGiaVon">
+          <label>Giá vốn</label>
+          <input type="number" id="giaVon" step="0.01" />
+        </div>
+
+        <div id="formGiaBan">
+          <label>Giá bán</label>
+          <input type="number" id="giaBan" step="0.01" />
+        </div>
+
+        <div id="formSoLuong">
+          <label>Số lượng tồn</label>
+          <input type="number" id="soLuongTon" />
+        </div>
+
+        <button type="submit">Sửa</button>
       </form>
 
     <a href="#" class="close">Đóng</a>
@@ -272,5 +271,7 @@
   </div>
   </div>
 </div>
+
+<script src="../JSAdmin/SanPham.js"></script>
 </body>
 </html>

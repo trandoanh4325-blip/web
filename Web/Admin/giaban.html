@@ -6,20 +6,57 @@
     <title>Quản Lý Giá Bán</title>
     <link rel="stylesheet" href="../cssAdmin/giaban.css" />
     <link rel="stylesheet" href="../cssAdmin/styleAdmin.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <style>
+      /* ── Preview giá bán real-time ── */
+      .preview-box {
+        background: linear-gradient(135deg, #fff8e1, #fff3cd);
+        border: 2px solid #f0ad4e;
+        border-radius: 10px;
+        padding: 12px 18px;
+        margin: 10px 0 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 15px;
+      }
+      .preview-box .label { color: #666; }
+      .preview-box .value {
+        font-size: 20px;
+        font-weight: 700;
+        color: #e67e22;
+        letter-spacing: 0.5px;
+      }
+      /* Toast notification */
+      #toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: #2ecc71;
+        color: #fff;
+        padding: 12px 22px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        opacity: 0;
+        transition: opacity 0.4s;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      }
+      #toast.show  { opacity: 1; }
+      #toast.error { background: #e74c3c; }
+      /* Loading overlay */
+      .loading-row td { text-align:center; color:#888; font-style:italic; padding:20px; }
+    </style>
   </head>
   <body>
-    
+
     <header class="header">
       <div class="logo">
         <a href="Admin.html">
           <img src="../Image/logostore-Photoroom.png" alt="Logo" />
         </a>
       </div>
-
       <div class="header-right">
         <a class="chucnang-item" href="Admin.html"><i class="fas fa-home"></i> Tổng quan</a>
         <a class="chucnang-item active" href="giaban.html"><i class="fas fa-tags"></i> Giá bán</a>
@@ -28,16 +65,22 @@
         <a class="chucnang-item" href="donhang.html"><i class="fas fa-shopping-cart"></i> Đơn hàng</a>
         <a class="chucnang-item" href="khovan.html"><i class="fas fa-truck-loading"></i> Kho vận</a>
         <a class="chucnang-item" href="khachhang.php"><i class="fas fa-users"></i> Khách hàng</a>
-        <a class="chucnang-item" href="LoginA.html" style="background: rgba(255,0,0,0.1); color: #e74c3c;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+        <a class="chucnang-item" href="LoginA.html" style="background:rgba(255,0,0,0.1);color:#e74c3c;">
+          <i class="fas fa-sign-out-alt"></i> Đăng xuất
+        </a>
       </div>
     </header>
 
+    <!-- ═══════════════════════════════════════════════ -->
+    <!--  PHẦN THÊM SẢN PHẨM                            -->
+    <!-- ═══════════════════════════════════════════════ -->
     <div id="giaban" class="tab-content active">
       <div class="content">
         <div class="container">
-          <h2>
-            <i style="font-size: 24px" class="fas">&#xf155;</i> Lợi nhuận & Giá bán
-          </h2>
+
+          <h2><i style="font-size:24px" class="fas">&#xf155;</i> Lợi nhuận & Giá bán</h2>
+
+          <!-- Form thêm -->
           <label for="loaiSanPham">Loại sản phẩm</label>
           <select id="loaiSanPham">
             <option value="Quà Lưu Niệm">Quà Lưu Niệm</option>
@@ -51,25 +94,29 @@
           </select>
 
           <label for="loiNhuanTheoLoai">Lợi nhuận theo loại (%)</label>
-          <input type="number" id="loiNhuanTheoLoai" placeholder="vd: 30%" />
-          <p>
-            <i
-              >*Lợi nhuận theo loại = % lời chung cho tất cả sản phẩm thuộc loại đó*</i
-            >
-          </p>
+          <input type="number" id="loiNhuanTheoLoai" placeholder="vd: 30" min="0" />
+          <p><i>*Lợi nhuận theo loại = % lời chung cho tất cả sản phẩm thuộc loại đó*</i></p>
 
           <label for="tenSanPham">Tên sản phẩm</label>
           <input type="text" id="tenSanPham" placeholder="Tên sản phẩm" />
 
-          <label for="giaVon">Giá vốn</label>
-          <input type="number" id="giaVon" placeholder="vd: 12000" />
+          <label for="giaVon">Giá vốn (đồng)</label>
+          <input type="number" id="giaVon" placeholder="vd: 12000" min="0" />
 
-          <label for="loiNhuanTheoSanPham">Lợi nhuận (%)</label>
-          <input type="number" id="loiNhuanTheoSanPham" placeholder="vd: 30% (ưu tiên nếu có)" />
-          <p><i>*Lợi nhuận sản phẩm = % lời riêng của sản phẩm*</i></p>
+          <label for="loiNhuanTheoSanPham">Lợi nhuận riêng sản phẩm (%)</label>
+          <input type="number" id="loiNhuanTheoSanPham" placeholder="vd: 30 (ưu tiên nếu có)" min="0" />
+          <p><i>*Lợi nhuận sản phẩm = % lời riêng của sản phẩm (ưu tiên hơn lợi nhuận theo loại)*</i></p>
 
-          <button>ADD / THÊM</button>
+          <!-- Preview giá bán real-time -->
+          <div class="preview-box">
+            <span class="label"><i class="fas fa-calculator"></i> Giá bán dự tính:</span>
+            <span class="value" id="previewGiaBan">—</span>
+            <span class="label" id="previewNote" style="font-size:12px;color:#999;"></span>
+          </div>
 
+          <button id="btnThem">ADD / THÊM</button>
+
+          <!-- Bảng danh sách -->
           <div class="list-section">
             <table>
               <thead>
@@ -83,77 +130,19 @@
                   <th>Sửa</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>Hoa Tươi</td>
-                  <td>Hoa Hồng</td>
-                  <td>15.000</td>
-                  <td>50%</td>
-                  <td>22.500</td>
-                  <td>
-                    <button class="btn-xoa">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </td>
-                  <td>
-                    <a href="#popup-suasp"><button class="btn-sua"><i class="fa fa-pen"></i></button></a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Hoa Giấy</td>
-                  <td>Hoa Cẩm Chướng</td>
-                  <td>10.000</td>
-                  <td>50%</td>
-                  <td>15.000</td>
-                  <td>
-                    <button class="btn-xoa">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </td>
-                   <td>
-                     <a href="#popup-suasp"><button class="btn-sua"><i class="fa fa-pen"></i></button></a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Quà Lưu Niệm</td>
-                  <td>Gấu Bông</td>
-                  <td>60.000</td>
-                  <td>50%</td>
-                  <td>90.000</td>
-                  <td>
-                    <button class="btn-xoa">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </td>
-                   <td>
-                     <a href="#popup-suasp"><button class="btn-sua"><i class="fa fa-pen"></i></button></a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Set Quà Tặng</td>
-                  <td>Set Quà Tặng Sinh Nhật</td>
-                  <td>120.000</td>
-                  <td>50%</td>
-                  <td>180.000</td>
-                  <td>
-                    <button class="btn-xoa">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </td>
-                   <td>
-                    <a href="#popup-suasp"><button class="btn-sua"><i class="fa fa-pen"></i></button></a>
-                  </td>
-                </tr>
+              <tbody id="tbodyMain">
+                <tr class="loading-row"><td colspan="7">Đang tải dữ liệu...</td></tr>
               </tbody>
             </table>
           </div>
 
+          <!-- ════ TRA CỨU ════ -->
           <h2><i style="font-size:24px" class="fas fa-search"></i> Tra cứu theo giá vốn, lợi nhuận, giá bán</h2>
-            <div class="search">
-            <input type="text" id="timKiemPhieu" placeholder=" Nhập giá bán/ lợi nhuận/ giá vốn">
-            <button class="btn-them">Tìm kiếm</button>
-            </div>
-            
+          <div class="search">
+            <input type="text" id="timKiemPhieu" placeholder="Nhập giá bán / lợi nhuận / giá vốn" />
+            <button class="btn-them" id="btnTimKiem">Tìm kiếm</button>
+          </div>
+
           <div class="list-section">
             <table>
               <thead>
@@ -166,103 +155,347 @@
                   <th>Xóa</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>Hoa Tươi</td>
-                  <td>Hoa Hồng</td>
-                  <td>15.000</td>
-                  <td>50%</td>
-                  <td>22.500</td>
-                  <td>
-                    <button class="btn-xoa">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Hoa Giấy</td>
-                  <td>Hoa Cẩm Chướng</td>
-                  <td>15.000</td>
-                  <td>50%</td>
-                  <td>22.500</td>
-                  <td>
-                    <button class="btn-xoa">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Hoa Tươi</td>
-                  <td>Hoa Lan</td>
-                  <td>15.000</td>
-                  <td>60%</td>
-                  <td>25.000</td>
-                  <td>
-                    <button class="btn-xoa">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Hoa Tươi</td>
-                  <td>Hoa Tulip</td>
-                  <td>15.000</td>
-                  <td>70%</td>
-                  <td>30.000</td>
-                  <td>
-                    <button class="btn-xoa">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
+              <tbody id="tbodySearch">
+                <tr class="loading-row"><td colspan="6">Nhập từ khóa và bấm Tìm kiếm.</td></tr>
               </tbody>
             </table>
           </div>
+
+        </div><!-- /container -->
+      </div><!-- /content -->
+    </div><!-- /giaban -->
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!--  POPUP SỬA                                      -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div id="popup-suasp" class="overlay">
+      <a href="#" class="overlay-bg"></a>
+      <div class="popup-box">
+        <h3 style="margin-bottom:12px;color:#c0392b;"><i class="fas fa-pen"></i> Sửa thông tin giá bán</h3>
+
+        <input type="hidden" id="suaId" />
+
+        <label for="suaLoai">Loại sản phẩm</label>
+        <select id="suaLoai">
+          <option value="Quà Lưu Niệm">Quà Lưu Niệm</option>
+          <option value="Quà Tặng">Quà Tặng</option>
+          <option value="Hoa Tươi">Hoa Tươi</option>
+          <option value="Đồ Trang Trí">Đồ Trang Trí</option>
+          <option value="Thiệp và Phụ kiện">Thiệp và Phụ kiện</option>
+          <option value="Set Quà Tặng">Set Quà Tặng</option>
+          <option value="Handmade">Handmade</option>
+          <option value="Hoa Giấy">Hoa Giấy</option>
+        </select>
+
+        <label for="suaLoiNhuanLoai">Lợi nhuận theo loại (%)</label>
+        <input type="number" id="suaLoiNhuanLoai" placeholder="vd: 30" min="0" />
+        <p><i>*Lợi nhuận theo loại = % lời chung cho tất cả sản phẩm thuộc loại đó*</i></p>
+
+        <label for="suaTen">Tên sản phẩm</label>
+        <input type="text" id="suaTen" placeholder="Tên sản phẩm" />
+
+        <label for="suaGiaVon">Giá vốn (đồng)</label>
+        <input type="number" id="suaGiaVon" placeholder="vd: 12000" min="0" />
+
+        <label for="suaLoiNhuanSP">Lợi nhuận riêng sản phẩm (%)</label>
+        <input type="number" id="suaLoiNhuanSP" placeholder="vd: 30 (ưu tiên nếu có)" min="0" />
+        <p><i>*Lợi nhuận sản phẩm = % lời riêng của sản phẩm*</i></p>
+
+        <!-- Preview real-time trong popup -->
+        <div class="preview-box">
+          <span class="label"><i class="fas fa-calculator"></i> Giá bán mới:</span>
+          <span class="value" id="suaPreviewGiaBan">—</span>
         </div>
+
+        <button id="btnSua">SỬA / LƯU</button>
+        <a href="#" class="close" id="btnDongPopup">Đóng</a>
       </div>
     </div>
-             
 
-  <div id="popup-suasp" class="overlay">
-  <a href="#" class="overlay-bg"></a>
-  <div class="popup-box">
+    <!-- Toast thông báo -->
+    <div id="toast"></div>
 
-          <label for="loaiSanPham">Loại sản phẩm</label>
-          <select id="loaiSanPham">
-            <option value="Quà Lưu Niệm">Quà Lưu Niệm</option>
-            <option value="Quà Tặng">Quà Tặng</option>
-            <option value="Hoa Tươi">Hoa Tươi</option>
-            <option value="Đồ Trang Trí">Đồ Trang Trí</option>
-            <option value="Thiệp và Phụ kiện">Thiệp và Phụ kiện</option>
-            <option value="Set Quà Tặng">Set Quà Tặng</option>
-            <option value="Handmade">Handmade</option>
-            <option value="Hoa Giấy">Hoa Giấy</option>
-          </select>
+    <!-- ═══════════════════════════════════════════════ -->
+    <!--  JAVASCRIPT                                      -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <script>
+    // ── Cấu hình ──────────────────────────────────────
+    const API_URL = 'giaban_api.php';   // Đường dẫn tới file PHP API
 
-          <label for="loiNhuanTheoLoai">Lợi nhuận theo loại (%)</label>
-          <input type="number" id="loiNhuanTheoLoai" placeholder="vd: 30%" />
-          <p>
-            <i
-              >*Lợi nhuận theo loại = % lời chung cho tất cả sản phẩm thuộc loại đó*</i
-            >
-          </p>
+    // ── Utility ───────────────────────────────────────
+    const fmt = (n) => Number(n).toLocaleString('vi-VN') + 'đ';
+    const fmtPct = (n) => Number(n).toLocaleString('vi-VN') + '%';
 
-          <label for="tenSanPham">Tên sản phẩm</label>
-          <input type="text" id="tenSanPham" placeholder="Tên sản phẩm" />
+    function showToast(msg, isError = false) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'show' + (isError ? ' error' : '');
+      setTimeout(() => { t.className = ''; }, 3000);
+    }
 
-          <label for="giaVon">Giá vốn</label>
-          <input type="number" id="giaVon" placeholder="vd: 12000" />
+    // ── Tính giá bán ──────────────────────────────────
+    // Công thức: giaBan = giaVon * (1 + loiNhuan/100)
+    // Ưu tiên: loiNhuanSanPham > loiNhuanLoai
+    function tinhGiaBan(giaVon, loiNhuanLoai, loiNhuanSanPham) {
+      const gv  = parseFloat(giaVon) || 0;
+      const lnSP = parseFloat(loiNhuanSanPham);
+      const lnL  = parseFloat(loiNhuanLoai) || 0;
+      const ln   = (!isNaN(lnSP) && loiNhuanSanPham !== '' && loiNhuanSanPham !== null)
+                    ? lnSP : lnL;
+      return { giaBan: gv * (1 + ln / 100), loiNhuanDung: ln };
+    }
 
-          <label for="loiNhuanTheoSanPham">Lợi nhuận (%)</label>
-          <input type="number" id="loiNhuanTheoSanPham" placeholder="vd: 30% (ưu tiên nếu có)" />
-          <p><i>*Lợi nhuận sản phẩm = % lời riêng của sản phẩm*</i></p>
+    // ── Preview real-time (form thêm) ─────────────────
+    function updatePreview() {
+      const gv   = document.getElementById('giaVon').value;
+      const lnL  = document.getElementById('loiNhuanTheoLoai').value;
+      const lnSP = document.getElementById('loiNhuanTheoSanPham').value;
+      const { giaBan, loiNhuanDung } = tinhGiaBan(gv, lnL, lnSP);
+      const el = document.getElementById('previewGiaBan');
+      const note = document.getElementById('previewNote');
+      if (parseFloat(gv) > 0) {
+        el.textContent = fmt(giaBan);
+        const src = (lnSP !== '' && lnSP !== null) ? '(lợi nhuận riêng SP)' : '(lợi nhuận theo loại)';
+        note.textContent = `Lợi nhuận áp dụng: ${loiNhuanDung}% ${src}`;
+      } else {
+        el.textContent = '—';
+        note.textContent = '';
+      }
+    }
+    ['giaVon','loiNhuanTheoLoai','loiNhuanTheoSanPham'].forEach(id =>
+      document.getElementById(id).addEventListener('input', updatePreview)
+    );
 
-          <button>SỬA</button>
+    // ── Preview real-time (popup sửa) ─────────────────
+    function updateSuaPreview() {
+      const gv   = document.getElementById('suaGiaVon').value;
+      const lnL  = document.getElementById('suaLoiNhuanLoai').value;
+      const lnSP = document.getElementById('suaLoiNhuanSP').value;
+      const { giaBan } = tinhGiaBan(gv, lnL, lnSP);
+      const el = document.getElementById('suaPreviewGiaBan');
+      el.textContent = parseFloat(gv) > 0 ? fmt(giaBan) : '—';
+    }
+    ['suaGiaVon','suaLoiNhuanLoai','suaLoiNhuanSP'].forEach(id =>
+      document.getElementById(id).addEventListener('input', updateSuaPreview)
+    );
 
-    <a href="" class="close">Đóng</a>
-  </div>
-</div>
+    // ── Render bảng chính ─────────────────────────────
+    function renderMainTable(rows) {
+      const tbody = document.getElementById('tbodyMain');
+      if (!rows.length) {
+        tbody.innerHTML = '<tr class="loading-row"><td colspan="7">Chưa có dữ liệu.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map(r => {
+        const giaBan = r.gia_ban_tinh ?? tinhGiaBan(r.gia_von, r.loi_nhuan_loai, r.loi_nhuan_san_pham).giaBan;
+        const ln     = r.loi_nhuan_hieu_dung ?? (r.loi_nhuan_san_pham ?? r.loi_nhuan_loai);
+        return `<tr data-id="${r.id}">
+          <td>${r.loai}</td>
+          <td>${r.ten_san_pham}</td>
+          <td>${fmt(r.gia_von)}</td>
+          <td>${fmtPct(ln)}</td>
+          <td><strong>${fmt(giaBan)}</strong></td>
+          <td><button class="btn-xoa" onclick="xoaSanPham(${r.id})"><i class="fa fa-trash"></i></button></td>
+          <td><a href="#popup-suasp"><button class="btn-sua" onclick="moPopupSua(${r.id})"><i class="fa fa-pen"></i></button></a></td>
+        </tr>`;
+      }).join('');
+    }
 
+    // ── Render bảng tìm kiếm ──────────────────────────
+    function renderSearchTable(rows) {
+      const tbody = document.getElementById('tbodySearch');
+      if (!rows.length) {
+        tbody.innerHTML = '<tr class="loading-row"><td colspan="6">Không tìm thấy kết quả.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map(r => {
+        const giaBan = r.gia_ban_tinh ?? tinhGiaBan(r.gia_von, r.loi_nhuan_loai, r.loi_nhuan_san_pham).giaBan;
+        const ln     = r.loi_nhuan_hieu_dung ?? (r.loi_nhuan_san_pham ?? r.loi_nhuan_loai);
+        return `<tr data-id="${r.id}">
+          <td>${r.loai}</td>
+          <td>${r.ten_san_pham}</td>
+          <td>${fmt(r.gia_von)}</td>
+          <td>${fmtPct(ln)}</td>
+          <td><strong>${fmt(giaBan)}</strong></td>
+          <td><button class="btn-xoa" onclick="xoaSanPham(${r.id}, true)"><i class="fa fa-trash"></i></button></td>
+        </tr>`;
+      }).join('');
+    }
+
+    // ── Tải dữ liệu từ API ────────────────────────────
+    async function taiDuLieu() {
+      try {
+        const res  = await fetch(API_URL);
+        const data = await res.json();
+        if (data.success) renderMainTable(data.data);
+        else showToast('Lỗi tải dữ liệu: ' + data.message, true);
+      } catch (e) {
+        showToast('Không kết nối được với server!', true);
+        document.getElementById('tbodyMain').innerHTML =
+          '<tr class="loading-row"><td colspan="7">Lỗi kết nối server.</td></tr>';
+      }
+    }
+
+    // ── Thêm sản phẩm ─────────────────────────────────
+    document.getElementById('btnThem').addEventListener('click', async () => {
+      const loai    = document.getElementById('loaiSanPham').value;
+      const lnLoai  = document.getElementById('loiNhuanTheoLoai').value;
+      const ten     = document.getElementById('tenSanPham').value.trim();
+      const gv      = document.getElementById('giaVon').value;
+      const lnSP    = document.getElementById('loiNhuanTheoSanPham').value;
+
+      if (!ten || !gv || parseFloat(gv) <= 0) {
+        showToast('Vui lòng nhập đủ: Tên sản phẩm và Giá vốn!', true);
+        return;
+      }
+
+      const body = {
+        loai,
+        loiNhuanLoai:   lnLoai  || 0,
+        tenSanPham:     ten,
+        giaVon:         gv,
+        loiNhuanSanPham: lnSP !== '' ? lnSP : null,
+      };
+
+      try {
+        const res  = await fetch(API_URL, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+        const data = await res.json();
+        if (data.success) {
+          showToast('✅ ' + data.message);
+          // Reset form
+          document.getElementById('tenSanPham').value = '';
+          document.getElementById('giaVon').value = '';
+          document.getElementById('loiNhuanTheoSanPham').value = '';
+          document.getElementById('previewGiaBan').textContent = '—';
+          document.getElementById('previewNote').textContent = '';
+          taiDuLieu();
+        } else {
+          showToast('Lỗi: ' + data.message, true);
+        }
+      } catch (e) {
+        showToast('Lỗi kết nối server!', true);
+      }
+    });
+
+    // ── Xóa sản phẩm ─────────────────────────────────
+    async function xoaSanPham(id, isSearch = false) {
+      if (!confirm('Bạn có chắc muốn xóa sản phẩm này không?')) return;
+      try {
+        const res  = await fetch(`${API_URL}?id=${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('🗑️ ' + data.message);
+          taiDuLieu();
+          if (isSearch) {
+            const kw = document.getElementById('timKiemPhieu').value.trim();
+            if (kw) timKiem(kw);
+          }
+        } else {
+          showToast('Lỗi: ' + data.message, true);
+        }
+      } catch (e) {
+        showToast('Lỗi kết nối server!', true);
+      }
+    }
+
+    // ── Mở popup sửa ─────────────────────────────────
+    // Lưu dữ liệu hàng hiện tại để điền vào popup
+    let _allData = [];
+    const _origFetch = taiDuLieu;
+
+    async function taiDuLieuVaLuu() {
+      try {
+        const res  = await fetch(API_URL);
+        const data = await res.json();
+        if (data.success) {
+          _allData = data.data;
+          renderMainTable(data.data);
+        }
+      } catch (e) {
+        showToast('Không kết nối được với server!', true);
+      }
+    }
+
+    function moPopupSua(id) {
+      const row = _allData.find(r => r.id == id);
+      if (!row) return;
+      document.getElementById('suaId').value             = row.id;
+      document.getElementById('suaLoai').value           = row.loai;
+      document.getElementById('suaLoiNhuanLoai').value   = row.loi_nhuan_loai;
+      document.getElementById('suaTen').value            = row.ten_san_pham;
+      document.getElementById('suaGiaVon').value         = row.gia_von;
+      document.getElementById('suaLoiNhuanSP').value     = row.loi_nhuan_san_pham ?? '';
+      updateSuaPreview();
+    }
+
+    // ── Lưu sửa ──────────────────────────────────────
+    document.getElementById('btnSua').addEventListener('click', async () => {
+      const id     = document.getElementById('suaId').value;
+      const loai   = document.getElementById('suaLoai').value;
+      const lnLoai = document.getElementById('suaLoiNhuanLoai').value;
+      const ten    = document.getElementById('suaTen').value.trim();
+      const gv     = document.getElementById('suaGiaVon').value;
+      const lnSP   = document.getElementById('suaLoiNhuanSP').value;
+
+      if (!ten || !gv || parseFloat(gv) <= 0) {
+        showToast('Vui lòng nhập đủ: Tên sản phẩm và Giá vốn!', true);
+        return;
+      }
+
+      const body = {
+        id: parseInt(id),
+        loai,
+        loiNhuanLoai:   lnLoai  || 0,
+        tenSanPham:     ten,
+        giaVon:         gv,
+        loiNhuanSanPham: lnSP !== '' ? lnSP : null,
+      };
+
+      try {
+        const res  = await fetch(API_URL, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+        const data = await res.json();
+        if (data.success) {
+          showToast('✏️ ' + data.message);
+          window.location.hash = '';   // đóng popup
+          taiDuLieuVaLuu();
+        } else {
+          showToast('Lỗi: ' + data.message, true);
+        }
+      } catch (e) {
+        showToast('Lỗi kết nối server!', true);
+      }
+    });
+
+    // ── Tìm kiếm ─────────────────────────────────────
+    async function timKiem(kw) {
+      const tbody = document.getElementById('tbodySearch');
+      tbody.innerHTML = '<tr class="loading-row"><td colspan="6">Đang tìm kiếm...</td></tr>';
+      try {
+        const res  = await fetch(`${API_URL}?search=${encodeURIComponent(kw)}`);
+        const data = await res.json();
+        if (data.success) renderSearchTable(data.data);
+        else showToast('Lỗi tìm kiếm!', true);
+      } catch (e) {
+        showToast('Lỗi kết nối server!', true);
+      }
+    }
+
+    document.getElementById('btnTimKiem').addEventListener('click', () => {
+      const kw = document.getElementById('timKiemPhieu').value.trim();
+      if (!kw) { showToast('Vui lòng nhập từ khóa tìm kiếm!', true); return; }
+      timKiem(kw);
+    });
+
+    // Enter để tìm kiếm
+    document.getElementById('timKiemPhieu').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('btnTimKiem').click();
+    });
+
+    // ── Khởi động ─────────────────────────────────────
+    // Override hàm tải để luôn lưu data
+    window.taiDuLieu = taiDuLieuVaLuu;
+    taiDuLieuVaLuu();
+    </script>
 
   </body>
 </html>
