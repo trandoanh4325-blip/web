@@ -16,13 +16,13 @@
       <a href="Admin.html"><img src="../Image/logostore-Photoroom.png" alt="Logo" /></a>
     </div>
     <div class="header-right">
-      <a class="chucnang-item" href="Admin.html"><i class="fas fa-home"></i> Tổng quan</a>
-      <a class="chucnang-item active" href="giaban.html"><i class="fas fa-tags"></i> Giá bán</a>
-      <a class="chucnang-item" href="SanPham.php"><i class="fas fa-box-open"></i> Sản phẩm</a>
-      <a class="chucnang-item" href="phieunhap.php"><i class="fas fa-file-invoice"></i> Phiếu nhập</a>
-      <a class="chucnang-item" href="donhang.html"><i class="fas fa-shopping-cart"></i> Đơn hàng</a>
-      <a class="chucnang-item" href="khovan.html"><i class="fas fa-truck-loading"></i> Kho vận</a>
-      <a class="chucnang-item" href="khachhang.php"><i class="fas fa-users"></i> Khách hàng</a>
+      <a class="chucnang-item"        href="Admin.html">     <i class="fas fa-home"></i>         Tổng quan</a>
+      <a class="chucnang-item active" href="giaban.html">    <i class="fas fa-tags"></i>          Giá bán</a>
+      <a class="chucnang-item"        href="SanPham.php">    <i class="fas fa-box-open"></i>      Sản phẩm</a>
+      <a class="chucnang-item"        href="phieunhap.php">  <i class="fas fa-file-invoice"></i>  Phiếu nhập</a>
+      <a class="chucnang-item"        href="donhang.html">   <i class="fas fa-shopping-cart"></i> Đơn hàng</a>
+      <a class="chucnang-item"        href="khovan.html">    <i class="fas fa-truck-loading"></i> Kho vận</a>
+      <a class="chucnang-item"        href="khachhang.php">  <i class="fas fa-users"></i>         Khách hàng</a>
       <a class="chucnang-item" href="LoginA.php"
          style="background:rgba(255,255,255,0.15);color:#fff;">
         <i class="fas fa-sign-out-alt"></i> Đăng xuất
@@ -41,20 +41,14 @@
       </h2>
 
       <label for="loaiSanPham">Loại sản phẩm</label>
+      <!-- Không hardcode options – giaban.js tải từ DB qua process_SanPham.php -->
       <select id="loaiSanPham">
-        <option value="Quà Lưu Niệm">Quà Lưu Niệm</option>
-        <option value="Quà Tặng">Quà Tặng</option>
-        <option value="Hoa Tươi">Hoa Tươi</option>
-        <option value="Đồ Trang Trí">Đồ Trang Trí</option>
-        <option value="Thiệp và Phụ kiện">Thiệp và Phụ kiện</option>
-        <option value="Set Quà Tặng">Set Quà Tặng</option>
-        <option value="Handmade">Handmade</option>
-        <option value="Hoa Giấy">Hoa Giấy</option>
+        <option value="">-- Đang tải loại sản phẩm... --</option>
       </select>
 
       <label for="loiNhuanTheoLoai">Lợi nhuận theo loại (%)</label>
-      <input type="number" id="loiNhuanTheoLoai" placeholder="vd: 30" min="0" />
-      <p><i>* Lợi nhuận theo loại = % lời chung cho tất cả sản phẩm thuộc loại đó</i></p>
+      <input type="number" id="loiNhuanTheoLoai" placeholder="vd: 30 (tự điền khi chọn loại)" min="0" step="0.01" />
+      <p><i>* Chọn loại → % lợi nhuận mặc định của loại đó sẽ tự điền</i></p>
 
       <label for="tenSanPham">Tên sản phẩm</label>
       <input type="text" id="tenSanPham" placeholder="Tên sản phẩm" />
@@ -64,8 +58,8 @@
 
       <label for="loiNhuanTheoSanPham">Lợi nhuận riêng sản phẩm (%)</label>
       <input type="number" id="loiNhuanTheoSanPham"
-             placeholder="vd: 30 (ưu tiên nếu có)" min="0" />
-      <p><i>* Lợi nhuận sản phẩm = % lời riêng, ưu tiên hơn lợi nhuận theo loại</i></p>
+             placeholder="vd: 35 (ưu tiên hơn lợi nhuận theo loại, để trống = dùng loại)" min="0" step="0.01" />
+      <p><i>* Lợi nhuận riêng SP ưu tiên hơn lợi nhuận theo loại. Mã SP sẽ tự sinh (SP001, SP002...)</i></p>
 
       <!-- Preview giá bán real-time -->
       <div class="preview-box">
@@ -84,6 +78,7 @@
           <thead>
             <tr>
               <th>#</th>
+              <th>Mã SP</th>
               <th>Loại</th>
               <th>Sản phẩm</th>
               <th>Giá vốn</th>
@@ -94,7 +89,7 @@
             </tr>
           </thead>
           <tbody id="tbodyMain">
-            <tr class="loading-row"><td colspan="8">Đang tải dữ liệu...</td></tr>
+            <tr class="loading-row"><td colspan="9">Đang tải dữ liệu...</td></tr>
           </tbody>
         </table>
       </div>
@@ -106,7 +101,7 @@
       </h2>
       <div class="search">
         <input type="text" id="timKiemPhieu"
-               placeholder="Nhập tên SP / loại / giá vốn / % lợi nhuận / giá bán" />
+               placeholder="Nhập tên SP / mã SP / loại / giá vốn / % lợi nhuận / giá bán" />
         <button id="btnTimKiem">
           <i class="fas fa-search"></i> Tìm kiếm
         </button>
@@ -117,6 +112,7 @@
           <thead>
             <tr>
               <th>#</th>
+              <th>Mã SP</th>
               <th>Loại</th>
               <th>Sản phẩm</th>
               <th>Giá vốn</th>
@@ -127,7 +123,7 @@
             </tr>
           </thead>
           <tbody id="tbodySearch">
-            <tr class="loading-row"><td colspan="8">Nhập từ khóa và bấm Tìm kiếm.</td></tr>
+            <tr class="loading-row"><td colspan="9">Nhập từ khóa và bấm Tìm kiếm.</td></tr>
           </tbody>
         </table>
       </div>
@@ -150,31 +146,26 @@
         <input type="hidden" id="suaId" />
 
         <label for="suaLoai">Loại sản phẩm</label>
+        <!-- Không hardcode – JS điền từ _loaiData -->
         <select id="suaLoai">
-          <option value="Quà Lưu Niệm">Quà Lưu Niệm</option>
-          <option value="Quà Tặng">Quà Tặng</option>
-          <option value="Hoa Tươi">Hoa Tươi</option>
-          <option value="Đồ Trang Trí">Đồ Trang Trí</option>
-          <option value="Thiệp và Phụ kiện">Thiệp và Phụ kiện</option>
-          <option value="Set Quà Tặng">Set Quà Tặng</option>
-          <option value="Handmade">Handmade</option>
-          <option value="Hoa Giấy">Hoa Giấy</option>
+          <option value="">-- Chọn loại --</option>
         </select>
 
         <label for="suaLoiNhuanLoai">Lợi nhuận theo loại (%)</label>
-        <input type="number" id="suaLoiNhuanLoai" placeholder="vd: 30" min="0" />
-        <p><i>* Lợi nhuận theo loại = % lời chung cho tất cả sản phẩm thuộc loại đó</i></p>
+        <input type="number" id="suaLoiNhuanLoai" placeholder="vd: 30" min="0" step="0.01" />
+        <p><i>* Thay đổi ở đây sẽ cập nhật % mặc định cho cả loại đó</i></p>
 
         <label for="suaTen">Tên sản phẩm</label>
         <input type="text" id="suaTen" placeholder="Tên sản phẩm" />
 
         <label for="suaGiaVon">Giá vốn (đồng)</label>
         <input type="number" id="suaGiaVon" placeholder="vd: 12000" min="0" />
+        <p><i>* Giá vốn bình quân được tự động cập nhật khi hoàn thành phiếu nhập hàng</i></p>
 
         <label for="suaLoiNhuanSP">Lợi nhuận riêng sản phẩm (%)</label>
         <input type="number" id="suaLoiNhuanSP"
-               placeholder="vd: 30 (để trống = dùng lợi nhuận theo loại)" min="0" />
-        <p><i>* Lợi nhuận sản phẩm = % lời riêng, ưu tiên hơn lợi nhuận theo loại</i></p>
+               placeholder="vd: 35 (để trống = dùng % theo loại)" min="0" step="0.01" />
+        <p><i>* Lợi nhuận riêng SP ưu tiên hơn lợi nhuận theo loại</i></p>
 
         <div class="preview-box">
           <span class="label"><i class="fas fa-calculator"></i> Giá bán mới:</span>
@@ -198,9 +189,7 @@
     <div class="confirm-box">
       <div class="confirm-icon"><i class="fas fa-trash-alt"></i></div>
       <h4>Xác nhận xóa?</h4>
-      <p id="confirmMsg">
-        Bạn có chắc muốn xóa sản phẩm này?<br/>Hành động này không thể hoàn tác.
-      </p>
+      <p id="confirmMsg">Bạn có chắc muốn xóa sản phẩm này?</p>
       <div class="confirm-actions">
         <button class="btn-cf-cancel" id="btnCancelDel">Hủy</button>
         <button class="btn-cf-delete" id="btnOkDel">
@@ -214,7 +203,7 @@
   <div id="toast"></div>
 
   <!-- ════ JS TÁCH RIÊNG ════ -->
-  <script src="../jsAdmin/giaban.js"></script>
+  <script src="../JSAdmin/giaban.js"></script>
 
 </body>
 </html>

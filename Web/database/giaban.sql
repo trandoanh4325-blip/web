@@ -15,7 +15,7 @@
 --    để hỗ trợ "lợi nhuận mặc định theo loại".
 -- ================================================================
 
-USE quanlycuahang;  -- ← đổi tên database nếu cần
+USE shop_hoa_db;  -- ← đổi tên database nếu cần
 
 
 -- 2. BẢNG LOẠI SẢN PHẨM

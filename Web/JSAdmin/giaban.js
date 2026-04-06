@@ -1,18 +1,23 @@
-/* ================================================
-   giaban.js – Logic Quản lý Giá Bán
-   Dùng bảng: san_pham + loai_san_pham
-   ================================================ */
+// =============================================================
+// JSAdmin/giaban.js  –  Logic Quản lý Giá Bán
+// Kết nối: Admin/giaban_api.php + Admin/process_SanPham.php
+// =============================================================
 
-const API_URL = 'giaban_api.php';
+const API_URL    = '../Admin/giaban_api.php';
+const SP_API_URL = '../Admin/process_SanPham.php';  // dùng chung để lấy danh sách loại
 
 /* ── Utility ── */
 const fmt    = n  => Number(n).toLocaleString('vi-VN') + 'đ';
 const fmtPct = n  => Number(n).toLocaleString('vi-VN') + '%';
 const $      = id => document.getElementById(id);
 
-/* ────────────────────────────────────────────────
-   TOAST THÔNG BÁO
-   ────────────────────────────────────────────── */
+/* ── Dữ liệu toàn cục ── */
+let _allData  = [];
+let _loaiData = [];  // cache loại sản phẩm từ DB
+
+/* ════════════════════════════════════════════════
+   TOAST
+   ════════════════════════════════════════════════ */
 let _toastTimer;
 function showToast(msg, isError = false) {
   clearTimeout(_toastTimer);
@@ -22,12 +27,11 @@ function showToast(msg, isError = false) {
   _toastTimer = setTimeout(() => { t.className = ''; }, 3500);
 }
 
-/* ────────────────────────────────────────────────
+/* ════════════════════════════════════════════════
    TÍNH GIÁ BÁN
-   Công thức: gia_ban = gia_von * (1 + ty_le / 100)
-   tức là:    gia_ban = gia_von * (100% + ty_le_loi_nhuan)
-   Ưu tiên:   ty_le_rieng_SP > ty_le_theo_loai
-   ────────────────────────────────────────────── */
+   gia_ban = gia_von * (100% + ty_le_loi_nhuan)
+   Ưu tiên: loi_nhuan_san_pham > loi_nhuan_loai
+   ════════════════════════════════════════════════ */
 function tinhGiaBan(giaVon, loiNhuanLoai, loiNhuanSanPham) {
   const gv    = parseFloat(giaVon)          || 0;
   const lnSP  = parseFloat(loiNhuanSanPham);
@@ -35,7 +39,7 @@ function tinhGiaBan(giaVon, loiNhuanLoai, loiNhuanSanPham) {
   const hasLnSP = !isNaN(lnSP) &&
                   loiNhuanSanPham !== '' &&
                   loiNhuanSanPham !== null;
-  const ln    = hasLnSP ? lnSP : lnL;
+  const ln = hasLnSP ? lnSP : lnL;
   return {
     giaBan: gv * (1 + ln / 100),
     ln,
@@ -43,9 +47,9 @@ function tinhGiaBan(giaVon, loiNhuanLoai, loiNhuanSanPham) {
   };
 }
 
-/* ────────────────────────────────────────────────
+/* ════════════════════════════════════════════════
    PREVIEW REAL-TIME – Form thêm
-   ────────────────────────────────────────────── */
+   ════════════════════════════════════════════════ */
 function updatePreview() {
   const { giaBan, ln, nguon } = tinhGiaBan(
     $('giaVon').value,
@@ -61,9 +65,9 @@ function updatePreview() {
   }
 }
 
-/* ────────────────────────────────────────────────
+/* ════════════════════════════════════════════════
    PREVIEW REAL-TIME – Modal sửa
-   ────────────────────────────────────────────── */
+   ════════════════════════════════════════════════ */
 function updateSuaPreview() {
   const { giaBan, ln, nguon } = tinhGiaBan(
     $('suaGiaVon').value,
@@ -79,22 +83,60 @@ function updateSuaPreview() {
   }
 }
 
-/* ────────────────────────────────────────────────
-   DỮ LIỆU TOÀN CỤC
-   ────────────────────────────────────────────── */
-let _allData = [];
+/* ════════════════════════════════════════════════
+   TẢI DANH SÁCH LOẠI → điền dropdown
+   Dùng process_SanPham.php (đồng bộ với trang SanPham)
+   ════════════════════════════════════════════════ */
+async function taiLoai() {
+  try {
+    const res  = await fetch(`${SP_API_URL}?resource=loai-san-pham`);
+    const data = await res.json();
+    if (!data.success) return;
 
-/* ── Tạo 1 dòng bảng ── */
+    _loaiData = data.data || [];
+
+    const opts = _loaiData
+      .map(l => `<option value="${l.id}">${l.ten_loai}</option>`)
+      .join('');
+    const placeholder = '<option value="">-- Chọn loại --</option>';
+
+    $('loaiSanPham').innerHTML = placeholder + opts;
+    $('suaLoai').innerHTML     = placeholder + opts;
+  } catch {
+    /* silent – dropdown sẽ hiện "Đang tải..." */
+  }
+}
+
+/* Khi chọn loại → tự điền % lợi nhuận mặc định của loại đó */
+function onLoaiChange(selectId, lnInputId) {
+  const idLoai = parseInt($(selectId).value);
+  const loai   = _loaiData.find(l => l.id === idLoai);
+  $(lnInputId).value = (loai && loai.ty_le_loi_nhuan > 0)
+                       ? loai.ty_le_loi_nhuan : '';
+}
+
+/* ════════════════════════════════════════════════
+   RENDER BẢNG
+   Field aliases từ giaban_api.php khớp với JS:
+     r.loai           = l.ten_loai
+     r.ten_san_pham   = sp.ten_sp
+     r.loi_nhuan_loai = l.ty_le_loi_nhuan
+     r.loi_nhuan_san_pham = sp.ty_le_loi_nhuan
+     r.gia_ban_tinh   = sp.gia_ban
+     r.loi_nhuan_hieu_dung (computed)
+   ════════════════════════════════════════════════ */
 function makeRow(r, idx) {
-  // Đối chiếu: r.gia_ban từ SQL, nếu không có thì mới tính bằng JS
-  const gb  = r.gia_ban || 0; 
-  const ln  = r.ty_le_hieu_dung || 0; // ty_le_hieu_dung là tên cột trong Source 2
-  const ten = (r.ten_sp || '').replace(/'/g, "\\'"); // Source 2 dùng ten_sp
+  const gb  = parseFloat(r.gia_ban_tinh)
+              || tinhGiaBan(r.gia_von, r.loi_nhuan_loai, r.loi_nhuan_san_pham).giaBan;
+  const ln  = r.loi_nhuan_hieu_dung
+              ?? (r.loi_nhuan_san_pham ?? r.loi_nhuan_loai);
+  const ten = (r.ten_san_pham || '').replace(/'/g, "\\'");
 
   return `<tr data-id="${r.id}">
     <td style="color:#999;font-size:13px;">${idx + 1}</td>
-    <td>${r.ten_loai}</td> 
-    <td><strong>${r.ten_sp}</strong></td>
+    <td style="font-size:12px;color:#666;">${r.ma_sp ?? '—'}</td>
+    <td>${r.loai}</td>
+    <td><strong>${r.ten_san_pham}</strong></td>
     <td>${fmt(r.gia_von)}</td>
     <td style="color:#27ae60;font-weight:600;">${fmtPct(ln)}</td>
     <td style="color:#0195b2;font-weight:700;">${fmt(gb)}</td>
@@ -114,18 +156,18 @@ function makeRow(r, idx) {
 function renderMainTable(rows) {
   $('tbodyMain').innerHTML = rows.length
     ? rows.map((r, i) => makeRow(r, i)).join('')
-    : '<tr class="loading-row"><td colspan="8">Chưa có dữ liệu.</td></tr>';
+    : '<tr class="loading-row"><td colspan="9">Chưa có dữ liệu.</td></tr>';
 }
 
 function renderSearchTable(rows) {
   $('tbodySearch').innerHTML = rows.length
     ? rows.map((r, i) => makeRow(r, i)).join('')
-    : '<tr class="loading-row"><td colspan="8">Không tìm thấy kết quả.</td></tr>';
+    : '<tr class="loading-row"><td colspan="9">Không tìm thấy kết quả.</td></tr>';
 }
 
-/* ────────────────────────────────────────────────
-   TẢI DANH SÁCH
-   ────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════
+   TẢI DANH SÁCH SẢN PHẨM
+   ════════════════════════════════════════════════ */
 async function taiDuLieu() {
   try {
     const res  = await fetch(API_URL);
@@ -139,20 +181,23 @@ async function taiDuLieu() {
   } catch {
     showToast('Không kết nối được server!', true);
     $('tbodyMain').innerHTML =
-      '<tr class="loading-row"><td colspan="8">Lỗi kết nối server.</td></tr>';
+      '<tr class="loading-row"><td colspan="9">Lỗi kết nối server.</td></tr>';
   }
 }
 
-/* ────────────────────────────────────────────────
+/* ════════════════════════════════════════════════
    THÊM SẢN PHẨM
-   ────────────────────────────────────────────── */
+   ════════════════════════════════════════════════ */
 async function themSanPham() {
-  const ten = $('tenSanPham').value.trim();
-  const gv  = $('giaVon').value;
+  const idLoai = parseInt($('loaiSanPham').value);
+  const ten    = $('tenSanPham').value.trim();
+  const gv     = $('giaVon').value;
 
+  if (!idLoai) {
+    showToast('Vui lòng chọn loại sản phẩm!', true); return;
+  }
   if (!ten || !gv || parseFloat(gv) <= 0) {
-    showToast('Vui lòng nhập Tên sản phẩm và Giá vốn!', true);
-    return;
+    showToast('Vui lòng nhập Tên sản phẩm và Giá vốn!', true); return;
   }
 
   const btn  = $('btnThem');
@@ -165,18 +210,21 @@ async function themSanPham() {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        loai:            $('loaiSanPham').value,
-        loiNhuanLoai:    $('loiNhuanTheoLoai').value   || 0,
+        id_loai:         idLoai,
+        loiNhuanLoai:    $('loiNhuanTheoLoai').value    || 0,
         tenSanPham:      ten,
         giaVon:          gv,
         loiNhuanSanPham: $('loiNhuanTheoSanPham').value !== ''
-                         ? $('loiNhuanTheoSanPham').value : null,
+                         ? $('loiNhuanTheoSanPham').value : 0,
       })
     });
     const data = await res.json();
     if (data.success) {
       showToast('✅ ' + data.message);
-      ['tenSanPham', 'giaVon', 'loiNhuanTheoSanPham'].forEach(id => $(id).value = '');
+      ['tenSanPham', 'giaVon', 'loiNhuanTheoSanPham', 'loiNhuanTheoLoai'].forEach(id =>
+        $(id).value = ''
+      );
+      $('loaiSanPham').value         = '';
       $('previewGiaBan').textContent = '—';
       $('previewNote').textContent   = '';
       taiDuLieu();
@@ -191,15 +239,16 @@ async function themSanPham() {
   }
 }
 
-/* ────────────────────────────────────────────────
-   XÓA SẢN PHẨM – confirm dialog
-   ────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════
+   XÓA – confirm dialog
+   ════════════════════════════════════════════════ */
 let _xoaId = null;
 
 function moConfirmXoa(id, ten) {
   _xoaId = id;
   $('confirmMsg').innerHTML =
-    `Bạn có chắc muốn xóa <strong>"${ten}"</strong>?<br/>Hành động này không thể hoàn tác.`;
+    `Bạn có chắc muốn xóa <strong>"${ten}"</strong>?<br/>
+     <small style="color:#e74c3c">SP đã có phiếu nhập sẽ được ẩn thay vì xóa hẳn.</small>`;
   $('confirmDel').classList.add('open');
 }
 
@@ -229,27 +278,26 @@ async function thucHienXoa() {
   }
 }
 
-/* ────────────────────────────────────────────────
-   SỬA – Mở modal popup
-   ────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════
+   SỬA – Modal popup
+   ════════════════════════════════════════════════ */
 function moModalSua(id) {
   const row = _allData.find(r => r.id == id);
   if (!row) { showToast('Không tìm thấy dữ liệu!', true); return; }
 
   $('suaId').value           = row.id;
-  $('suaLoai').value         = row.loai;
-  $('suaLoiNhuanLoai').value = row.loi_nhuan_loai;
-  $('suaTen').value          = row.ten_san_pham;
+  $('suaLoai').value         = row.id_loai;            // dùng ID cho select
+  $('suaLoiNhuanLoai').value = row.loi_nhuan_loai;     // alias từ SQL
+  $('suaTen').value          = row.ten_san_pham;       // alias từ SQL
   $('suaGiaVon').value       = row.gia_von;
-  $('suaLoiNhuanSP').value   = row.loi_nhuan_san_pham ?? '';
+  $('suaLoiNhuanSP').value   = row.loi_nhuan_san_pham > 0
+                               ? row.loi_nhuan_san_pham : '';
 
   updateSuaPreview();
   $('modalSua').classList.add('open');
 }
 
-function dongModal() {
-  $('modalSua').classList.remove('open');
-}
+function dongModal() { $('modalSua').classList.remove('open'); }
 
 /* ── Lưu sửa ── */
 async function luuSua() {
@@ -257,8 +305,7 @@ async function luuSua() {
   const gv  = $('suaGiaVon').value;
 
   if (!ten || !gv || parseFloat(gv) <= 0) {
-    showToast('Vui lòng nhập Tên sản phẩm và Giá vốn!', true);
-    return;
+    showToast('Vui lòng nhập Tên sản phẩm và Giá vốn!', true); return;
   }
 
   const btn  = $('btnSua');
@@ -272,19 +319,26 @@ async function luuSua() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         id:              parseInt($('suaId').value),
-        loai:            $('suaLoai').value,
-        loiNhuanLoai:    $('suaLoiNhuanLoai').value    || 0,
+        idLoai:          parseInt($('suaLoai').value),   // gửi ID loại
+        loiNhuanLoai:    $('suaLoiNhuanLoai').value || 0,
         tenSanPham:      ten,
         giaVon:          gv,
         loiNhuanSanPham: $('suaLoiNhuanSP').value !== ''
-                         ? $('suaLoiNhuanSP').value : null,
+                         ? $('suaLoiNhuanSP').value : 0,
       })
     });
     const data = await res.json();
     if (data.success) {
       showToast('✏️ ' + data.message);
       dongModal();
-      taiDuLieu();
+      // Cập nhật row trong _allData không cần reload toàn bộ
+      if (data.data) {
+        const idx = _allData.findIndex(r => r.id == data.data.id);
+        if (idx !== -1) _allData[idx] = data.data;
+        renderMainTable(_allData);
+      } else {
+        taiDuLieu();
+      }
       const kw = $('timKiemPhieu').value.trim();
       if (kw) timKiem(kw);
     } else {
@@ -298,12 +352,12 @@ async function luuSua() {
   }
 }
 
-/* ────────────────────────────────────────────────
+/* ════════════════════════════════════════════════
    TÌM KIẾM
-   ────────────────────────────────────────────── */
+   ════════════════════════════════════════════════ */
 async function timKiem(kw) {
   $('tbodySearch').innerHTML =
-    '<tr class="loading-row"><td colspan="8">Đang tìm kiếm...</td></tr>';
+    '<tr class="loading-row"><td colspan="9">Đang tìm kiếm...</td></tr>';
   try {
     const res  = await fetch(`${API_URL}?search=${encodeURIComponent(kw)}`);
     const data = await res.json();
@@ -314,32 +368,43 @@ async function timKiem(kw) {
   }
 }
 
-/* ────────────────────────────────────────────────
-   GẮN SỰ KIỆN (chạy sau khi DOM sẵn sàng)
-   ────────────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded', () => {
+/* ════════════════════════════════════════════════
+   GẮN SỰ KIỆN & KHỞI ĐỘNG
+   ════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', async () => {
 
-  /* Form thêm – preview real-time */
+  // Tải loại trước để dropdown có dữ liệu
+  await taiLoai();
+
+  // Khi chọn loại → tự điền % lợi nhuận mặc định
+  $('loaiSanPham').addEventListener('change', () =>
+    onLoaiChange('loaiSanPham', 'loiNhuanTheoLoai')
+  );
+  $('suaLoai').addEventListener('change', () =>
+    onLoaiChange('suaLoai', 'suaLoiNhuanLoai')
+  );
+
+  // Preview real-time form thêm
   ['giaVon', 'loiNhuanTheoLoai', 'loiNhuanTheoSanPham'].forEach(id =>
     $(id).addEventListener('input', updatePreview)
   );
 
-  /* Nút thêm */
+  // Preview real-time modal sửa
+  ['suaGiaVon', 'suaLoiNhuanLoai', 'suaLoiNhuanSP'].forEach(id =>
+    $(id).addEventListener('input', updateSuaPreview)
+  );
+
+  // Nút thêm
   $('btnThem').addEventListener('click', themSanPham);
 
-  /* Confirm xóa */
+  // Confirm xóa
   $('btnCancelDel').addEventListener('click', dongConfirm);
   $('btnOkDel').addEventListener('click', thucHienXoa);
   $('confirmDel').addEventListener('click', e => {
     if (e.target === $('confirmDel')) dongConfirm();
   });
 
-  /* Modal sửa – preview real-time */
-  ['suaGiaVon', 'suaLoiNhuanLoai', 'suaLoiNhuanSP'].forEach(id =>
-    $(id).addEventListener('input', updateSuaPreview)
-  );
-
-  /* Modal sửa – đóng/lưu */
+  // Modal sửa
   $('btnDongModal').addEventListener('click', dongModal);
   $('btnCancelModal').addEventListener('click', dongModal);
   $('btnSua').addEventListener('click', luuSua);
@@ -347,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target === $('modalSua')) dongModal();
   });
 
-  /* Tìm kiếm */
+  // Tìm kiếm
   $('btnTimKiem').addEventListener('click', () => {
     const kw = $('timKiemPhieu').value.trim();
     if (!kw) { showToast('Vui lòng nhập từ khóa!', true); return; }
@@ -357,6 +422,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Enter') $('btnTimKiem').click();
   });
 
-  /* Khởi động – tải danh sách */
+  // Tải danh sách sản phẩm
   taiDuLieu();
 });
