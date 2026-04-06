@@ -6,8 +6,8 @@ const API_BASE = '../Admin/process_SanPham.php';
 
 let loaiList      = [];
 let spList        = [];
-let editingLoaiId = null;
-let editingSpId   = null;
+let editingLoaiMa = null; // Đã đổi thành mã loại thay vì ID
+let editingSpMa   = null; // Đã đổi thành mã sản phẩm thay vì ID
 
 // =============================================================
 // KHỞI TẠO
@@ -70,17 +70,18 @@ function renderLoaiTable() {
             ? new Date(loai.ngay_them).toLocaleDateString('vi-VN')
             : '—';
         const tr = document.createElement('tr');
+        // Lưu ý: truyền chuỗi mã loại phải nằm trong nháy đơn '${loai.ma_loai}'
         tr.innerHTML = `
             <td>${i + 1}</td>
             <td>${loai.ma_loai || ''}</td>
             <td>${loai.ten_loai}</td>
             <td>${fmt}</td>
             <td>
-              <button class="btn-sua1" onclick="openEditLoai(${loai.id})">
+              <button class="btn-sua1" onclick="openEditLoai('${loai.ma_loai}')">
                 <i class="fas fa-edit"></i> Sửa
               </button>
-              <button class="btn-xoa1" onclick="confirmDeleteLoai(${loai.id},'${escHtml(loai.ten_loai)}')">
-                <i class="fas fa-trash"></i> Xoa
+              <button class="btn-xoa1" onclick="confirmDeleteLoai('${loai.ma_loai}','${escHtml(loai.ten_loai)}')">
+                <i class="fas fa-trash"></i> Xóa
               </button>
             </td>`;
         tbody.appendChild(tr);
@@ -106,7 +107,6 @@ async function submitAddLoai() {
     if (res.success) {
         showToast(`Đã thêm loại: ${tenLoai} (${res.ma_loai})`, 'success');
         document.getElementById('formLoaiSanPham').reset();
-        // Reset lại ngày mặc định
         document.getElementById('tungay').value = todayStr();
         await fetchLoaiList();
         renderLoaiTable();
@@ -123,26 +123,26 @@ function bindPopupLoai() {
     if (btn) btn.addEventListener('click', e => { e.preventDefault(); submitEditLoai(); });
 }
 
-function openEditLoai(id) {
-    const loai = loaiList.find(l => l.id == id);
+function openEditLoai(maLoai) {
+    const loai = loaiList.find(l => l.ma_loai === maLoai);
     if (!loai) { showToast('Không tìm thấy loại!', 'error'); return; }
-    editingLoaiId = id;
+    editingLoaiMa = maLoai;
     document.getElementById('editTenLoai').value = loai.ten_loai;
     document.getElementById('tungayPopup').value  = loai.ngay_them || '';
     window.location.hash = '#popup-themsp';
 }
 
 async function submitEditLoai() {
-    if (!editingLoaiId) return;
+    if (!editingLoaiMa) return;
     const tenLoai  = document.getElementById('editTenLoai').value.trim();
     const ngayThem = document.getElementById('tungayPopup').value;
     if (!tenLoai) { showToast('Tên loại không được để trống!', 'warn'); return; }
 
     const res = await apiFetch('loai-san-pham', 'PUT',
-        { id: editingLoaiId, ten_loai: tenLoai, ngay_them: ngayThem });
+        { ma_loai: editingLoaiMa, ten_loai: tenLoai, ngay_them: ngayThem });
     if (res.success) {
         showToast('Cập nhật loại thành công!', 'success');
-        editingLoaiId = null;
+        editingLoaiMa = null;
         window.location.hash = '';
         await fetchLoaiList();
         renderLoaiTable();
@@ -154,9 +154,9 @@ async function submitEditLoai() {
 // =============================================================
 // LOẠI SẢN PHẨM – XÓA
 // =============================================================
-async function confirmDeleteLoai(id, ten) {
+async function confirmDeleteLoai(maLoai, ten) {
     if (!confirm(`Xác nhận xóa loại "${ten}"?\nTất cả sản phẩm loại này phải được xóa trước!`)) return;
-    const res = await apiFetch('loai-san-pham', 'DELETE', { id });
+    const res = await apiFetch('loai-san-pham', 'DELETE', { ma_loai: maLoai });
     showToast(res.message, res.success ? 'success' : 'error');
     if (res.success) { await fetchLoaiList(); renderLoaiTable(); }
 }
@@ -176,7 +176,8 @@ function renderSpTable(filter = {}) {
             sp.ma_sp.toLowerCase().includes(kw) ||
             sp.ten_sp.toLowerCase().includes(kw));
     }
-    if (filter.loai)  list = list.filter(sp => sp.id_loai == filter.loai);
+    // Lọc theo mã loại thay vì ID
+    if (filter.loai)  list = list.filter(sp => sp.ma_loai === filter.loai);
     if (filter.trang) list = list.filter(sp => sp.hien_trang === filter.trang);
 
     if (list.length === 0) {
@@ -189,15 +190,17 @@ function renderSpTable(filter = {}) {
     list.forEach((sp, i) => {
         const badge = sp.hien_trang === 'hien_thi'
             ? '<span class="badge-hienthi"><i class="fas fa-eye"></i> Đang bán</span>'
-            : '<span class="badge-an"><i class="fas fa-eye-slash"></i> An</span>';
+            : '<span class="badge-an"><i class="fas fa-eye-slash"></i> Ẩn</span>';
         const imgSrc   = sp.hinh_anh
-            ? `../Image/${sp.hinh_anh}`
+            ? `../ImageSanPham/${sp.hinh_anh}`
             : '../Image/placeholder.png';
         const moTaShort = (sp.mo_ta || '').substring(0, 60)
             + ((sp.mo_ta || '').length > 60 ? '...' : '');
 
         const tr = document.createElement('tr');
         if (sp.hien_trang === 'an') tr.style.opacity = '0.55';
+        
+        // Truyền chuỗi ma_sp trong dấu nháy đơn
         tr.innerHTML = `
             <td>${i + 1}</td>
             <td><img src="${imgSrc}"
@@ -214,11 +217,11 @@ function renderSpTable(filter = {}) {
             <td><p style="font-size:11px;margin:0;max-width:140px">${moTaShort}</p></td>
             <td>${badge}</td>
             <td>
-              <button class="btn-sua1" onclick="openEditSp(${sp.id})">
+              <button class="btn-sua1" onclick="openEditSp('${sp.ma_sp}')">
                 <i class="fas fa-edit"></i> Sửa
               </button>
-              <button class="btn-xoa1" onclick="confirmDeleteSp(${sp.id},'${escHtml(sp.ten_sp)}')">
-                <i class="fas fa-trash"></i> Xoa
+              <button class="btn-xoa1" onclick="confirmDeleteSp('${sp.ma_sp}','${escHtml(sp.ten_sp)}')">
+                <i class="fas fa-trash"></i> Xóa
               </button>
             </td>`;
         tbody.appendChild(tr);
@@ -329,10 +332,10 @@ function bindFormSua() {
     });
 }
 
-function openEditSp(id) {
-    const sp = spList.find(s => s.id == id);
+function openEditSp(maSp) {
+    const sp = spList.find(s => s.ma_sp === maSp);
     if (!sp) { showToast('Không tìm thấy sản phẩm!', 'error'); return; }
-    editingSpId = id;
+    editingSpMa = maSp;
 
     document.getElementById('suaMaSP').value        = sp.ma_sp;
     document.getElementById('suaTenSP').value       = sp.ten_sp;
@@ -345,16 +348,16 @@ function openEditSp(id) {
     document.getElementById('suaHienTrang').value   = sp.hien_trang;
     document.getElementById('suaXoaHinh').value     = '0';
 
-    // Populate dropdown loai
+    // Populate dropdown loai (set theo mã loại)
     const loaiSel = document.getElementById('suaLoaiSP');
     populateLoaiSelect(loaiSel);
-    loaiSel.value = sp.id_loai;
+    loaiSel.value = sp.ma_loai;
 
     // Hiển hình cũ
     const imgEl  = document.getElementById('previewHinhSua');
     const btnXoa = document.getElementById('btnXoaHinh');
     if (sp.hinh_anh) {
-        imgEl.src             = `../Image/${sp.hinh_anh}`;
+        imgEl.src             = `../ImageSanPham/${sp.hinh_anh}`;
         imgEl.style.display   = 'block';
         btnXoa.style.display  = 'inline-block';
     } else {
@@ -370,7 +373,7 @@ function openEditSp(id) {
 }
 
 async function submitEditSp() {
-    if (!editingSpId) return;
+    if (!editingSpMa) return;
 
     const hinhEl  = document.getElementById('suaHinhAnh');
     const hinh    = hinhEl?.files[0] || null;
@@ -391,13 +394,16 @@ async function submitEditSp() {
         giaBan: '#suaGiaBan', soLuong: '#suaSoLuongTon',
         hienTrang: '#suaHienTrang', moTa: '#suaMoTa',
     }, hinhPath);
+    
     if (!payload) return;
-    payload.id = editingSpId;
+    
+    // Gửi mã cũ cho Backend để biết đường update (do user có thể sửa mã mới)
+    payload.ma_sp_cu = editingSpMa;
 
     const res = await apiFetch('san-pham', 'PUT', payload);
     if (res.success) {
         showToast('Cập nhật sản phẩm thành công!', 'success');
-        editingSpId = null;
+        editingSpMa = null;
         window.location.hash = '';
         await fetchSpList();
         renderSpTable();
@@ -409,13 +415,13 @@ async function submitEditSp() {
 // =============================================================
 // SẢN PHẨM – XÓA
 // =============================================================
-async function confirmDeleteSp(id, ten) {
+async function confirmDeleteSp(maSp, ten) {
     if (!confirm(
         `Xác nhận xóa sản phẩm "${ten}"?\n\n` +
         `• Chưa nhập hàng   → xóa hẳn khỏi CSDL\n` +
         `• Đã có phiếu nhập → chỉ đặt trạng thái Ẩn`
     )) return;
-    const res = await apiFetch('san-pham', 'DELETE', { id });
+    const res = await apiFetch('san-pham', 'DELETE', { ma_sp: maSp });
     showToast(res.message, res.success ? 'success' : 'error');
     if (res.success) { await fetchSpList(); renderSpTable(); }
 }
@@ -481,7 +487,8 @@ function updateLoaiDropdown() {
         selFilter.innerHTML = '<option value="">-- Tất cả loại --</option>';
         loaiList.forEach(l => {
             const opt = document.createElement('option');
-            opt.value = l.id; opt.textContent = l.ten_loai;
+            opt.value = l.ma_loai; // Đổi sang ma_loai
+            opt.textContent = l.ten_loai;
             selFilter.appendChild(opt);
         });
         if (cur) selFilter.value = cur;
@@ -493,7 +500,8 @@ function populateLoaiSelect(sel) {
     sel.innerHTML = '<option value="">-- Chọn loại --</option>';
     loaiList.forEach(l => {
         const opt = document.createElement('option');
-        opt.value = l.id; opt.textContent = `${l.ma_loai} – ${l.ten_loai}`;
+        opt.value = l.ma_loai; // Đổi sang ma_loai
+        opt.textContent = `${l.ma_loai} – ${l.ten_loai}`;
         sel.appendChild(opt);
     });
     if (cur) sel.value = cur;
@@ -507,8 +515,8 @@ function collectSpForm(form, ids, hinhPath) {
 
     const maSP   = (g(ids.maSP)?.value   || '').trim();
     const tenSP  = (g(ids.tenSP)?.value  || '').trim();
-    const idLoai =  g(ids.loaiSP)?.value || '';
-    const dvt    = (g(ids.dvt)?.value    || 'Cai').trim();
+    const maLoai =  g(ids.loaiSP)?.value || ''; // Đổi sang lấy mã loại
+    const dvt    = (g(ids.dvt)?.value    || 'Cái').trim();
     const giaVon =  parseFloat(g(ids.giaVon)?.value  || 0);
     const tyleLN =  parseFloat(g(ids.tyleLN)?.value  || 0);
     const giaBan =  parseFloat(g(ids.giaBan)?.value  || 0);
@@ -516,12 +524,12 @@ function collectSpForm(form, ids, hinhPath) {
     const htrang =  g(ids.hienTrang)?.value || 'hien_thi';
     const moTa   = (g(ids.moTa)?.value   || '').trim();
 
-    if (!maSP)  { showToast('Mã sản phẩm không được để trống!', 'warn'); return null; }
-    if (!tenSP) { showToast('Tên sản phẩm không được để trống!', 'warn'); return null; }
-    if (!idLoai){ showToast('Vui lòng chọn loại sản phẩm!', 'warn');      return null; }
+    if (!maSP)   { showToast('Mã sản phẩm không được để trống!', 'warn'); return null; }
+    if (!tenSP)  { showToast('Tên sản phẩm không được để trống!', 'warn'); return null; }
+    if (!maLoai) { showToast('Vui lòng chọn loại sản phẩm!', 'warn');      return null; }
 
     return {
-        ma_sp: maSP, ten_sp: tenSP, id_loai: idLoai,
+        ma_sp: maSP, ten_sp: tenSP, ma_loai: maLoai, // Truyền đúng trường ma_loai
         don_vi_tinh: dvt, so_luong_ton: sl,
         gia_von: giaVon, ty_le_loi_nhuan: tyleLN, gia_ban: giaBan,
         hinh_anh: hinhPath || '', mo_ta: moTa, hien_trang: htrang,
