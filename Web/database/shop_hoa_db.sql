@@ -15,8 +15,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-<<<<<<< HEAD
-
 -- -------------------------------------------------------------
 -- 1. BẢNG LOẠI SẢN PHẨM (Khóa chính là ma_loai)
 -- -------------------------------------------------------------
