@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `san_pham` (
   CONSTRAINT `fk_sp_loai` FOREIGN KEY (`id_loai`) REFERENCES `loai_san_pham` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
 -- 4. BẢNG PHIẾU NHẬP
 CREATE TABLE IF NOT EXISTS `phieu_nhap` (
   `id`         INT(11)   NOT NULL AUTO_INCREMENT,
