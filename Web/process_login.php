@@ -19,6 +19,15 @@ if ($data) {
         
         // Kiểm tra mật khẩu (vì lúc đăng ký mình đã mã hóa hash)
         if (password_verify($password, $user['password'])) {
+           // KIỂM TRA TÀI KHOẢN CÓ BỊ KHÓA HAY KHÔNG
+        if (isset($user['status']) && $user['status'] === 'locked') {
+            // Nếu bị khóa, trả về thông báo lỗi dạng JSON (vì bạn đang dùng fetch/AJAX)
+            echo json_encode([
+                'status' => 'error', 
+                'message' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Quản trị viên!'
+            ]);
+            exit(); 
+        }
             
             // Lưu thông tin vào Session để dùng cho Giỏ hàng và Trang cá nhân sau này
             $_SESSION['user_id'] = $user['id'];
