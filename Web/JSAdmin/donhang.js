@@ -238,11 +238,10 @@ function renderModal(dh, items) {
         }`;
 
     footer.innerHTML = da_xong
-        ? `<button class="btn-dong" onclick="dongModal()"><i class="fas fa-times"></i> Đóng</button>`
+        ? ``
         : `<button class="btn-capnhat" onclick="capNhatTrangThai(${dh.id})">
                <i class="fas fa-save"></i> Lưu thay đổi
-           </button>
-           <button class="btn-dong" onclick="dongModal()"><i class="fas fa-times"></i> Đóng</button>`;
+           </button>`;
 }
 
 /* ===== CHỌN TRẠNG THÁI (radio pill) ===== */
