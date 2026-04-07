@@ -87,22 +87,25 @@ function renderBangPhieu(list) {
 }
 
 function bindTaoPhieu() {
-    const form = document.getElementById('formTaoPhieu');
-    if (!form) return;
-    form.addEventListener('submit', async e => {
-        e.preventDefault();
-        const ngay   = document.getElementById('ngayNhapMoi').value;
-        const ghiChu = document.getElementById('ghiChuMoi').value.trim();
-        if (!ngay) { showToast('Vui lòng chọn ngày nhập!', 'warn'); return; }
+    // Không dùng form submit nữa, dùng sự kiện click của nút bấm mới
+    const btnTaoNhanh = document.getElementById('btnTaoPhieuMoiNhanh');
+    if (!btnTaoNhanh) return;
 
+    btnTaoNhanh.addEventListener('click', async () => {
+        // Tự động lấy ngày hôm nay
+        const ngay = todayStr();
+        const ghiChu = ''; // Ghi chú rỗng ban đầu
+
+        // Gửi API tạo phiếu
         const res = await pnFetch('phieu-nhap', 'POST', { ngay_nhap: ngay, ghi_chu: ghiChu });
+        
         if (res.success) {
-            showToast(`Đã tạo ${res.ma_phieu}! Bấm Sửa để thêm sản phẩm.`, 'success');
-            form.reset();
-            document.getElementById('ngayNhapMoi').value = todayStr();
-            await fetchPhieuNhap();
-            moPopupPhieu(res.ma_phieu);
-        } else showToast(res.message, 'error');
+            showToast(`Đã tạo phiếu mới! Mời bạn thêm sản phẩm.`, 'success');
+            await fetchPhieuNhap(); // Load lại bảng ở ngoài
+            moPopupPhieu(res.ma_phieu); // Tự động mở popup lên luôn
+        } else {
+            showToast(res.message, 'error');
+        }
     });
 }
 

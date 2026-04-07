@@ -42,7 +42,17 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
 <div class="content">
 <div class="container-phieunhap">
 
-  <!-- ===== 1. TIM KIEM PHIEU NHAP ===== -->
+  <!-- ===== 1. TAO PHIEU NHAP MOI ===== -->
+  <section>
+    <h2><i class="fas fa-file-invoice-dollar" style="font-size:22px"></i> Tạo phiếu nhập mới</h2>
+    <div style="margin-bottom: 20px;">
+        <button type="button" id="btnTaoPhieuMoiNhanh" class="btn-them" style="padding: 12px 24px; font-size: 15px;">
+          <i class="fas fa-plus"></i> Tạo phiếu nhập ngay
+        </button>
+    </div>
+  </section>
+
+  <!-- ===== 2. TIM KIEM PHIEU NHAP ===== -->
   <section>
     <h2><i class="fas fa-search" style="font-size:22px"></i> Tìm kiếm phiếu nhập</h2>
     <div class="search">
@@ -52,42 +62,6 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
         <i class="fas fa-search"></i> Tìm kiếm
       </button>
     </div>
-
-    <h2><i class="fas fa-clipboard-list" style="font-size:22px"></i> Kết quả tìm kiếm</h2>
-    <div class="DanhMucTimPhieu">
-      <table id="bangTimKiem">
-        <thead>
-          <tr>
-            <th>Mã phiếu</th><th>Ngày nhập</th><th>Số SP</th>
-            <th>Tổng tiền</th><th>Trạng thái</th>
-          </tr>
-        </thead>
-        <tbody id="tbodyTimKiem">
-          <tr><td colspan="5" style="color:#999;text-align:center">
-            Nhập từ khóa và nhấn Tìm kiếm
-          </td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ===== 2. TAO PHIEU NHAP MOI ===== -->
-  <section>
-    <h2><i class="fas fa-file-invoice-dollar" style="font-size:22px"></i> Tạo phiếu nhập mới</h2>
-    <form id="formTaoPhieu">
-      <label for="ngayNhapMoi">Ngày nhập <span style="color:red">*</span></label>
-      <input type="date" id="ngayNhapMoi" value="<?= date('Y-m-d') ?>" required />
-
-      <label for="ghiChuMoi">Ghi chú</label>
-      <input type="text" id="ghiChuMoi" placeholder="VD: Nhập hàng đợt 1 tháng 4..." />
-
-      <div class="btn-wrapper">
-        <button type="submit" class="btn-them">
-          <i class="fas fa-plus"></i> Tạo phiếu
-        </button>
-      </div>
-    </form>
-  </section>
 
   <!-- ===== 3. DANH SACH PHIEU NHAP ===== -->
   <section>
@@ -119,98 +93,100 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
 <!-- ===================================================== -->
 <div id="popup-suaphieu" class="overlay-phieu">
   <a href="#" class="overlay-bg"></a>
-  <div class="popup-box popup-phieu-large">
+  
+  <div class="popup-box popup-phieu-large" style="width: 1100px; max-width: 95vw; padding: 20px;">
 
-    <h2><i class="fas fa-edit"></i>
-      Phiếu nhập: <span id="popupMaPhieu"></span>
-      <span id="popupBadge"></span>
+    <h2 style="margin-bottom: 15px;">
+        <i class="fas fa-edit"></i>
+        Phiếu nhập: <span id="popupMaPhieu"></span>
+        <span id="popupBadge"></span>
     </h2>
 
-    <!-- Thong tin dau phieu -->
-    <div class="popup-info-row">
-      <div class="popup-field">
-        <label>Ngày nhập</label>
-        <input type="date" id="popupNgayNhap" />
-      </div>
-      <div class="popup-field">
-        <label>Ghi chú</label>
-        <input type="text" id="popupGhiChu" placeholder="Ghi chú..." />
-      </div>
-      <div class="popup-field" style="align-self:flex-end">
-        <button type="button" id="btnLuuDauPhieu" class="btn-luu-info">
-          <i class="fas fa-save"></i> Lưu thông tin
-        </button>
-      </div>
-    </div>
+    <div class="popup-layout-3-phan">
+        
+        <div class="popup-cot-trai">
+            
+            <div id="khuTimSP" class="khu-vuc-box">
+                <h3><i class="fas fa-plus-circle"></i> Thêm sản phẩm vào phiếu</h3>
+                
+                <div class="form-group-doc" style="position: relative;">
+                    <label>Tìm sản phẩm</label>
+                    <input type="text" id="timSPPhieu" placeholder="Nhập mã hoặc tên sản phẩm..." autocomplete="off" />
+                    <div id="goiYSP" class="goi-y-sp" style="display:none; position: absolute; top: 100%; left: 0; width: 100%; z-index: 999; border: 1px solid #ccc; background: #fff; max-height: 150px; overflow-y: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"></div>
+                </div>
 
-    <hr style="margin:14px 0;border-color:#eee" />
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <div class="form-group-doc" style="flex: 1;">
+                        <label>Số lượng</label>
+                        <input type="number" id="soLuongThem" min="1" value="1" />
+                    </div>
+                    <div class="form-group-doc" style="flex: 1;">
+                        <label>Giá nhập (VND)</label>
+                        <input type="number" id="donGiaThem" min="0" step="1000" placeholder="0" />
+                    </div>
+                </div>
 
-    <!-- Tim kiem san pham de them vao phieu -->
-    <div id="khuTimSP" class="khu-tim-sp">
-      <h3 style="margin:0 0 10px;font-size:15px">
-        <i class="fas fa-plus-circle"></i> Thêm sản phẩm vào phiếu
-      </h3>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
-        <div style="flex:2;min-width:200px">
-          <label style="font-size:12px;font-weight:600">Tìm sản phẩm</label>
-          <input type="text" id="timSPPhieu"
-                 placeholder="Nhập mã hoặc tên sản phẩm..." />
+                <button type="button" id="btnThemSPVaoPhieu" class="btn-chuc-nang mt-10" style="width: 100%; background: #28a745;">
+                    <i class="fas fa-plus"></i> Thêm vào phiếu
+                </button>
+            </div>
+
+            <div class="khu-vuc-box" style="margin-top: 15px;">
+                <h3><i class="fas fa-info-circle"></i> Thông tin phiếu</h3>
+                <div class="form-group-doc">
+                    <label>Ngày nhập</label>
+                    <input type="date" id="popupNgayNhap" />
+                </div>
+                <div class="form-group-doc mt-10">
+                    <label>Ghi chú</label>
+                    <input type="text" id="popupGhiChu" placeholder="Ghi chú..." />
+                </div>
+                <button type="button" id="btnLuuDauPhieu" class="btn-chuc-nang mt-10" style="width: 100%; background: #007bff;">
+                    <i class="fas fa-save"></i> Lưu thông tin
+                </button>
+            </div>
+
+        </div> 
+        <div class="popup-cot-phai">
+            
+            <div class="khu-vuc-box" style="height: 100%; display: flex; flex-direction: column;">
+                <h3><i class="fas fa-list"></i> Danh sách sản phẩm trong phiếu</h3>
+                
+                <div style="overflow-y: auto; flex-grow: 1; max-height: 400px; border: 1px solid #eee;">
+                    <table id="bangChiTietPhieu" style="width: 100%; margin: 0;">
+                        <thead>
+                        <tr>
+                            <th>#</th><th>Mã SP</th><th>Tên sản phẩm</th>
+                            <th>DVT</th><th>Số lượng</th><th>Giá nhập</th>
+                            <th>Thành tiền</th><th id="cotChucNang">Chức năng</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbodyChiTiet">
+                        <tr><td colspan="8" style="text-align:center;color:#999">Chưa có sản phẩm</td></tr>
+                        </tbody>
+                        <tfoot>
+                        <tr style="background-color: #f9f9f9;">
+                            <td colspan="6" style="text-align:right;font-weight:700">Tổng cộng:</td>
+                            <td id="tongTienChiTiet" style="font-weight:700;color:#e74c3c">0 đ</td>
+                            <td></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div id="khuHoanThanh" style="margin-top:15px; text-align:right;">
+                    <button type="button" id="btnHoanThanhPhieu" class="btn-chuc-nang" style="background: red; font-size: 15px; padding: 10px 20px;">
+                        <i class="fas fa-check-circle"></i> Hoàn thành phiếu
+                    </button>
+                </div>
+            </div>
+
         </div>
-        <div style="flex:1;min-width:130px">
-          <label style="font-size:12px;font-weight:600">Số lượng</label>
-          <input type="number" id="soLuongThem" min="1" value="1" />
-        </div>
-        <div style="flex:1;min-width:140px">
-          <label style="font-size:12px;font-weight:600">Giá nhập (VND)</label>
-          <input type="number" id="donGiaThem" min="0" step="1000" placeholder="0" />
-        </div>
-        <div style="align-self:flex-end">
-          <button type="button" id="btnThemSPVaoPhieu" class="btn-them-sp">
-            <i class="fas fa-plus"></i> Thêm
-          </button>
-        </div>
-      </div>
-
-      <!-- Ket qua goi y san pham -->
-      <div id="goiYSP" class="goi-y-sp" style="display:none"></div>
-    </div>
-
-    <!-- Danh sach chi tiet phieu -->
-    <h3 style="margin:14px 0 8px;font-size:15px">
-      <i class="fas fa-list"></i> Danh sách sản phẩm trong phiếu
-    </h3>
-    <div style="overflow-x:auto">
-      <table id="bangChiTietPhieu">
-        <thead>
-          <tr>
-            <th>#</th><th>Mã SP</th><th>Tên sản phẩm</th>
-            <th>DVT</th><th>Số lượng</th><th>Giá nhập</th>
-            <th>Thành tiền</th><th id="cotChucNang">Chức năng</th>
-          </tr>
-        </thead>
-        <tbody id="tbodyChiTiet">
-          <tr><td colspan="8" style="text-align:center;color:#999">Chưa có sản phẩm</td></tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="6" style="text-align:right;font-weight:700">Tổng cộng:</td>
-            <td id="tongTienChiTiet" style="font-weight:700;color:#e74c3c"></td>
-            <td></td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-
-    <!-- Nut hoan thanh phieu -->
-    <div id="khuHoanThanh" style="margin-top:16px;text-align:right">
-      <button type="button" id="btnHoanThanhPhieu" class="btn-hoan-thanh">
-        <i class="fas fa-check-circle"></i> Hoàn thành phiếu
-      </button>
-    </div>
-
-    <a href="#" class="close" id="btnDongPopup">&#x2715; Đóng</a>
+        </div> 
+    <a href="#" class="close" id="btnDongPopup" style="display: block; text-align: center; margin-top: 15px; font-weight: bold;">&#x2715; Đóng</a>
+  
+  </div> 
   </div>
-</div>
 
 <!-- Popup sua 1 dong chi tiet -->
 <div id="popup-suadong" class="overlay-phieu" style="z-index:1001">

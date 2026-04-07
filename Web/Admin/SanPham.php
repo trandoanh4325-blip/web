@@ -111,6 +111,7 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
     <h2><i class="fas fa-plus-square" style="font-size:22px"></i> Thêm sản phẩm</h2>
     <form id="formThemSanPham">
 
+      <!-- Hàng 1: Mã SP, Tên SP, Loại SP -->
       <div class="form-row">
         <div class="form-group">
           <label>Mã sản phẩm <span class="required">*</span></label>
@@ -120,21 +121,43 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
           <label>Tên sản phẩm <span class="required">*</span></label>
           <input type="text" id="tenSP" placeholder="Tên sản phẩm" required />
         </div>
-      </div>
-
-      <div class="form-row">
         <div class="form-group">
           <label>Loại sản phẩm <span class="required">*</span></label>
           <select id="loaiSP">
             <option value="">-- Chọn loại --</option>
           </select>
         </div>
+      </div>
+
+      <!-- Hàng 2: Số lượng tồn, Đơn vị tính, Hình ảnh -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Số lượng tồn ban đầu</label>
+          <input type="number" id="soLuongTon" min="0" value="0" />
+        </div>
         <div class="form-group">
           <label>Đơn vị tính</label>
           <input type="text" id="donViTinh" value="Cái" placeholder="Cái / Bó / Hộp..." />
         </div>
+        <div class="form-group">
+          <label>Hình ảnh</label>
+          <input type="file" id="hinhAnh" accept="image/*" />
+          <div id="previewHinhThem" style="margin-top:6px;display:none">
+            <img id="imgPreviewThem" src="" alt="Xem trước"
+                 style="width:70px;height:70px;object-fit:cover;border-radius:8px;border:1px solid #ddd" />
+          </div>
+        </div>
       </div>
 
+      <!-- Hàng 3: Mô tả (full width) -->
+      <div class="form-row">
+        <div class="form-group form-group-full">
+          <label>Mô tả</label>
+          <textarea id="moTa" rows="3" placeholder="Mô tả sản phẩm..."></textarea>
+        </div>
+      </div>
+
+      <!-- Hàng 4: Giá vốn, Tỷ lệ LN, Giá bán -->
       <div class="form-row">
         <div class="form-group">
           <label>Giá vốn (VND)</label>
@@ -151,11 +174,8 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
         </div>
       </div>
 
+      <!-- Hàng 5: Hiện trạng -->
       <div class="form-row">
-        <div class="form-group">
-          <label>Số lượng tồn ban đầu</label>
-          <input type="number" id="soLuongTon" min="0" value="0" />
-        </div>
         <div class="form-group">
           <label>Hiện trạng</label>
           <select id="hienTrang">
@@ -163,21 +183,6 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
             <option value="an">Ẩn (Không bán)</option>
           </select>
         </div>
-      </div>
-
-      <div class="form-group full-width">
-        <label>Hình ảnh</label>
-        <input type="file" id="hinhAnh" accept="image/*" />
-        <div id="previewHinhThem" style="margin-top:6px;display:none">
-          <img id="imgPreviewThem"
-               src="" alt="Xem trước"
-               style="width:90px;height:90px;object-fit:cover;border-radius:8px;border:1px solid #ddd" />
-        </div>
-      </div>
-
-      <div class="form-group full-width">
-        <label>Mô tả</label>
-        <textarea id="moTa" rows="3" placeholder="Mô tả sản phẩm..."></textarea>
       </div>
 
       <button type="submit"><i class="fas fa-plus"></i> Thêm sản phẩm</button>

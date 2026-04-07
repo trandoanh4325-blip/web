@@ -8,7 +8,7 @@
   margin: 0 auto;
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-  max-width: 1000px;
+  max-width: 1300px;
   font-family: "Segoe UI", Arial, sans-serif;
   margin-bottom: 60px;
 }
@@ -184,42 +184,60 @@
 
 /* Form thêm sản phẩm */
 #formThemSanPham {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px 20px;
-  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 960px;
   margin: 0 auto;
   position: relative;
   background: #fff;
-  padding: 20px;
-  padding-bottom: 75px;
+  padding: 20px 24px 70px;
   border-radius: 15px;
   border: 1px solid #000000;
+}
+
+#formThemSanPham .form-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+#formThemSanPham .form-group {
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+#formThemSanPham .form-group-full {
+  flex: 0 0 100%;
+  width: 100%;
 }
 
 #formThemSanPham label {
   font-weight: 600;
   color: #333;
+  font-size: 13px;
 }
 
 #formThemSanPham input[type="text"],
+#formThemSanPham input[type="number"],
 #formThemSanPham select,
 #formThemSanPham textarea,
 #formThemSanPham input[type="file"] {
   width: 100%;
-  padding: 8px;
+  padding: 8px 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 14px;
   box-sizing: border-box;
 }
 
-#formMaSP   { grid-column: 1; }
-#formTenSP  { grid-column: 2; }
-#formLoaiSP { grid-column: 3; }
-
-#formHinhAnh { grid-column: 1 / span 1; }
-#formMoTa    { grid-column: 2 / span 2; height: 70px; resize: vertical; }
+#formThemSanPham textarea {
+  resize: vertical;
+  height: 70px;
+}
 
 #formThemSanPham button {
   position: absolute;
@@ -228,8 +246,8 @@
   background-color: red;
   color: white;
   border: none;
-  width: 150px;
-  padding: 8px 0;
+  width: 160px;
+  padding: 9px 0;
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;

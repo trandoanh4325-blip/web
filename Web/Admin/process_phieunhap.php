@@ -260,16 +260,34 @@ function handleHoanThanh(array $body): void
     $pdo->beginTransaction();
     try {
         foreach ($chiTiets as $ct) {
-            $pdo->prepare('UPDATE san_pham SET so_luong_ton = so_luong_ton + ? WHERE ma_sp=?')
-                ->execute([$ct['so_luong'], $ct['ma_sp']]);
+            // Lấy tồn kho và giá vốn hiện tại TRƯỚC khi cộng thêm
+            $stSP = $pdo->prepare('SELECT so_luong_ton, gia_von FROM san_pham WHERE ma_sp=?');
+            $stSP->execute([$ct['ma_sp']]);
+            $sp = $stSP->fetch();
 
+            $soLuongTonCu  = (float)($sp['so_luong_ton'] ?? 0);
+            $giaVonCu      = (float)($sp['gia_von']      ?? 0);
+            $soLuongNhap   = (float)$ct['so_luong'];
+            $giaNhapMoi    = (float)$ct['don_gia'];
+
+            // Bình quân gia quyền
+            $soLuongTonMoi = $soLuongTonCu + $soLuongNhap;
+            $giaVonMoi = ($soLuongTonMoi > 0)
+                ? ($soLuongTonCu * $giaVonCu + $soLuongNhap * $giaNhapMoi) / $soLuongTonMoi
+                : $giaNhapMoi;
+
+            // Cộng số lượng
+            $pdo->prepare('UPDATE san_pham SET so_luong_ton = so_luong_ton + ? WHERE ma_sp=?')
+                ->execute([$soLuongNhap, $ct['ma_sp']]);
+
+            // Cập nhật giá vốn (bình quân) và giá bán
             $pdo->prepare('UPDATE san_pham SET gia_von = ?, gia_ban = ROUND(? * (1 + ty_le_loi_nhuan / 100)) WHERE ma_sp=?')
-                ->execute([$ct['don_gia'], $ct['don_gia'], $ct['ma_sp']]);
+                ->execute([$giaVonMoi, $giaVonMoi, $ct['ma_sp']]);
         }
         $pdo->prepare("UPDATE phieu_nhap SET trang_thai='hoan_thanh' WHERE ma_phieu=?")->execute([$maPhieu]);
         $pdo->commit();
         
-        jsonResp(true, "Phiếu $maPhieu đã hoàn thành! Giá vốn và số lượng tồn đã được cập nhật.");
+        jsonResp(true, "Phiếu $maPhieu đã hoàn thành! Giá vốn (bình quân gia quyền) và số lượng tồn đã được cập nhật.");
     } catch (Throwable $e) {
         $pdo->rollBack();
         jsonResp(false, 'Lỗi: ' . $e->getMessage());
