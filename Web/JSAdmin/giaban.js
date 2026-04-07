@@ -95,8 +95,9 @@ async function taiLoai() {
 
     _loaiData = data.data || [];
 
+    // Dùng ma_loai làm value cho option (khớp với giaban_api.php)
     const opts = _loaiData
-      .map(l => `<option value="${l.id}">${l.ten_loai}</option>`)
+      .map(l => `<option value="${l.ma_loai}">${l.ten_loai}</option>`)
       .join('');
     const placeholder = '<option value="">-- Chọn loại --</option>';
 
@@ -109,8 +110,8 @@ async function taiLoai() {
 
 /* Khi chọn loại → tự điền % lợi nhuận mặc định của loại đó */
 function onLoaiChange(selectId, lnInputId) {
-  const idLoai = parseInt($(selectId).value);
-  const loai   = _loaiData.find(l => l.id === idLoai);
+  const maLoai = $(selectId).value;
+  const loai   = _loaiData.find(l => l.ma_loai === maLoai);
   $(lnInputId).value = (loai && loai.ty_le_loi_nhuan > 0)
                        ? loai.ty_le_loi_nhuan : '';
 }
@@ -118,11 +119,12 @@ function onLoaiChange(selectId, lnInputId) {
 /* ════════════════════════════════════════════════
    RENDER BẢNG
    Field aliases từ giaban_api.php khớp với JS:
-     r.loai           = l.ten_loai
-     r.ten_san_pham   = sp.ten_sp
-     r.loi_nhuan_loai = l.ty_le_loi_nhuan
+     r.ma_loai            = ma_loai của sản phẩm
+     r.loai               = l.ten_loai
+     r.ten_san_pham       = sp.ten_sp
+     r.loi_nhuan_loai     = l.ty_le_loi_nhuan
      r.loi_nhuan_san_pham = sp.ty_le_loi_nhuan
-     r.gia_ban_tinh   = sp.gia_ban
+     r.gia_ban_tinh       = sp.gia_ban
      r.loi_nhuan_hieu_dung (computed)
    ════════════════════════════════════════════════ */
 function makeRow(r, idx) {
@@ -131,22 +133,23 @@ function makeRow(r, idx) {
   const ln  = r.loi_nhuan_hieu_dung
               ?? (r.loi_nhuan_san_pham ?? r.loi_nhuan_loai);
   const ten = (r.ten_san_pham || '').replace(/'/g, "\\'");
+  const maSP = r.ma_sp ?? '';
 
-  return `<tr data-id="${r.id}">
+  return `<tr data-masp="${maSP}">
     <td style="color:#999;font-size:13px;">${idx + 1}</td>
-    <td style="font-size:12px;color:#666;">${r.ma_sp ?? '—'}</td>
+    <td style="font-size:12px;color:#666;">${maSP || '—'}</td>
     <td>${r.loai}</td>
     <td><strong>${r.ten_san_pham}</strong></td>
     <td>${fmt(r.gia_von)}</td>
     <td style="color:#27ae60;font-weight:600;">${fmtPct(ln)}</td>
     <td style="color:#0195b2;font-weight:700;">${fmt(gb)}</td>
     <td style="text-align:center;">
-      <button class="btn-sua" title="Sửa" onclick="moModalSua(${r.id})">
+      <button class="btn-sua" title="Sửa" onclick="moModalSua('${maSP}')">
         <i class="fas fa-pen"></i>
       </button>
     </td>
     <td style="text-align:center;">
-      <button class="btn-xoa" title="Xóa" onclick="moConfirmXoa(${r.id},'${ten}')">
+      <button class="btn-xoa" title="Xóa" onclick="moConfirmXoa('${maSP}','${ten}')">
         <i class="fas fa-trash"></i>
       </button>
     </td>
@@ -189,11 +192,11 @@ async function taiDuLieu() {
    THÊM SẢN PHẨM
    ════════════════════════════════════════════════ */
 async function themSanPham() {
-  const idLoai = parseInt($('loaiSanPham').value);
+  const maLoai = $('loaiSanPham').value;
   const ten    = $('tenSanPham').value.trim();
   const gv     = $('giaVon').value;
 
-  if (!idLoai) {
+  if (!maLoai) {
     showToast('Vui lòng chọn loại sản phẩm!', true); return;
   }
   if (!ten || !gv || parseFloat(gv) <= 0) {
@@ -210,7 +213,7 @@ async function themSanPham() {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        id_loai:         idLoai,
+        ma_loai:         maLoai,
         loiNhuanLoai:    $('loiNhuanTheoLoai').value    || 0,
         tenSanPham:      ten,
         giaVon:          gv,
@@ -242,10 +245,10 @@ async function themSanPham() {
 /* ════════════════════════════════════════════════
    XÓA – confirm dialog
    ════════════════════════════════════════════════ */
-let _xoaId = null;
+let _xoaMaSP = null;
 
-function moConfirmXoa(id, ten) {
-  _xoaId = id;
+function moConfirmXoa(maSP, ten) {
+  _xoaMaSP = maSP;
   $('confirmMsg').innerHTML =
     `Bạn có chắc muốn xóa <strong>"${ten}"</strong>?<br/>
      <small style="color:#e74c3c">SP đã có phiếu nhập sẽ được ẩn thay vì xóa hẳn.</small>`;
@@ -254,16 +257,16 @@ function moConfirmXoa(id, ten) {
 
 function dongConfirm() {
   $('confirmDel').classList.remove('open');
-  _xoaId = null;
+  _xoaMaSP = null;
 }
 
 async function thucHienXoa() {
-  if (!_xoaId) return;
-  const id = _xoaId;
+  if (!_xoaMaSP) return;
+  const maSP = _xoaMaSP;
   dongConfirm();
 
   try {
-    const res  = await fetch(`${API_URL}?id=${id}`, { method: 'DELETE' });
+    const res  = await fetch(`${API_URL}?ma_sp=${encodeURIComponent(maSP)}`, { method: 'DELETE' });
     const data = await res.json();
     if (data.success) {
       showToast('🗑️ ' + data.message);
@@ -281,14 +284,14 @@ async function thucHienXoa() {
 /* ════════════════════════════════════════════════
    SỬA – Modal popup
    ════════════════════════════════════════════════ */
-function moModalSua(id) {
-  const row = _allData.find(r => r.id == id);
+function moModalSua(maSP) {
+  const row = _allData.find(r => r.ma_sp === maSP);
   if (!row) { showToast('Không tìm thấy dữ liệu!', true); return; }
 
-  $('suaId').value           = row.id;
-  $('suaLoai').value         = row.id_loai;            // dùng ID cho select
-  $('suaLoiNhuanLoai').value = row.loi_nhuan_loai;     // alias từ SQL
-  $('suaTen').value          = row.ten_san_pham;       // alias từ SQL
+  $('suaId').value           = row.ma_sp;               // lưu ma_sp vào hidden field
+  $('suaLoai').value         = row.ma_loai;             // dùng ma_loai cho select
+  $('suaLoiNhuanLoai').value = row.loi_nhuan_loai;      // alias từ SQL
+  $('suaTen').value          = row.ten_san_pham;        // alias từ SQL
   $('suaGiaVon').value       = row.gia_von;
   $('suaLoiNhuanSP').value   = row.loi_nhuan_san_pham > 0
                                ? row.loi_nhuan_san_pham : '';
@@ -318,8 +321,8 @@ async function luuSua() {
       method:  'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        id:              parseInt($('suaId').value),
-        idLoai:          parseInt($('suaLoai').value),   // gửi ID loại
+        ma_sp:           $('suaId').value,              // gửi ma_sp thay vì id
+        maLoai:          $('suaLoai').value,            // gửi ma_loai thay vì idLoai
         loiNhuanLoai:    $('suaLoiNhuanLoai').value || 0,
         tenSanPham:      ten,
         giaVon:          gv,
@@ -333,7 +336,7 @@ async function luuSua() {
       dongModal();
       // Cập nhật row trong _allData không cần reload toàn bộ
       if (data.data) {
-        const idx = _allData.findIndex(r => r.id == data.data.id);
+        const idx = _allData.findIndex(r => r.ma_sp === data.data.ma_sp);
         if (idx !== -1) _allData[idx] = data.data;
         renderMainTable(_allData);
       } else {

@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- -------------------------------------------------------------
 -- 1. BẢNG LOẠI SẢN PHẨM (Khóa chính là ma_loai)
 -- -------------------------------------------------------------
-CREATE TABLE `loai_san_pham` (
+CREATE TABLE IF NOT EXISTS `loai_san_pham` (
   `ma_loai`   VARCHAR(20)  NOT NULL,
   `ten_loai`  VARCHAR(100) NOT NULL,
   `ngay_them` DATE         DEFAULT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE `loai_san_pham` (
 -- -------------------------------------------------------------
 -- 2. BẢNG SẢN PHẨM (Khóa chính là ma_sp, khóa ngoại ma_loai)
 -- -------------------------------------------------------------
-CREATE TABLE `san_pham` (
+CREATE TABLE IF NOT EXISTS `san_pham` (
   `ma_sp`            VARCHAR(30)   NOT NULL,
   `ten_sp`           VARCHAR(200)  NOT NULL,
   `ma_loai`          VARCHAR(20)   DEFAULT NULL,
@@ -82,7 +82,7 @@ VALUES
 -- -------------------------------------------------------------
 -- BẢNG PHIẾU NHẬP (Khóa chính: ma_phieu)
 -- -------------------------------------------------------------
-CREATE TABLE `phieu_nhap` (
+CREATE TABLE IF NOT EXISTS `phieu_nhap` (
   `ma_phieu`   VARCHAR(20) NOT NULL,
   `ngay_nhap`  DATE        NOT NULL,
   `trang_thai` ENUM('chua_hoan_thanh','hoan_thanh') NOT NULL DEFAULT 'chua_hoan_thanh',
@@ -94,7 +94,7 @@ CREATE TABLE `phieu_nhap` (
 -- -------------------------------------------------------------
 -- BẢNG CHI TIẾT PHIẾU NHẬP (Khóa chính gồm 2 cột: ma_phieu và ma_sp)
 -- -------------------------------------------------------------
-CREATE TABLE `chi_tiet_phieu_nhap` (
+CREATE TABLE IF NOT EXISTS `chi_tiet_phieu_nhap` (
   `ma_phieu`  VARCHAR(20)   NOT NULL,
   `ma_sp`     VARCHAR(30)   NOT NULL,
   `so_luong`  INT(11)       NOT NULL DEFAULT 0,
@@ -117,3 +117,41 @@ INSERT IGNORE INTO `chi_tiet_phieu_nhap` (`ma_phieu`,`ma_sp`,`so_luong`,`don_gia
   ('PN001','SP001',50, 80000), 
   ('PN001','SP002',100,15000), 
   ('PN002','SP003',20,250000);
+  
+  -- 6. BẢNG ĐƠN HÀNG
+CREATE TABLE IF NOT EXISTS `don_hang` (
+  `ma_don`        VARCHAR(50)    NOT NULL,
+  `id` INT(11)        NOT NULL,
+  `ngay_dat`      DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `hoat_dong`     ENUM('dang_cho', 'dang_chuan_bi', 'cho_lay_hang', 'dang_van_chuyen', 'giao_thanh_cong', 'da_huy') NOT NULL DEFAULT 'dang_cho',
+  `trang_thai_tt` ENUM('chua_thanh_toan', 'da_thanh_toan', 'hoan_tien') NOT NULL DEFAULT 'chua_thanh_toan',
+  `dia_chi_giao`  VARCHAR(255)   NOT NULL,
+  `phuong`        VARCHAR(100)   NOT NULL,
+  `quan`          VARCHAR(100)   NOT NULL,
+  `thanh_pho`     VARCHAR(100)   NOT NULL,
+  `ly_do_huy`     TEXT           DEFAULT NULL,
+  `tong_tien`     DECIMAL(12,2)  NOT NULL DEFAULT 0,
+  `created_at`    TIMESTAMP      DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ma_don`),
+  UNIQUE KEY `ma_don` (`ma_don`),
+  CONSTRAINT `fk_donhang_user` FOREIGN KEY (`id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 7. BẢNG CHI TIẾT ĐƠN HÀNG
+CREATE TABLE IF NOT EXISTS `chi_tiet_don_hang` (
+  `ma_don` VARCHAR(50)        NOT NULL,
+  `ma_sp` VARCHAR(30)        NOT NULL,
+  `so_luong`    INT(11)        NOT NULL DEFAULT 1,
+  `gia_ban`     DECIMAL(12,2)  NOT NULL,
+  PRIMARY KEY (`ma_don`,`ma_sp`),
+  CONSTRAINT `fk_ct_donhang` FOREIGN KEY (`ma_don`) REFERENCES `don_hang` (`ma_don`),
+  CONSTRAINT `fk_ct_sanpham` FOREIGN KEY (`ma_sp`) REFERENCES `san_pham` (`ma_sp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+USE shop_hoa_db;
+
+ALTER TABLE `loai_san_pham`
+  ADD COLUMN IF NOT EXISTS `ty_le_loi_nhuan`
+    DECIMAL(6,2) NOT NULL DEFAULT 0.00
+    COMMENT '% lợi nhuận mặc định áp dụng cho SP thuộc loại này'
+  AFTER `ten_loai`;
