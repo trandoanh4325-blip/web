@@ -209,3 +209,197 @@
   animation: spin 0.7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══════════════════════════════════════════
+   AUTOCOMPLETE – Tìm sản phẩm
+   ═══════════════════════════════════════════ */
+.sp-search-wrap {
+  position: relative;
+  margin: 8px 0 4px;
+}
+
+.sp-search-wrap input {
+  width: 100%;
+  padding: 10px 40px 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.sp-search-wrap input:focus {
+  border-color: #0195b2;
+  box-shadow: 0 0 5px rgba(1,149,178,0.3);
+  outline: none;
+}
+
+.sp-search-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+/* Dropdown gợi ý */
+.sp-suggest-list {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  list-style: none;
+  padding: 4px 0;
+  margin: 0;
+  z-index: 500;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.sp-suggest-list.open { display: block; }
+
+.suggest-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-size: 13.5px;
+}
+
+.suggest-item:hover,
+.suggest-item.active { background: #e8f7fb; }
+
+.suggest-ma {
+  font-weight: 700;
+  color: #0195b2;
+  min-width: 60px;
+  font-size: 12px;
+}
+
+.suggest-ten {
+  flex: 1;
+  color: #333;
+}
+
+.suggest-loai {
+  font-size: 12px;
+  color: #888;
+}
+
+.suggest-badge-an {
+  font-size: 11px;
+  background: #ffe0e0;
+  color: #e74c3c;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-weight: 600;
+}
+
+.suggest-empty {
+  padding: 14px;
+  text-align: center;
+  color: #aaa;
+  font-size: 13px;
+}
+
+/* ── Card sản phẩm đã chọn ── */
+.sp-da-chon {
+  background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+  border: 2px solid #0195b2;
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin: 8px 0 16px;
+}
+
+.sp-da-chon-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sp-da-chon-inner > i {
+  font-size: 20px;
+  color: #0195b2;
+  flex-shrink: 0;
+}
+
+.sp-da-chon-inner > div {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.sp-da-chon .sp-ma {
+  font-weight: 700;
+  color: #0195b2;
+  font-size: 13px;
+  background: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.sp-da-chon .sp-ten {
+  font-weight: 700;
+  color: #222;
+  font-size: 14px;
+}
+
+.sp-da-chon .sp-loai {
+  font-size: 12px;
+  color: #666;
+}
+
+.sp-da-chon #btnBoChon {
+  background: #e74c3c;
+  border: none;
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  transition: background 0.2s;
+}
+
+.sp-da-chon #btnBoChon:hover { background: #c0392b; }
+
+/* ── Input readonly styling ── */
+input[readonly] {
+  background-color: #f5f5f5 !important;
+  color: #666;
+  cursor: not-allowed;
+}
+
+input[readonly]:focus {
+  border-color: #ccc !important;
+  box-shadow: none !important;
+}
+
+/* ── Lock trạng thái form chờ chọn SP ── */
+.form-fields-locked input:not([type="button"]),
+.form-fields-locked select,
+.form-fields-locked .preview-box {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.form-fields-locked #btnThem {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

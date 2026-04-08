@@ -1,9 +1,18 @@
+<?php
+// =============================================================
+// htmlAdmin/giaban.php  –  Trang quản lý giá bán (Admin)
+// Đổi tên từ giaban.html → giaban.php
+// =============================================================
+session_start();
+require_once '../includes/db_connect.php';
+$adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'UTF-8');
+?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quản Lý Giá Bán</title>
+  <title>Quản Lý Giá Bán – <?= $adminName ?></title>
   <link rel="stylesheet" href="../cssAdmin/giaban.css" />
   <link rel="stylesheet" href="../cssAdmin/styleAdmin.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
@@ -16,14 +25,14 @@
       <a href="Admin.html"><img src="../Image/logostore-Photoroom.png" alt="Logo" /></a>
     </div>
     <div class="header-right">
-      <a class="chucnang-item"        href="Admin.html">     <i class="fas fa-home"></i>         Tổng quan</a>
-      <a class="chucnang-item active" href="giaban.html">    <i class="fas fa-tags"></i>          Giá bán</a>
-      <a class="chucnang-item"        href="SanPham.php">    <i class="fas fa-box-open"></i>      Sản phẩm</a>
-      <a class="chucnang-item"        href="phieunhap.php">  <i class="fas fa-file-invoice"></i>  Phiếu nhập</a>
-      <a class="chucnang-item"        href="donhang.html">   <i class="fas fa-shopping-cart"></i> Đơn hàng</a>
-      <a class="chucnang-item"        href="khovan.html">    <i class="fas fa-truck-loading"></i> Kho vận</a>
-      <a class="chucnang-item"        href="khachhang.php">  <i class="fas fa-users"></i>         Khách hàng</a>
-      <a class="chucnang-item" href="LoginA.php"
+      <a class="chucnang-item"        href="Admin.html">    <i class="fas fa-home"></i>         Tổng quan</a>
+      <a class="chucnang-item active" href="giaban.php">    <i class="fas fa-tags"></i>          Giá bán</a>
+      <a class="chucnang-item"        href="SanPham.php">   <i class="fas fa-box-open"></i>      Sản phẩm</a>
+      <a class="chucnang-item"        href="phieunhap.php"> <i class="fas fa-file-invoice"></i>  Phiếu nhập</a>
+      <a class="chucnang-item"        href="donhang.php">   <i class="fas fa-shopping-cart"></i> Đơn hàng</a>
+      <a class="chucnang-item"        href="khovan.html">   <i class="fas fa-truck-loading"></i> Kho vận</a>
+      <a class="chucnang-item"        href="khachhang.php"> <i class="fas fa-users"></i>         Khách hàng</a>
+      <a class="chucnang-item"        href="LoginA.php"
          style="background:rgba(255,255,255,0.15);color:#fff;">
         <i class="fas fa-sign-out-alt"></i> Đăng xuất
       </a>
@@ -34,43 +43,73 @@
   <div class="content">
     <div class="container">
 
-      <!-- ── Form thêm ── -->
+      <!-- ── Form cập nhật giá bán ── -->
       <h2>
         <i class="fas fa-dollar-sign" style="color:#0195b2;margin-right:8px;"></i>
         Lợi nhuận &amp; Giá bán
       </h2>
 
-      <label for="loaiSanPham">Loại sản phẩm</label>
-      <!-- Không hardcode options – giaban.js tải từ DB qua process_SanPham.php -->
-      <select id="loaiSanPham">
-        <option value="">-- Đang tải loại sản phẩm... --</option>
-      </select>
+      <!-- ── Tìm sản phẩm (THAY THẾ input tên tự do) ── -->
+      <label for="timSanPham">Tìm sản phẩm <span style="color:#e74c3c">*</span></label>
+      <div class="sp-search-wrap">
+        <input type="text" id="timSanPham"
+               placeholder="Nhập mã SP hoặc tên sản phẩm để tìm..."
+               autocomplete="off" />
+        <i class="fas fa-search sp-search-icon"></i>
+        <!-- Dropdown gợi ý -->
+        <ul id="spSuggestList" class="sp-suggest-list"></ul>
+      </div>
+      <p><i>* Gõ ít nhất 1 ký tự để tìm sản phẩm đã có trong hệ thống</i></p>
 
-      <label for="loiNhuanTheoLoai">Lợi nhuận theo loại (%)</label>
-      <input type="number" id="loiNhuanTheoLoai" placeholder="vd: 30 (tự điền khi chọn loại)" min="0" step="0.01" />
-      <p><i>* Chọn loại → % lợi nhuận mặc định của loại đó sẽ tự điền</i></p>
-
-      <label for="tenSanPham">Tên sản phẩm</label>
-      <input type="text" id="tenSanPham" placeholder="Tên sản phẩm" />
-
-      <label for="giaVon">Giá vốn (đồng)</label>
-      <input type="number" id="giaVon" placeholder="vd: 12000" min="0" />
-
-      <label for="loiNhuanTheoSanPham">Lợi nhuận riêng sản phẩm (%)</label>
-      <input type="number" id="loiNhuanTheoSanPham"
-             placeholder="vd: 35 (ưu tiên hơn lợi nhuận theo loại, để trống = dùng loại)" min="0" step="0.01" />
-      <p><i>* Lợi nhuận riêng SP ưu tiên hơn lợi nhuận theo loại. Mã SP sẽ tự sinh (SP001, SP002...)</i></p>
-
-      <!-- Preview giá bán real-time -->
-      <div class="preview-box">
-        <span class="label"><i class="fas fa-calculator"></i> Giá bán dự tính:</span>
-        <span class="value" id="previewGiaBan">—</span>
-        <span class="note" id="previewNote"></span>
+      <!-- ── Card hiển thị sản phẩm đã chọn ── -->
+      <div id="spDaChon" class="sp-da-chon" style="display:none;">
+        <div class="sp-da-chon-inner">
+          <i class="fas fa-box-open"></i>
+          <div>
+            <span id="spDaChonMa" class="sp-ma"></span>
+            <span id="spDaChonTen" class="sp-ten"></span>
+            <span id="spDaChonLoai" class="sp-loai"></span>
+          </div>
+          <button type="button" id="btnBoChon" title="Bỏ chọn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
       </div>
 
-      <button id="btnThem">
-        <i class="fas fa-plus-circle"></i> ADD / THÊM
-      </button>
+      <!-- Hidden field lưu ma_sp đang chọn -->
+      <input type="hidden" id="maSPDangChon" />
+
+      <!-- ── Các trường còn lại (lock cho đến khi chọn SP) ── -->
+      <div id="formGiaBanFields" class="form-fields-locked">
+
+        <label for="loiNhuanTheoLoai">Lợi nhuận theo loại (%)</label>
+        <input type="number" id="loiNhuanTheoLoai"
+               min="0" step="0.01" readonly />
+        <p><i>* % lợi nhuận mặc định của loại sản phẩm (chỉ đọc)</i></p>
+
+        <label for="giaVon">Giá vốn (đồng) <span style="color:#e74c3c">*</span></label>
+        <input type="number" id="giaVon"
+               placeholder="Nhập hoặc sửa giá vốn" min="0" />
+        <p><i>* Giá vốn bình quân được sử dụng để tính giá bán</i></p>
+
+        <label for="loiNhuanTheoSanPham">Lợi nhuận riêng sản phẩm (%)</label>
+        <input type="number" id="loiNhuanTheoSanPham"
+               placeholder="Nhập % lợi nhuận muốn áp dụng (để trống = dùng theo loại)"
+               min="0" step="0.01" />
+        <p><i>* Lợi nhuận riêng SP ưu tiên hơn lợi nhuận theo loại</i></p>
+
+        <!-- Preview giá bán real-time -->
+        <div class="preview-box">
+          <span class="label"><i class="fas fa-calculator"></i> Giá bán dự tính:</span>
+          <span class="value" id="previewGiaBan">—</span>
+          <span class="note" id="previewNote"></span>
+        </div>
+
+        <button id="btnThem" disabled>
+          <i class="fas fa-save"></i> Cập nhật giá bán
+        </button>
+
+      </div><!-- /formGiaBanFields -->
 
       <!-- ── Bảng danh sách ── -->
       <div class="list-section">
@@ -134,19 +173,19 @@
   <!-- ════ MODAL SỬA ════ -->
   <div class="modal-overlay" id="modalSua">
     <div class="modal-box">
-
       <div class="modal-header">
         <h3><i class="fas fa-pen"></i> Sửa thông tin giá bán</h3>
         <button class="modal-close-btn" id="btnDongModal">
           <i class="fas fa-times"></i>
         </button>
       </div>
-
       <div class="modal-body">
         <input type="hidden" id="suaId" />
 
+        <label>Mã sản phẩm</label>
+        <input type="text" id="suaMaSP" readonly style="background:#f5f5f5;color:#888;" />
+
         <label for="suaLoai">Loại sản phẩm</label>
-        <!-- Không hardcode – JS điền từ _loaiData -->
         <select id="suaLoai">
           <option value="">-- Chọn loại --</option>
         </select>
@@ -173,14 +212,12 @@
           <span class="note" id="suaPreviewNote"></span>
         </div>
       </div>
-
       <div class="modal-footer">
         <button class="btn-modal-cancel" id="btnCancelModal">Hủy bỏ</button>
         <button class="btn-modal-save" id="btnSua">
           <i class="fas fa-save"></i> Lưu thay đổi
         </button>
       </div>
-
     </div>
   </div>
 
@@ -202,7 +239,11 @@
   <!-- ════ TOAST ════ -->
   <div id="toast"></div>
 
-  <!-- ════ JS TÁCH RIÊNG ════ -->
+  <!-- Truyền URL API sang JS -->
+  <script>
+    const GIABAN_API  = '../Admin/process_giaban.php';
+    const SP_API      = '../Admin/process_SanPham.php';
+  </script>
   <script src="../JSAdmin/giaban.js"></script>
 
 </body>

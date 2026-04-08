@@ -295,7 +295,7 @@ INSERT IGNORE INTO `chi_tiet_phieu_nhap` (`ma_phieu`,`ma_sp`,`so_luong`,`don_gia
   -- 6. BẢNG ĐƠN HÀNG
 CREATE TABLE IF NOT EXISTS `don_hang` (
   `ma_don`        VARCHAR(50)    NOT NULL,
-  `id` INT(11)        NOT NULL,
+  `username` INT(11)        NOT NULL,
   `ngay_dat`      DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `hoat_dong`     ENUM('dang_cho', 'dang_chuan_bi', 'cho_lay_hang', 'dang_van_chuyen', 'giao_thanh_cong', 'da_huy') NOT NULL DEFAULT 'dang_cho',
   `trang_thai_tt` ENUM('chua_thanh_toan', 'da_thanh_toan', 'hoan_tien') NOT NULL DEFAULT 'chua_thanh_toan',
@@ -308,7 +308,7 @@ CREATE TABLE IF NOT EXISTS `don_hang` (
   `created_at`    TIMESTAMP      DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ma_don`),
   UNIQUE KEY `ma_don` (`ma_don`),
-  CONSTRAINT `fk_donhang_user` FOREIGN KEY (`id`) REFERENCES `users` (`id`)
+  CONSTRAINT `fk_donhang_user` FOREIGN KEY (`username`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 7. BẢNG CHI TIẾT ĐƠN HÀNG

@@ -3,6 +3,7 @@
 // Admin/phieunhap.php  –  Quan ly Phieu Nhap Hang
 // =============================================================
 session_start();
+require_once '../includes/db_connect.php';
 // Bat comment khi da co he thong dang nhap
 // if (empty($_SESSION['admin_logged_in'])) { header('Location: LoginA.php'); exit; }
 $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'UTF-8');
@@ -25,10 +26,10 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
   </div>
   <div class="header-right">
     <a class="chucnang-item" href="Admin.html">         <i class="fas fa-home"></i>         Tổng quan</a>
-    <a class="chucnang-item" href="giaban.html">        <i class="fas fa-tags"></i>          Giá bán</a>
-    <a class="chucnang-item" href="SanPham.php">        <i class="fas fa-box-open"></i>      Sản phẩm</a>
-    <a class="chucnang-item active" href="phieunhap.php"><i class="fas fa-file-invoice"></i> Phiếu nhập</a>
-    <a class="chucnang-item" href="donhang.html">       <i class="fas fa-shopping-cart"></i> Đơn hàng</a>
+    <a class="chucnang-item" href="giaban.php">        <i class="fas fa-tags"></i>          Giá bán</a>
+    <a class="chucnang-item" href="SanPham.php">        <i class="fas fa-box-open"></i>       Sản phẩm</a>
+    <a class="chucnang-item active" href="phieunhap.php">   <i class="fas fa-file-invoice"></i>   Phiếu nhập</a>
+    <a class="chucnang-item" href="donhang.php">       <i class="fas fa-shopping-cart"></i> Đơn hàng</a>
     <a class="chucnang-item" href="khovan.html">        <i class="fas fa-truck-loading"></i> Kho vận</a>
     <a class="chucnang-item" href="khachhang.php">      <i class="fas fa-users"></i>         Khách hàng</a>
     <a class="chucnang-item" href="LoginA.php"
