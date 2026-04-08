@@ -88,41 +88,57 @@
   background: #f5faff;
 }
 
-/* Form tao phieu */
+/* Form tao phieu - nằm ngang 1 hàng */
 #formTaoPhieu {
+  margin-bottom: 8px;
+}
+
+.tao-phieu-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+
+.tao-phieu-field {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  width: 480px;
-  max-width: 100%;
-  margin: 0 auto 20px auto;
-  background: #fff;
-  padding: 20px 24px 60px;
-  border-radius: 12px;
-  border: 1px solid #000;
-  position: relative;
+  gap: 5px;
+  min-width: 160px;
 }
-#formTaoPhieu label {
+
+.tao-phieu-field--grow {
+  flex: 1;
+}
+
+.tao-phieu-field--btn {
+  flex-shrink: 0;
+}
+
+.tao-phieu-field label {
   font-weight: 600;
   color: #333;
-  font-size: 14px;
+  font-size: 13px;
+  white-space: nowrap;
 }
-#formTaoPhieu input {
-  width: 100%;
+
+.tao-phieu-field input[type="date"],
+.tao-phieu-field input[type="text"] {
   padding: 9px 12px;
   border: 1px solid #ccc;
   border-radius: 7px;
   font-size: 14px;
   box-sizing: border-box;
+  width: 100%;
 }
-#formTaoPhieu input:focus {
+
+.tao-phieu-field input:focus {
   border-color: #0195b2;
   outline: none;
-}
-#formTaoPhieu .btn-wrapper {
-  position: absolute;
-  bottom: 14px;
-  right: 20px;
 }
 
 /* Nut Sua / Xoa trong bang */
@@ -147,36 +163,166 @@
   transform: scale(1.04);
 }
 
-/* POPUP */
+/* ---- POPUP 3-PANEL ---- */
+
+.pp3-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #111;
+  padding-bottom: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pp3-header h2 {
+  margin: 0;
+  border: none;
+  padding: 0;
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pp3-body {
+  display: flex;
+  flex-direction: column; /* Thêm dòng này để xếp dọc từ trên xuống */
+  gap: 18px;
+  align-items: stretch; /* Đổi thành stretch để các hộp tràn hết bề ngang */
+}
+
+/* Cột trái chứa form */
+.pp3-left {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%; /* Sửa 320px thành 100% */
+  flex-shrink: 0;
+}
+
+/* Cột phải chứa bảng */
+.pp3-right {
+  width: 100%; /* Thêm width 100% */
+  flex: 1;
+  min-width: 0;
+}
+
+.pp3-panel {
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.pp3-panel-title {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #222;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.pp3-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+  position: relative;
+}
+.pp3-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #444;
+}
+.pp3-field input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+.pp3-field input:focus {
+  border-color: #0195b2;
+  outline: none;
+}
+
+.pp3-row2 {
+  display: flex;
+  gap: 10px;
+}
+.pp3-row2 .pp3-field {
+  flex: 1;
+}
+
+.pp3-table-wrap {
+  overflow-x: auto;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+/* Responsive: man nho xuong 1 cot */
+@media (max-width: 760px) {
+  .pp3-body       { flex-direction: column; }
+  .pp3-left       { width: 100%; }
+  .popup-phieu-3col { width: 98vw; }
+}
+
+/* ===== POPUP NEN TOI + HOP POPUP ===== */
 .overlay-phieu {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(4px);
+  z-index: 9999;
   opacity: 0;
   visibility: hidden;
   transition: .3s;
-  z-index: 999;
+  /* Can giua popup an toan bang flex */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
 }
 .overlay-phieu:target {
   opacity: 1;
   visibility: visible;
 }
+
+/* Hop popup chung */
 .overlay-phieu .popup-box {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%) scale(0.85);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   background: #fff;
-  padding: 26px 28px 18px;
   width: 520px;
-  max-width: 96vw;
+  max-width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
   border-radius: 14px;
-  transition: .3s;
+  padding: 26px 28px 18px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
 }
-.overlay-phieu:target .popup-box {
-  transform: translate(-50%, -50%) scale(1);
+
+/* Popup 3 phần - thu hẹp lại cho gọn */
+.overlay-phieu .popup-box.popup-phieu-3col {
+  width: 550px; /* Thu hẹp từ 1100px xuống 550px */
+  max-width: 95vw;
+  max-height: 90vh;
+  padding: 20px 24px 16px;
+}
+
+/* pp3-header tự xử lý border, không cần h2 border của popup chung */
+.overlay-phieu .popup-box.popup-phieu-3col h2 {
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
 .overlay-phieu .popup-box h2 {
@@ -246,95 +392,101 @@
 }
 .overlay-phieu .close:hover { text-decoration: underline; }
 
-.overlay-phieu .overlay-bg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+/* Layout Popup 2 cột mới */
+.popup-box-2-cot {
+    background: #fff;
+    width: 1200px;
+    max-width: 95vw;
+    max-height: 92vh;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Layout 3 phần cho popup */
-.popup-layout-3-phan {
+.popup-title-new {
+    font-size: 20px !important;
+    margin-top: 0 !important;
+    margin-bottom: 20px !important;
+    color: #333;
+    border-bottom: 2px solid #eee !important;
+    padding-bottom: 15px !important;
+}
+
+.popup-main-layout {
     display: flex;
     gap: 20px;
-    align-items: stretch; /* Kéo giãn 2 cột bằng nhau */
+    flex: 1;
+    overflow: hidden; /* Ngăn vỡ khung */
 }
 
-.popup-cot-trai {
-    width: 32%; /* Cột trái chiếm 32% */
-    display: flex;
-    flex-direction: column;
-}
+/* Chia cột */
+.popup-side-left { flex: 0 0 350px; overflow-y: auto; }
+.popup-side-right { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 
-.popup-cot-phai {
-    width: 68%; /* Cột phải chiếm 68% */
+/* Các hộp trắng bên trong */
+.box-white-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 18px;
 }
-
-.khu-vuc-box {
-    background: #fdfdfd;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.02);
-}
-
-.khu-vuc-box h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
+.box-white-item h3 {
+    margin: 0 0 15px 0;
     font-size: 15px;
-    color: #333;
-    border-bottom: 1px dashed #ccc;
-    padding-bottom: 8px;
-}
-
-.form-group-doc {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group-doc label {
-    margin: 0 0 5px 0 !important;
-    font-size: 13px;
+    font-weight: bold;
     color: #555;
 }
+.h-full { height: 100%; display: flex; flex-direction: column; }
 
-.form-group-doc input {
-    margin: 0 !important;
-}
-
-.mt-10 { margin-top: 10px; }
-
-.btn-chuc-nang {
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-}
-
-.btn-chuc-nang:hover {
-    opacity: 0.85;
-}
-
-/* Fix bảng bị tràn nếu tên dài */
-.popup-cot-phai table {
+/* Form field */
+.field-item { margin-bottom: 12px; }
+.field-item label { font-weight: 600; display: block; margin-bottom: 5px; font-size: 13px; }
+.field-item input {
     width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
 }
 
-/* Chỉnh lại phần Gợi ý SP để đè lên form bên dưới chứ ko đẩy giao diện */
+.row-flex { display: flex; gap: 10px; }
+.flex-1 { flex: 1; }
+.mt-20 { margin-top: 20px; }
+
+/* Buttons */
+.btn-green-add { background: #28a745; color: white; border: none; width: 100%; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+.btn-blue-save { background: #007bff; color: white; border: none; width: 100%; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+.btn-red-final { background: #dc3545; color: white; border: none; padding: 12px 30px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; }
+
+/* Table style */
+.table-scroll-area { flex: 1; overflow-y: auto; border: 1px solid #eee; margin-top: 10px; border-radius: 5px; }
+.table-new-style { width: 100%; border-collapse: collapse; }
+.table-new-style th { background: #f8f9fa; position: sticky; top: 0; padding: 12px; font-size: 13px; border-bottom: 2px solid #dee2e6; text-align: left; }
+.table-new-style td { padding: 10px; border-bottom: 1px solid #eee; font-size: 14px; }
+
+/* Footer tổng tiền */
+.footer-summary {
+    margin-top: auto;
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 2px solid #f1f1f1;
+}
+.total-text { font-size: 20px; font-weight: bold; }
+.total-text span { color: #d9534f; }
+
+.popup-close-row { text-align: center; padding-top: 15px; }
+.btn-close-text { color: #888; text-decoration: none; font-weight: bold; }
+.btn-close-text:hover { color: red; }
+
+/* Suggesstion box */
 .goi-y-sp {
-    position: absolute;
-    width: calc(100% - 2px);
-    z-index: 10;
-    top: 100%;
-    left: 0;
-}
-.goi-y-item {
-    padding: 8px;
-    cursor: pointer;
-    border-bottom: 1px solid #eee;
-}
-.goi-y-item:hover {
-    background: #f0f8ff;
+    display:none; position: absolute; top: 100%; left: 0; width: 100%; 
+    z-index: 999; border: 1px solid #ccc; background: #fff; 
+    max-height: 150px; overflow-y: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
