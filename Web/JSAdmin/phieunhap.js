@@ -147,8 +147,8 @@ async function moPopupPhieu(maPhieu) {
     document.getElementById('popupNgayNhap').value      = phieu.ngay_nhap;
     document.getElementById('popupGhiChu').value        = phieu.ghi_chu || '';
 
-    document.getElementById('khuTimSP').style.display      = daHT ? 'none' : 'block';
-    document.getElementById('khuHoanThanh').style.display  = daHT ? 'none' : 'block';
+    document.getElementById('khuTimSP')?.style.setProperty('display', daHT ? 'none' : 'block');
+    document.getElementById('khuHoanThanh')?.style.setProperty('display', daHT ? 'none' : 'block');
     document.getElementById('btnLuuDauPhieu').style.display= daHT ? 'none' : 'inline-block';
     document.getElementById('popupNgayNhap').disabled      = daHT;
     document.getElementById('popupGhiChu').disabled        = daHT;

@@ -479,7 +479,13 @@ body {
   margin-bottom: 25px;
 }
 
-.fas {
+.sp-card,
+.goi-y-card {
+  position: relative;
+}
+
+.sp-card .fas,
+.goi-y-card .fas {
   position: absolute;
   bottom: 10px;
   right: 12px;
@@ -489,11 +495,13 @@ body {
   transition: transform 0.25s ease, color 0.3s ease;
 }
 
-.fas:hover {
+.sp-card .fas:hover,
+.goi-y-card .fas:hover {
   color: rgb(184, 184, 184);
   transform: rotate(-15deg) scale(1.2);
 }
-.fas:active {
+.sp-card .fas:active,
+.goi-y-card .fas:active {
   transform: scale(1) rotate(0deg);
   color: #d0011b;
   filter: brightness(1.3);
