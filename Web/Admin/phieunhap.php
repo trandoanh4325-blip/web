@@ -105,8 +105,8 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
             
             <div class="popup-side-left">
                 
-                <div class="box-white-item">
-                    <h3><i class="fas fa-plus-circle"></i> Thêm sản phẩm</h3>
+              <div class="box-white-item" id="khuTimSP">
+                  <h3><i class="fas fa-plus-circle"></i> Thêm sản phẩm</h3>
                     <div class="field-item">
                         <label>Tìm sản phẩm</label>
                         <div style="position: relative;">
@@ -162,7 +162,7 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
                                     <th>SL</th>
                                     <th>Giá nhập</th>
                                     <th>Thành tiền</th>
-                                    <th>Sửa/Xóa</th>
+                                    <th id="cotChucNang">Sửa/Xóa</th>
                                 </tr>
                             </thead>
                             <tbody id="tbodyChiTiet">
@@ -170,7 +170,7 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
                         </table>
                     </div>
 
-                    <div class="footer-summary">
+                    <div class="footer-summary" id="khuHoanThanh">
                         <div class="total-text">
                             Tổng cộng: <span id="tongTienChiTiet">0 đ</span>
                         </div>
