@@ -29,7 +29,7 @@ while ($row = $result->fetch_assoc()) {
     <link rel="stylesheet" href="../css/styleUser.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <style>
-        .wrap { max-width: 1000px; margin: 140px auto 20px; padding: 0 16px; }
+        .wrap { width: 100%; max-width: 1000px; margin: 20px auto ; padding: 0 16px; }
         .order { background: #fff; border: 1px solid #eee; border-radius: 10px; padding: 14px; margin-bottom: 12px; }
         .row { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
         .status { text-transform: uppercase; font-size: 12px; padding: 4px 8px; border-radius: 999px; background: #f4ecff; color: #6a4cbf; }

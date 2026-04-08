@@ -95,7 +95,7 @@ if ($cart) {
 </header>
 
 <!-- GIỎ HÀNG -->
-<div class="container" style="margin-top: 140px;">
+<div class="container"">
   <h2><i class="fas fa-shopping-cart"></i> Giỏ Hàng</h2>
 
   <?php if (!$items): ?>

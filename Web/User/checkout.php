@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../css/styleUser.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <style>
-        .wrap { max-width: 1100px; margin: 140px auto 20px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; padding: 0 16px; }
+        .wrap { max-width: 1100px; margin: 20px auto ; display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; padding: 0 16px; }
         .box { background: #fff; border: 1px solid #eee; border-radius: 10px; padding: 14px; }
         label { display: block; margin-top: 10px; font-weight: 600; }
         input, select { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ddd; border-radius: 7px; }
