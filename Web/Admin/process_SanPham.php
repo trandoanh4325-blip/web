@@ -63,10 +63,12 @@ if (in_array($method, ['POST', 'PUT', 'DELETE'], true)) {
 }
 
 match ($resource) {
-    'loai-san-pham' => handleLoai($method, $body),
-    'san-pham'      => handleSanPham($method, $body),
-    'upload-hinh'   => handleUploadHinh(),
-    default         => jsonResp(false, 'Resource không hợp lệ', null, 404),
+    'loai-san-pham'       => handleLoai($method, $body),
+    'san-pham'            => handleSanPham($method, $body),
+    'upload-hinh'         => handleUploadHinh(),
+    'san-pham-hinh'       => handleSanPhamHinh($method, $body),
+    'san-pham-hinh-xoa'   => handleXoaHinhSanPham($body),
+    default               => jsonResp(false, 'Resource không hợp lệ', null, 404),
 };
 
 
@@ -197,12 +199,13 @@ function handleSanPham(string $method, array $body): void
             }
             $body['hinh_anh'] = $hinhMoi;
 
-            $params   = buildSpParams($body, false); // Trả về mảng (ten_sp, ma_loai...) nhưng không có ma_sp nếu k đổi
-            $params[] = $maSpCu;
+            // Đổi `false` thành `true` để lấy ma_sp mới vào đầu mảng params
+            $params   = buildSpParams($body, true); 
+            $params[] = $maSpCu; // Thêm mã cũ vào cuối cho mệnh đề WHERE
 
             $st = $pdo->prepare('
                 UPDATE san_pham SET
-                  ten_sp=?, ma_loai=?, don_vi_tinh=?, so_luong_ton=?,
+                  ma_sp=?, ten_sp=?, ma_loai=?, don_vi_tinh=?, so_luong_ton=?,
                   gia_von=?, ty_le_loi_nhuan=?, gia_ban=?,
                   hinh_anh=?, mo_ta=?, hien_trang=?, ngay_them=?
                 WHERE ma_sp=?
@@ -311,6 +314,99 @@ function buildSpParams(array $b, bool $includeMaSp = false): array
         array_unshift($params, trim($b['ma_sp']));
     }
     return $params;
+}
+
+// =============================================================
+// QUẢN LÝ HÌNH ẢNH SẢN PHẨM (CHI TIẾT)
+// =============================================================
+function handleSanPhamHinh(string $method, array $body): void
+{
+    $pdo = getDB();
+
+    switch ($method) {
+        case 'GET':
+            // GET /san-pham-hinh?ma_sp=SP001
+            $maSp = trim($_GET['ma_sp'] ?? '');
+            if ($maSp === '') jsonResp(false, 'Thiếu mã sản phẩm!');
+
+            $st = $pdo->prepare('
+                SELECT ma_sp, thu_tu, duong_dan, ngay_them
+                FROM san_pham_hinh_anh
+                WHERE ma_sp = ?
+                ORDER BY thu_tu ASC
+            ');
+            $st->execute([$maSp]);
+            $hinhList = $st->fetchAll();
+
+            jsonResp(true, 'OK', $hinhList);
+            break;
+
+        case 'POST':
+            // Thêm hình ảnh mới cho sản phẩm
+            $maSp = trim($body['ma_sp'] ?? '');
+            $duongDan = trim($body['duong_dan'] ?? '');
+
+            if ($maSp === '' || $duongDan === '') {
+                jsonResp(false, 'Thiếu mã sản phẩm hoặc đường dẫn hình ảnh!');
+            }
+
+            // Tìm thứ tự lớn nhất hiện có
+            $q = $pdo->prepare('SELECT MAX(thu_tu) FROM san_pham_hinh_anh WHERE ma_sp = ?');
+            $q->execute([$maSp]);
+            $maxThuTu = (int)($q->fetchColumn() ?? 0);
+
+            $st = $pdo->prepare('
+                INSERT INTO san_pham_hinh_anh (ma_sp, thu_tu, duong_dan)
+                VALUES (?, ?, ?)
+            ');
+            $st->execute([$maSp, $maxThuTu + 1, $duongDan]);
+
+            jsonResp(true, 'Thêm hình ảnh thành công!', null, 201);
+            break;
+
+        default: jsonResp(false, 'Method không được hỗ trợ!', null, 405);
+    }
+}
+
+function handleXoaHinhSanPham(array $body): void
+{
+    $pdo = getDB();
+
+    $maSp = trim($body['ma_sp'] ?? '');
+    $thuTu = (int)($body['thu_tu'] ?? 0);
+
+    if ($maSp === '' || $thuTu <= 0) {
+        jsonResp(false, 'Thiếu mã sản phẩm hoặc thứ tự hình ảnh!');
+    }
+
+    // Lấy đường dẫn để xóa file
+    $q = $pdo->prepare('SELECT duong_dan FROM san_pham_hinh_anh WHERE ma_sp = ? AND thu_tu = ?');
+    $q->execute([$maSp, $thuTu]);
+    $duongDan = (string)($q->fetchColumn() ?: '');
+
+    // Xóa từ DB
+    $st = $pdo->prepare('DELETE FROM san_pham_hinh_anh WHERE ma_sp = ? AND thu_tu = ?');
+    $st->execute([$maSp, $thuTu]);
+
+    // Xóa file
+    if ($duongDan !== '' && file_exists(IMG_UPLOAD_DIR . $duongDan)) {
+        @unlink(IMG_UPLOAD_DIR . $duongDan);
+    }
+
+    // Sắp xếp lại thứ tự
+    $q = $pdo->prepare('SELECT thu_tu FROM san_pham_hinh_anh WHERE ma_sp = ? ORDER BY thu_tu ASC');
+    $q->execute([$maSp]);
+    $rows = $q->fetchAll();
+
+    foreach ($rows as $i => $row) {
+        $newThuTu = $i + 1;
+        if ($newThuTu !== (int)$row['thu_tu']) {
+            $upd = $pdo->prepare('UPDATE san_pham_hinh_anh SET thu_tu = ? WHERE ma_sp = ? AND thu_tu = ?');
+            $upd->execute([$newThuTu, $maSp, (int)$row['thu_tu']]);
+        }
+    }
+
+    jsonResp(true, 'Xóa hình ảnh thành công!');
 }
 
 function jsonResp(bool $success, string $message = '', ?array $data = null, int $httpCode = 200, array $extra = []): never {
