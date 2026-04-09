@@ -349,6 +349,43 @@ INSERT IGNORE INTO `san_pham_hinh_anh` (`ma_sp`, `thu_tu`, `duong_dan`) VALUES
   ('SP007', 1, '7.webp'),
   ('SP008', 1, '8.jpg');
 
+DELIMITER $$
+
+-- 1. Trigger TỰ ĐỘNG GIẢM KHO khi có người đặt hàng
+CREATE TRIGGER `trg_BanHang_GiamKho` 
+AFTER INSERT ON `chi_tiet_don_hang` 
+FOR EACH ROW 
+BEGIN
+    UPDATE `san_pham` 
+    SET `so_luong_ton` = `so_luong_ton` - NEW.so_luong 
+    WHERE `ma_sp` = NEW.ma_sp;
+END$$
+
+-- 2. Trigger TỰ ĐỘNG TĂNG KHO khi nhập hàng thành công
+CREATE TRIGGER `trg_NhapHang_TangKho` 
+AFTER INSERT ON `chi_tiet_phieu_nhap` 
+FOR EACH ROW 
+BEGIN
+    UPDATE `san_pham` 
+    SET `so_luong_ton` = `so_luong_ton` + NEW.so_luong 
+    WHERE `ma_sp` = NEW.ma_sp;
+END$$
+
+-- 3. Trigger TỰ ĐỘNG TRẢ KHO khi đơn hàng bị hủy
+CREATE TRIGGER `trg_HuyDon_TraKho`
+AFTER UPDATE ON `don_hang`
+FOR EACH ROW
+BEGIN
+    -- Nếu trạng thái mới là 'da_huy' và trạng thái cũ không phải 'da_huy'
+    IF NEW.hoat_dong = 'da_huy' AND OLD.hoat_dong != 'da_huy' THEN
+        UPDATE `san_pham` sp
+        JOIN `chi_tiet_don_hang` ct ON sp.ma_sp = ct.ma_sp
+        SET sp.so_luong_ton = sp.so_luong_ton + ct.so_luong
+        WHERE ct.ma_don = NEW.ma_don;
+    END IF;
+END$$
+
+DELIMITER ;
 
 
 
