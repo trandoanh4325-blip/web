@@ -8,7 +8,7 @@ require_once __DIR__ . '/db_connect.php';
 function ensure_logged_in(): void
 {
     if (!isset($_SESSION['user_id'])) {
-        header('Location: ../Login.html');
+        header('Location: ../Login.php');
         exit();
     }
 }

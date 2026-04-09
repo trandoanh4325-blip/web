@@ -33,8 +33,8 @@
                     // Thành công
                     showToast('Thành công', 'Đăng nhập thành công! Đang chuyển hướng...', 'success');
                     
-                    // Chuyển hướng sang trang Admin.html sau 1.5 giây
-                    setTimeout(() => { window.location.href = "Admin.html"; }, 1000);
+                    // Chuyển hướng sang trang Admin.php sau 1.5 giây
+                    setTimeout(() => { window.location.href = "Admin.php"; }, 1000);
                 } else {
                     // Thất bại
                     showToast('Đăng nhập thất bại', 'Sai email hoặc mật khẩu. Vui lòng thử lại!', 'error');

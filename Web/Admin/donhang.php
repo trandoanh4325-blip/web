@@ -1,8 +1,6 @@
 <?php
-// =============================================================
-// htmlAdmin/donhang.php  –  Trang quản lý đơn hàng (Admin)
-// Đổi tên từ donhang.html → donhang.php
-// =============================================================
+
+
 session_start();
 require_once '../includes/db_connect.php';
 
@@ -32,22 +30,19 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
   <!-- ===== HEADER ===== -->
   <header class="header">
     <div class="logo">
-      <a href="Admin.html">
+      <a href="Admin.php">
         <img src="../Image/logostore-Photoroom.png" alt="Logo" />
       </a>
     </div>
     <div class="header-right">
-      <a class="chucnang-item"        href="Admin.html">      <i class="fas fa-home"></i>          Tổng quan</a>
+      <a class="chucnang-item"        href="Admin.php">      <i class="fas fa-home"></i>          Tổng quan</a>
       <a class="chucnang-item"        href="giaban.php">     <i class="fas fa-tags"></i>           Giá bán</a>
       <a class="chucnang-item"        href="SanPham.php">     <i class="fas fa-box-open"></i>       Sản phẩm</a>
       <a class="chucnang-item"        href="phieunhap.php">   <i class="fas fa-file-invoice"></i>   Phiếu nhập</a>
       <a class="chucnang-item active" href="donhang.php">     <i class="fas fa-shopping-cart"></i>  Đơn hàng</a>
       <a class="chucnang-item"        href="khovan.php">     <i class="fas fa-truck-loading"></i>  Kho vận</a>
       <a class="chucnang-item"        href="khachhang.php">   <i class="fas fa-users"></i>          Khách hàng</a>
-      <a class="chucnang-item"        href="LoginA.php"
-         style="background:rgba(255,0,0,0.1);color:#e74c3c;">
-        <i class="fas fa-sign-out-alt"></i> Đăng xuất
-      </a>
+      <a class="chucnang-item"        href="LoginA.php" style="background: rgba(255,0,0,0.1); color: #e74c3c;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
     </div>
   </header>
 
@@ -226,7 +221,7 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
 
   <!-- API URL truyền sang JS qua biến PHP -->
   <script>
-    const PROCESS_URL = 'process_donhang.php';
+    const PROCESS_URL = '../Admin/process_donhang.php';
   </script>
   <script src="../JSAdmin/donhang.js"></script>
 

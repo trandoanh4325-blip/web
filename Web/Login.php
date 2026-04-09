@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập / Đăng Ký</title>
+    <link rel="stylesheet" href="css/styleLi.css" />
+    <!-- Sử dụng font chữ Poppins hiện đại -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header Giữ Nguyên -->
+    <div class="header">
+        <div class="logo">
+            <!-- Thêm ảnh placeholder phòng trường hợp lỗi đường dẫn local -->
+            <a href="Login.php">
+                <img src="Image/logostore-Photoroom.png" alt="Logo"/>
+            </a>
+        </div>
+    </div>
+
+    <!-- Form Container -->
+    <div class="container">
+        <!-- Chuyển đổi Tab -->
+        <div class="form-toggle">
+            <button id="tab-login" class="active" onclick="switchTab('login')">Đăng Nhập</button>
+            <button id="tab-register" onclick="switchTab('register')">Đăng Ký</button>
+            <div class="toggle-indicator" id="indicator"></div>
+        </div>
+
+        <div class="forms-wrapper" id="forms-wrapper">
+            
+            <!-- ====== FORM ĐĂNG NHẬP ====== -->
+            <form id="form-login" class="form-box active" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <input type="email" id="login-email" placeholder="Email của bạn..." required>
+                    <!-- Icon Email -->
+                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </div>
+                
+                <div class="input-group">
+                    <input type="password" id="login-password" placeholder="Mật khẩu..." required>
+                    <!-- Icon Lock -->
+                    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+                </div>
+
+                <p id="login-error" class="error-msg">Sai email hoặc mật khẩu!</p>
+                <button type="submit" class="submit-btn">Đăng nhập ngay</button>
+            </form>
+
+            <!-- ====== FORM ĐĂNG KÝ ====== -->
+            <form id="form-register" class="form-box" onsubmit="handleRegister(event)">
+                <div class="input-group">
+                    <input type="text" id="reg-username" placeholder="Tên đăng nhập..." required>
+                    <!-- Icon User -->
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="reg-name" placeholder="Họ và Tên..." required>
+                    <!-- Icon Id Card -->
+                    <svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z" fill="none"/><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.89-2-2-2zm0 14H4V6h16v12zM6 10h2v2H6zm0 4h8v2H6zm10 0h2v2h-2zm-6-4h8v2h-8z"/></svg>
+                </div>
+
+                <div class="input-group">
+                    <input type="tel" id="reg-phone" placeholder="Số điện thoại..." required>
+                    <!-- Icon Phone -->
+                    <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="reg-address" placeholder="Địa chỉ..." required>
+                    <!-- Icon Location -->
+                    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                </div>
+
+                <div class="input-group">
+                    <input type="email" id="reg-email" placeholder="Email..." required>
+                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="reg-password" placeholder="Mật khẩu..." required>
+                    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+                </div>
+
+                <p id="register-error" class="error-msg">Vui lòng điền đầy đủ thông tin!</p>
+                <button type="submit" class="submit-btn">Đăng ký tài khoản</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Hộp thoại thông báo (Modal) Mới -->
+    <div id="custom-modal">
+        <div class="modal-content" id="modal-content-box">
+            <div class="modal-icon" id="modal-icon">
+                <!-- Icon sẽ được chèn bằng JS -->
+            </div>
+            <h3 id="modal-title">Thông báo</h3>
+            <p id="modal-message">Nội dung</p>
+            <button class="modal-close" onclick="closeModal()" id="modal-btn">Đóng</button>
+        </div>
+    </div>
+<script src="js/script.js"></script>
+</body>
+</html>

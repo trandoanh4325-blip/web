@@ -3,7 +3,7 @@
    Dùng ma_don làm định danh đơn, username lấy từ JOIN users
    ============================================================ */
 
-const API_URL = typeof PROCESS_URL !== 'undefined' ? PROCESS_URL : 'process_donhang.php';
+const API_URL = typeof PROCESS_URL !== 'undefined' ? PROCESS_URL : '../Admin/process_donhang.php';
 
 /* ===== MAP HOẠT ĐỘNG → BADGE ===== */
 const HOAT_DONG_MAP = {

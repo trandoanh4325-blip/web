@@ -13,7 +13,8 @@ if ($category !== '') {
     $params[] = $category;
 }
 
-$productSql = "SELECT ma_sp, ten_sp, gia_ban, hinh_anh FROM san_pham $where ORDER BY ngay_them DESC LIMIT 8";
+// 1. ĐÃ BỎ "LIMIT 8" ĐỂ LẤY TOÀN BỘ SẢN PHẨM TRONG DATABASE
+$productSql = "SELECT ma_sp, ten_sp, gia_ban, hinh_anh FROM san_pham $where ORDER BY ngay_them DESC";
 $productStmt = $conn->prepare($productSql);
 if ($types !== '') {
     $productStmt->bind_param($types, ...$params);
@@ -21,13 +22,13 @@ if ($types !== '') {
 $productStmt->execute();
 $featured = $productStmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
+<!DOCTYPE html>
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <title>Trang chủ người dùng</title>
-    <link rel="stylesheet" href="../css/styleUser.css" />
-    <link
-      rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <link rel="stylesheet" href="../css/styleUser.css?v=1.1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
   </head>
   <body>
    
@@ -52,47 +53,23 @@ $featured = $productStmt->get_result()->fetch_all(MYSQLI_ASSOC);
           <a class="fa fa-shopping-bag" href="cart.php"></a>
         </ul>
         <ul>
-          <a href="../Main.html">
+          <a href="../Main.php">
             <button>Đăng Xuất</button>
           </a>
         </ul>
       </div>
     </div>
 
-  
     <div class="slideshow-container">
-      
-      <!-- Slide 1 -->
-      <div class="mySlides fade">
-        <img src="../Image/slide1.jpg" alt="Banner 1">
-      </div>
-
-      <!-- Slide 2 -->
-      <div class="mySlides fade">
-        <img src="../Image/slide2.jpg" alt="Banner 2">
-      </div>
-
-      <!-- Slide 3 -->
-      <div class="mySlides fade">
-        <img src="../Image/slide3.png" alt="Banner 3">
-      </div>
-
-      <!-- Slide 4 -->
-      <div class="mySlides fade">
-        <img src="../Image/slide4.jpg" alt="Banner 4">
-      </div>
-
-      <!-- Slide 5 -->
-      <div class="mySlides fade">
-        <img src="../Image/slide5.jpg" alt="Banner 5">
-      </div>
-
-      <!-- Nút Tới/Lui -->
+      <div class="mySlides fade"><img src="../Image/slide1.jpg" alt="Banner 1"></div>
+      <div class="mySlides fade"><img src="../Image/slide2.jpg" alt="Banner 2"></div>
+      <div class="mySlides fade"><img src="../Image/slide3.png" alt="Banner 3"></div>
+      <div class="mySlides fade"><img src="../Image/slide4.jpg" alt="Banner 4"></div>
+      <div class="mySlides fade"><img src="../Image/slide5.jpg" alt="Banner 5"></div>
       <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
       <a class="next" onclick="plusSlides(1)">&#10095;</a>
     </div>
 
-    <!-- Nút Chấm (Dots) -->
     <div class="dot-container">
       <span class="dot" onclick="currentSlide(1)"></span> 
       <span class="dot" onclick="currentSlide(2)"></span> 
@@ -100,66 +77,36 @@ $featured = $productStmt->get_result()->fetch_all(MYSQLI_ASSOC);
       <span class="dot" onclick="currentSlide(4)"></span> 
       <span class="dot" onclick="currentSlide(5)"></span> 
     </div>
-
     
     <div class="main-container">
     
     <div class="danhsach-container">
       <h2 class="danhsach-title">DANH MỤC</h2>
       <div class="danhsach-grid">
-        <div class="danh-muc">
-          <a href="products.php?category=LSP001"><img src="../Image/1.webp" alt="thiep"/></a>
-          <p>Thiệp và Phụ kiện</p>
-        </div>
-
-        <div class="danh-muc">
-          <a href="products.php?category=LSP002"><img src="../Image/2.jpg" alt="trangtri"/></a>
-          <p>Đồ trang trí</p>
-        </div>
-
-        <div class="danh-muc">
-          <a href="products.php?category=LSP003"><img src="../Image/3.webp" alt="setqua"/></a>
-          <p>Set quà tặng</p>
-        </div>
-
-        <div class="danh-muc">
-          <a href="products.php?category=LSP004"><img src="../Image/4.jpg" alt="handmade"/></a>
-          <p>Handmade</p>
-        </div>
-
-        <div class="danh-muc">
-          <a href="products.php?category=LSP005"><img src="../Image/5.jpg" alt="luuniem"/></a>
-          <p>Quà lưu niệm</p>
-        </div>
-
-        <div class="danh-muc">
-          <a href="products.php?category=LSP006"><img src="../Image/6.jpg" alt="Quatang"/></a>
-          <p>Quà tặng & Giỏ quà</p>
-        </div>
-
-        <div class="danh-muc">
-          <a href="products.php?category=LSP007"><img src="../Image/7.webp" alt="hoagiay"/></a>
-          <p>Hoa giấy</p>
-        </div>
-
-        <div class="danh-muc">
-          <a href="products.php?category=LSP008"><img src="../Image/8.jpg" alt="hoathat"/></a>
-          <p>Hoa thật 100%</p>
-        </div>
+        <div class="danh-muc"><a href="products.php?category=LSP001"><img src="../Image/1.webp" alt="thiep"/></a><p>Thiệp và Phụ kiện</p></div>
+        <div class="danh-muc"><a href="products.php?category=LSP002"><img src="../Image/2.jpg" alt="trangtri"/></a><p>Đồ trang trí</p></div>
+        <div class="danh-muc"><a href="products.php?category=LSP003"><img src="../Image/3.webp" alt="setqua"/></a><p>Set quà tặng</p></div>
+        <div class="danh-muc"><a href="products.php?category=LSP004"><img src="../Image/4.jpg" alt="handmade"/></a><p>Handmade</p></div>
+        <div class="danh-muc"><a href="products.php?category=LSP005"><img src="../Image/5.jpg" alt="luuniem"/></a><p>Quà lưu niệm</p></div>
+        <div class="danh-muc"><a href="products.php?category=LSP006"><img src="../Image/6.jpg" alt="Quatang"/></a><p>Quà tặng & Giỏ quà</p></div>
+        <div class="danh-muc"><a href="products.php?category=LSP007"><img src="../Image/7.webp" alt="hoagiay"/></a><p>Hoa giấy</p></div>
+        <div class="danh-muc"><a href="products.php?category=LSP008"><img src="../Image/8.jpg" alt="hoathat"/></a><p>Hoa thật 100%</p></div>
       </div>
     </div>
 
-    <section class="goi-y-hom-nay">
-      <h2>GỢI Ý HÔM NAY <?= $category !== '' ? '- ĐÃ LỌC THEO LOẠI' : '' ?></h2>
+    <section class="goi-y-hom-nay" id="khu-vuc-san-pham">
+      <h2>SẢN PHẨM CỦA SHOP LORENTINO<?= $category !== '' ? '- ĐÃ LỌC THEO LOẠI' : '' ?></h2>
       <div style="margin-bottom: 12px;">
-        <a href="User.php" style="text-decoration:none; color:#d4497f; font-weight:700;">Tất cả sản phẩm</a>
+        <a href="User.php" style="text-decoration:none; color:#d4497f; font-weight:700;">Sản Phẩm</a>
       </div>
-      <div class="goi-y-grid">
+      
+      <div class="goi-y-grid" id="grid-san-pham">
         <?php if (!$featured): ?>
           <p>Không có sản phẩm phù hợp.</p>
         <?php endif; ?>
+        
         <?php foreach ($featured as $sp): ?>
-        <div class="goi-y-card">
+        <div class="goi-y-card js-product-item">
           <a href="product_detail.php?id=<?= urlencode($sp['ma_sp']) ?>">
           <img src="<?= h($sp['hinh_anh'] ?: '../Image/sp.jpg') ?>" alt="<?= h($sp['ten_sp']) ?>"></a>
           <div class="goi-y-info">
@@ -170,8 +117,11 @@ $featured = $productStmt->get_result()->fetch_all(MYSQLI_ASSOC);
         </div>
         <?php endforeach; ?>
       </div>
+
+      <div id="js-pagination-controls" class="js-pagination"></div>
+
     </section>
-    <!-- Liên hệ -->
+
     <div class="contact">
       <h3>Liên hệ với chúng tôi</h3>
       <div class="icons">
@@ -211,7 +161,8 @@ $featured = $productStmt->get_result()->fetch_all(MYSQLI_ASSOC);
       </div>
     </footer>
   </div>
-  <script src="../js/Main.js"></script>
+
+  <script src="../js/Main.js?v=1.1"></script>
+
   </body>
 </html>
-

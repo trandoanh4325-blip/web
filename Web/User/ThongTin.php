@@ -2,7 +2,7 @@
 session_start();
 // Kiểm tra nếu chưa đăng nhập thì đuổi về trang Login
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../Login.html"); 
+    header("Location: ../Login.php"); 
     exit();
 }
 
@@ -25,23 +25,23 @@ $user = $result->fetch_assoc();
 <body>
     <div class="header">
         <div class="logo">
-            <a href="User.html">
+            <a href="User.php">
                 <img src="../Image/logostore-Photoroom.png" alt="Logo">
             </a>
         </div>
         <div class="others">
             <ul>
-                <a class="header-icon" href="User.html" title="Trở về trang chủ">
+                <a class="header-icon" href="User.php" title="Trở về trang chủ">
                     <i class="fa-solid fa-house-chimney"></i>
                 </a>
             </ul>
             <ul>
-                <a class="header-icon" href="giohang.html" title="Giỏ hàng">
+                <a class="header-icon" href="cart.php" title="Giỏ hàng">
                     <i class="fa-solid fa-shopping-bag"></i>
                 </a>
             </ul>
             <ul>
-                <a href="../Main.html" style="text-decoration: none;">
+                <a href="../Main.php" style="text-decoration: none;">
                     <button><i class="fa-solid fa-right-from-bracket" style="margin-right: 5px;"></i> Đăng Xuất</button>
                 </a>
             </ul>

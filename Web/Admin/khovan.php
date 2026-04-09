@@ -32,12 +32,12 @@ $result_loai = $conn->query($sql_loai);
     
    <header class="header">
       <div class="logo">
-        <a href="Admin.html">
+        <a href="Admin.php">
           <img src="../Image/logostore-Photoroom.png" alt="Logo" />
         </a>
       </div>
       <div class="header-right">
-        <a class="chucnang-item" href="Admin.html"><i class="fas fa-home"></i> Tổng quan</a>
+        <a class="chucnang-item" href="Admin.php"><i class="fas fa-home"></i> Tổng quan</a>
         <a class="chucnang-item" href="giaban.php"><i class="fas fa-tags"></i> Giá bán</a>
         <a class="chucnang-item" href="SanPham.php"><i class="fas fa-box-open"></i> Sản phẩm</a>
         <a class="chucnang-item" href="phieunhap.php"><i class="fas fa-file-invoice"></i> Phiếu nhập</a>

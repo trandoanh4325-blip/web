@@ -70,3 +70,64 @@ let slideIndex = 1; // Slide hiện tại
           showSlides(slideIndex += 1);
         }, 4000); 
       }
+// ... existing code ...
+  // Hàm thiết lập tự động chạy (sau mỗi 4 giây)
+  function startAutoSlide() {
+    slideTimer = setInterval(function() {
+      showSlides(slideIndex += 1);
+    }, 4000); 
+  }
+
+// ================= SCRIPT XỬ LÝ PHÂN TRANG (KHÔNG LOAD LẠI TRANG) =================
+document.addEventListener("DOMContentLoaded", function() {
+  const products = document.querySelectorAll('.js-product-item');
+  
+  // Nếu trang không có sản phẩm (không phải trang User/Main) thì bỏ qua để không báo lỗi
+  if(products.length === 0) return; 
+
+  const itemsPerPage = 16; // Số sản phẩm trên mỗi trang
+  const paginationContainer = document.getElementById('js-pagination-controls');
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+  let currentPage = 1;
+
+  // Hàm hiển thị sản phẩm theo trang
+  function displayPage(page) {
+    currentPage = page;
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+
+    products.forEach((product, index) => {
+      if (index >= start && index < end) {
+        product.style.display = ''; // Hiện SP
+      } else {
+        product.style.display = 'none'; // Ẩn SP
+      }
+    });
+
+    renderControls();
+  }
+
+  // Hàm tạo các nút bấm phân trang
+  function renderControls() {
+    paginationContainer.innerHTML = '';
+    if (totalPages <= 1) return; // Nếu chỉ có 1 trang thì không hiện nút
+
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement('button');
+      btn.innerText = i;
+      btn.className = 'js-page-btn ' + (i === currentPage ? 'active' : '');
+      
+      btn.onclick = function() {
+        displayPage(i);
+        // Tự động cuộn mượt lên đầu khu vực sản phẩm khi bấm chuyển trang
+        const khuVuc = document.getElementById('khu-vuc-san-pham');
+        if(khuVuc) khuVuc.scrollIntoView({ behavior: 'smooth' });
+      };
+      
+      paginationContainer.appendChild(btn);
+    }
+  }
+
+  // Kích hoạt hiển thị trang 1 lúc mới vào web
+  displayPage(1);
+});

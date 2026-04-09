@@ -12,8 +12,10 @@ let editingSpMa   = null;
 let filesThemTam  = []; // Lưu tạm file thêm mới
 let filesSuaTam   = []; // Lưu tạm file sửa mới
 
-// Control flag để tránh request lặp
-let isLoadingData = false;
+// Control flag riêng cho từng loại request (tránh xung đột khi gọi song song)
+let isLoadingLoai  = false;
+let isLoadingSp    = false;
+let originalSpData = null; // Snapshot dữ liệu ban đầu khi mở popup sửa
 
 // =============================================================
 // KHỞI TẠO
@@ -29,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     bindSearch();
     bindPreviewHinhThem();
     bindPreviewHinhSua();
+    bindCloseSuaPopup();
 });
 
 // =============================================================
@@ -54,24 +57,24 @@ async function apiFetch(resource, method = 'GET', body = null, timeout = 30000) 
 }
 
 async function fetchLoaiList() {
-    if (isLoadingData) return; // Tránh request lặp
-    isLoadingData = true;
+    if (isLoadingLoai) return;
+    isLoadingLoai = true;
     try {
         const res = await apiFetch('loai-san-pham');
         if (res.success) loaiList = res.data || [];
     } finally {
-        isLoadingData = false;
+        isLoadingLoai = false;
     }
 }
 
 async function fetchSpList() {
-    if (isLoadingData) return; // Tránh request lặp
-    isLoadingData = true;
+    if (isLoadingSp) return;
+    isLoadingSp = true;
     try {
         const res = await apiFetch('san-pham');
         if (res.success) spList = res.data || [];
     } finally {
-        isLoadingData = false;
+        isLoadingSp = false;
     }
 }
 
@@ -256,42 +259,46 @@ function bindSearch() {
 // =============================================================
 // PREVIEW HÌNH ẢNH KHI THÊM (MULTIPLE)
 // =============================================================
+// Render preview ảnh thêm mới từ mảng filesThemTam hiện tại
+function renderPreviewThem() {
+    const previewDiv = document.getElementById('previewHinhThem');
+    if (!previewDiv) return;
+    previewDiv.innerHTML = '';
+    filesThemTam.forEach((file, idx) => {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            const div = document.createElement('div');
+            div.style.cssText = 'position:relative;width:80px;height:80px;';
+            div.innerHTML = `
+                <img src="${evt.target.result}" alt="preview"
+                     style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid #ddd;" />
+                <button type="button" onclick="removePreviewThem(${idx})"
+                        style="position:absolute;top:-8px;right:-8px;width:24px;height:24px;
+                               border-radius:50%;background:#e74c3c;color:#fff;border:none;
+                               cursor:pointer;font-size:12px;padding:0;">X</button>
+            `;
+            previewDiv.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// Chỉ bind 1 lần duy nhất khi init
 function bindPreviewHinhThem() {
     const fileInput = document.getElementById('hinhAnhThem');
     if (!fileInput) return;
-
     fileInput.addEventListener('change', (e) => {
         filesThemTam = Array.from(e.target.files);
-        const previewDiv = document.getElementById('previewHinhThem');
-        previewDiv.innerHTML = '';
-
-        filesThemTam.forEach((file, idx) => {
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-                const div = document.createElement('div');
-                div.style.cssText = 'position:relative;width:80px;height:80px;';
-                div.innerHTML = `
-                    <img src="${evt.target.result}" alt="preview" 
-                         style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid #ddd;" />
-                    <button type="button" onclick="removePreviewThem(${idx})" 
-                            style="position:absolute;top:-8px;right:-8px;width:24px;height:24px;
-                                   border-radius:50%;background:#e74c3c;color:#fff;border:none;
-                                   cursor:pointer;font-size:12px;padding:0;">✕</button>
-                `;
-                previewDiv.appendChild(div);
-            };
-            reader.readAsDataURL(file);
-        });
+        renderPreviewThem();
     });
 }
 
 function removePreviewThem(idx) {
     filesThemTam.splice(idx, 1);
-    const fileInput = document.getElementById('hinhAnhThem');
     const dt = new DataTransfer();
     filesThemTam.forEach(f => dt.items.add(f));
-    fileInput.files = dt.files;
-    bindPreviewHinhThem();
+    document.getElementById('hinhAnhThem').files = dt.files;
+    renderPreviewThem(); // re-render từ array, không rebind
 }
 
 // =============================================================
@@ -427,42 +434,110 @@ function bindFormSua() {
     if (tyle) tyle.addEventListener('input', calc);
 }
 
+// Lấy snapshot tất cả giá trị form sửa tại thời điểm hiện tại
+function getFormSuaSnapshot() {
+    const form = document.getElementById('formSuaSanPham');
+    if (!form) return null;
+    return {
+        ma_sp        : form.querySelector('#suaMaSP')?.value || '',
+        ten_sp       : form.querySelector('#suaTenSP')?.value || '',
+        ma_loai      : form.querySelector('#suaLoaiSP')?.value || '',
+        don_vi_tinh  : form.querySelector('#suaDonViTinh')?.value || '',
+        gia_von      : form.querySelector('#suaGiaVon')?.value || '',
+        ty_le_ln     : form.querySelector('#suaTyleLN')?.value || '',
+        gia_ban      : form.querySelector('#suaGiaBan')?.value || '',
+        so_luong_ton : form.querySelector('#suaSoLuongTon')?.value || '',
+        hien_trang   : form.querySelector('#suaHienTrang')?.value || '',
+        mo_ta        : form.querySelector('#suaMoTa')?.value || '',
+        so_hinh_moi  : filesSuaTam.length, // Có thêm ảnh mới không
+    };
+}
+
+// So sánh 2 snapshot để phát hiện thay đổi
+function hasFormSuaChanged() {
+    if (!originalSpData) return false;
+    const current = getFormSuaSnapshot();
+    return JSON.stringify(current) !== JSON.stringify(originalSpData);
+}
+
+// Nút Đóng popup sửa SP: tự đóng nếu chưa sửa, hỏi nếu đã sửa
+function bindCloseSuaPopup() {
+    const popup     = document.getElementById('popup-suasp');
+    const closeBtn  = popup?.querySelector('a.close');
+    const overlayBg = popup?.querySelector('a.overlay-bg');
+
+    const doClose = () => {
+        editingSpMa    = null;
+        originalSpData = null;
+        filesSuaTam    = [];
+        window.location.hash = '';
+    };
+
+    const handleClose = (e) => {
+        if (!editingSpMa) return; // Popup chưa mở
+
+        if (!hasFormSuaChanged()) {
+            // Chưa sửa gì → thoát ngay
+            e.preventDefault();
+            doClose();
+            return;
+        }
+
+        // Đã sửa → hỏi có muốn lưu không
+        e.preventDefault();
+        const choice = confirm('Bạn có thay đổi chưa lưu!\n\nNhấn OK → Lưu thay đổi\nNhấn Hủy → Thoát không lưu');
+        if (choice) {
+            // Bấm OK → submit form để lưu
+            document.getElementById('formSuaSanPham')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+        } else {
+            // Bấm Hủy → thoát không lưu
+            doClose();
+        }
+    };
+
+    if (closeBtn)   closeBtn.addEventListener('click', handleClose);
+    if (overlayBg)  overlayBg.addEventListener('click', handleClose);
+}
+
+function renderPreviewSua() {
+    const previewDiv = document.getElementById('previewHinhSuaMoi');
+    if (!previewDiv) return;
+    previewDiv.innerHTML = '';
+    filesSuaTam.forEach((file, idx) => {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            const div = document.createElement('div');
+            div.style.cssText = 'position:relative;width:80px;height:80px;';
+            div.innerHTML = `
+                <img src="${evt.target.result}" alt="preview"
+                     style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid #ddd;" />
+                <button type="button" onclick="removePreviewSua(${idx})"
+                        style="position:absolute;top:-8px;right:-8px;width:24px;height:24px;
+                               border-radius:50%;background:#e74c3c;color:#fff;border:none;
+                               cursor:pointer;font-size:12px;padding:0;">X</button>
+            `;
+            previewDiv.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// Chỉ bind 1 lần duy nhất khi init
 function bindPreviewHinhSua() {
     const fileInput = document.getElementById('suaHinhAnhThem');
     if (!fileInput) return;
-
     fileInput.addEventListener('change', (e) => {
         filesSuaTam = Array.from(e.target.files);
-        const previewDiv = document.getElementById('previewHinhSuaMoi');
-        previewDiv.innerHTML = '';
-
-        filesSuaTam.forEach((file, idx) => {
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-                const div = document.createElement('div');
-                div.style.cssText = 'position:relative;width:80px;height:80px;';
-                div.innerHTML = `
-                    <img src="${evt.target.result}" alt="preview" 
-                         style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid #ddd;" />
-                    <button type="button" onclick="removePreviewSua(${idx})" 
-                            style="position:absolute;top:-8px;right:-8px;width:24px;height:24px;
-                                   border-radius:50%;background:#e74c3c;color:#fff;border:none;
-                                   cursor:pointer;font-size:12px;padding:0;">✕</button>
-                `;
-                previewDiv.appendChild(div);
-            };
-            reader.readAsDataURL(file);
-        });
+        renderPreviewSua();
     });
 }
 
 function removePreviewSua(idx) {
     filesSuaTam.splice(idx, 1);
-    const fileInput = document.getElementById('suaHinhAnhThem');
     const dt = new DataTransfer();
     filesSuaTam.forEach(f => dt.items.add(f));
-    fileInput.files = dt.files;
-    bindPreviewHinhSua();
+    document.getElementById('suaHinhAnhThem').files = dt.files;
+    renderPreviewSua(); // re-render từ array, không rebind
 }
 
 async function openEditSp(maSp) {
@@ -489,6 +564,9 @@ async function openEditSp(maSp) {
     filesSuaTam = [];
     document.getElementById('suaHinhAnhThem').value = '';
     document.getElementById('previewHinhSuaMoi').innerHTML = '';
+
+    // Lưu snapshot ban đầu để phát hiện thay đổi
+    originalSpData = getFormSuaSnapshot();
 
     window.location.hash = '#popup-suasp';
 }
@@ -580,6 +658,8 @@ async function submitEditSp() {
     const resUpd = await apiFetch('san-pham', 'PUT', spData);
     if (resUpd.success) {
         showToast('Cập nhật sản phẩm thành công!', 'success');
+        originalSpData = null; // Reset snapshot sau khi lưu thành công
+        editingSpMa    = null;
         await fetchSpList();
         renderSpTable();
         window.location.hash = '';

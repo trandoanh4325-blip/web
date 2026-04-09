@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trang chủ Admin</title>
+    <link rel="stylesheet" href="../cssAdmin/Admin.css" />
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <style>
+      /* Thêm CSS để bỏ gạch chân của thẻ a và giữ nguyên hiệu ứng hover cho Card */
+      .features-grid a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+      /* Giữ nguyên hiệu ứng nổi lên khi trỏ chuột vào link */
+      .features-grid a:hover .feature-card {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+    </style>
+  </head>
+  <body>
+    
+    <!-- Background Shapes -->
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <a href="Admin.php">
+        <img src="../Image/logostore-Photoroom.png" alt="Logo" />
+      </a>
+    </div>
+
+    <div class="header-right">
+      <a class="chucnang-item active" href="Admin.php"><i class="fas fa-home"></i> Tổng quan</a>
+      <a class="chucnang-item" href="giaban.php"><i class="fas fa-tags"></i> Giá bán</a>
+      <a class="chucnang-item" href="SanPham.php"><i class="fas fa-box-open"></i> Sản phẩm</a>
+      <a class="chucnang-item" href="phieunhap.php"><i class="fas fa-file-invoice"></i> Phiếu nhập</a>
+      <a class="chucnang-item" href="donhang.php"><i class="fas fa-shopping-cart"></i> Đơn hàng</a>
+      <a class="chucnang-item" href="khovan.php"><i class="fas fa-truck-loading"></i> Kho vận</a>
+      <a class="chucnang-item" href="Khachhang.php"><i class="fas fa-users"></i> Khách hàng</a>
+      <a class="chucnang-item" href="LoginA.php" style="background: rgba(255,0,0,0.1); color: #e74c3c;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Content -->
+  <div class="dashboard-container">
+    
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+      <div class="welcome-text">
+        <h1>Chào mừng, <span>Admin Florentino!</span> 👋</h1>
+        <p>Bạn đang đăng nhập với quyền quản trị cao nhất. Dưới đây là hệ thống công cụ giúp bạn kiểm soát toàn diện cửa hàng.</p>
+      </div>
+    </div>
+
+    <!-- Feature Cards Grid -->
+    <div class="features-grid">
+      <!-- Card 1: Dữ liệu tổng quát -->
+      <a href="SanPham.php">
+        <div class="feature-card">
+          <div class="icon-wrapper">
+            <i class="fas fa-database"></i>
+          </div>
+          <h3>Dữ liệu tổng quát</h3>
+          <p>Quản lý toàn bộ thông tin sản phẩm, đơn hàng và danh sách khách hàng của hệ thống.</p>
+        </div>
+      </a>
+
+      <!-- Card 2: Kho & Vận chuyển  -->
+      <a href="khovan.php">
+        <div class="feature-card">
+          <div class="icon-wrapper">
+            <i class="fas fa-warehouse"></i>
+          </div>
+          <h3>Kho & Vận chuyển</h3>
+          <p>Theo dõi tồn kho theo thời gian thực, quản lý giá nhập - bán và tình trạng giao nhận.</p>
+        </div>
+      </a>
+
+      <!-- Card 3: Giá bán sản phẩm -->
+      <a href="giaban.php">
+        <div class="feature-card">
+          <div class="icon-wrapper">
+            <i class="fa-solid fa-coins"></i>
+          </div>
+          <h3>Giá bán sản phẩm </h3>
+          <p>Kiểm soát, thay đổi giá thành bán ra, lợi nhuận của các sản phẩm.</p>
+        </div>
+      </a>
+
+      <!-- Card 4: Chăm sóc khách hàng -->
+      <a href="Khachhang.php">
+        <div class="feature-card">
+          <div class="icon-wrapper">
+            <i class="fas fa-headset"></i>
+          </div>
+          <h3>Chăm sóc khách hàng</h3>
+          <p>Hỗ trợ cập nhật thông tin người dùng và xử lý khách hàng nhanh chóng.</p>
+        </div>
+      </a>
+    </div>
+
+  </div>
+  </body>
+</html>
