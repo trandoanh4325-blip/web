@@ -88,7 +88,7 @@ function build_url(int $targetPage): string
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <style>
         /* .header fixed (cao ~100px) */
-        .container { max-width: 1180px; margin: 20px auto; padding: 0 16px; }
+        .container { max-width: 1180px; margin: 120px auto; padding: 0 16px; }
         .filter-box { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 10px; margin-bottom: 18px; }
         .filter-box input, .filter-box select, .filter-box button { padding: 10px; border-radius: 8px; border: 1px solid #ddd; }
         .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
@@ -106,19 +106,18 @@ function build_url(int $targetPage): string
     </style>
 </head>
 <body>
-<header class="main-header">
-  <div class="logo">
-    <a href="User.php"><img src="../Image/logostore-Photoroom.png" class="store-logo"></a>
-  </div>
-
-  <nav class="nav-links">
-    <a href="User.php">Trang chủ</a>
-    <a href="ThongTin.php">Tài khoản</a>
-    <a href="cart.php">Giỏ hàng</a>
-    <a href="order_history.php">Lịch sử giao dịch</a>
-    <a href="#">Tư vấn KH</a>
-  </nav>
-</header>
+<div class="header">
+    <div class="logo">
+        <a href="User.php">
+            <img src="../Image/logostore-Photoroom.png" alt="Logo"/>
+        </a>
+    </div>
+    <div class="others">
+        <ul><a class="fa fa-user" href="ThongTin.php"></a></ul>
+        <ul><a class="fa fa-shopping-bag" href="cart.php"></a></ul>
+        <ul><a href="User.php" class="fa fa-home"> </a></ul>
+    </div>
+</div>
 
     <div class="container">
         <h2>Danh sách sản phẩm</h2>
