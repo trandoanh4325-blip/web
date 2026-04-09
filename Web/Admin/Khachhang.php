@@ -35,7 +35,7 @@ $result = $conn->query($sql);
         <a class="chucnang-item" href="SanPham.php"><i class="fas fa-box-open"></i> Sản phẩm</a>
         <a class="chucnang-item" href="phieunhap.php"><i class="fas fa-file-invoice"></i> Phiếu nhập</a>
         <a class="chucnang-item" href="donhang.php"><i class="fas fa-shopping-cart"></i> Đơn hàng</a>
-        <a class="chucnang-item" href="khovan.html"><i class="fas fa-truck-loading"></i> Kho vận</a>
+        <a class="chucnang-item" href="khovan.php"><i class="fas fa-truck-loading"></i> Kho vận</a>
         <a class="chucnang-item active" href="Khachhang.php"><i class="fas fa-users"></i> Khách hàng</a>
         <a class="chucnang-item" href="LoginA.php" style="background: rgba(255,0,0,0.1); color: #e74c3c;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
       </div>
@@ -138,6 +138,6 @@ $result = $conn->query($sql);
       </div>
     </div>
 
-    <script src="../js/QLKhachHang.js"></script>
+    <script src="../JSAdmin/QLKhachHang.js"></script>
   </body>
 </html>
