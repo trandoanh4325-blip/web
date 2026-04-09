@@ -130,7 +130,7 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
         </div>
       </div>
 
-      <!-- Hàng 2: Số lượng tồn, Đơn vị tính, Hình ảnh -->
+      <!-- Hàng 2: Số lượng tồn, Đơn vị tính, Hình ảnh (MULTIPLE) -->
       <div class="form-row">
         <div class="form-group">
           <label>Số lượng tồn ban đầu</label>
@@ -140,12 +140,15 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
           <label>Đơn vị tính</label>
           <input type="text" id="donViTinh" value="Cái" placeholder="Cái / Bó / Hộp..." />
         </div>
-        <div class="form-group">
-          <label>Hình ảnh</label>
-          <input type="file" id="hinhAnh" accept="image/*" />
-          <div id="previewHinhThem" style="margin-top:6px;display:none">
-            <img id="imgPreviewThem" src="" alt="Xem trước"
-                 style="width:70px;height:70px;object-fit:cover;border-radius:8px;border:1px solid #ddd" />
+      </div>
+
+      <!-- Hình ảnh (Multiple) -->
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label>Hình ảnh (có thể thêm nhiều ảnh) <span class="required">*</span></label>
+          <input type="file" id="hinhAnhThem" accept="image/*" multiple />
+          <div id="previewHinhThem" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+            <!-- Sẽ chứa các ảnh xem trước -->
           </div>
         </div>
       </div>
@@ -290,19 +293,14 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
         </div>
 
         <div class="form-group full-width">
-          <label>Hình ảnh (bỏ trống = giữ hình cũ)</label>
-          <div style="display:flex;align-items:center;gap:12px;margin:6px 0 4px">
-            <img id="previewHinhSua" src="" alt="Hình hiện tại"
-                 style="display:none;width:90px;height:90px;object-fit:cover;
-                        border-radius:8px;border:1px solid #ddd" />
-            <button type="button" id="btnXoaHinh"
-                    style="display:none;padding:5px 12px;background:#e74c3c;color:#fff;
-                           border:none;border-radius:6px;cursor:pointer;font-size:13px">
-              <i class="fas fa-trash"></i> Bỏ hình
-            </button>
+          <label>Hình ảnh (thêm hoặc bỏ ảnh)</label>
+          <div id="hinhAnhHienTai" style="margin:8px 0;display:flex;gap:8px;flex-wrap:wrap">
+            <!-- Sẽ hiển thị các ảnh hiện có với nút xóa -->
           </div>
-          <input type="file" id="suaHinhAnh" accept="image/*" />
-          <input type="hidden" id="suaXoaHinh" value="0" />
+          <input type="file" id="suaHinhAnhThem" accept="image/*" multiple />
+          <div id="previewHinhSuaMoi" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+            <!-- Sẽ chứa các ảnh xem trước mới -->
+          </div>
         </div>
 
         <div class="form-group full-width">
