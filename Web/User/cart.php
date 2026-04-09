@@ -6,12 +6,24 @@ $action = $_GET['action'] ?? '';
 $id = trim($_GET['id'] ?? '');
 $cart = get_cart();
 
-if ($action === 'add' && $id !== '') {
+if (($action === 'add' || $action === 'inc') && $id !== '') {
     if (!isset($cart[$id])) {
         $cart[$id] = 0;
     }
     $cart[$id] += 1;
     set_cart($cart);
+    header('Location: cart.php');
+    exit();
+}
+
+if ($action === 'dec' && $id !== '') {
+    if (isset($cart[$id])) {
+        $cart[$id] = (int)$cart[$id] - 1;
+        if ($cart[$id] <= 0) {
+            unset($cart[$id]);
+        }
+        set_cart($cart);
+    }
     header('Location: cart.php');
     exit();
 }
@@ -71,6 +83,9 @@ if ($cart) {
     <link rel="stylesheet" href="../css/thanhtoan.css">
     <link rel="stylesheet" href="../css/styleUser.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <style>
+      html { text-decoration: none; }
+    </style>
 </head>
 <body>
 <header class="main-header">
@@ -121,9 +136,13 @@ if ($cart) {
         <td><?= h($p['ten_sp']) ?></td>
         <td><img src="<?= h($p['hinh_anh'] ?: '../Image/sp.jpg') ?>"></td>
         <td><?= format_vnd((float)$p['gia_ban']) ?></td>
-        <td><input type="number" name="qty[<?= h($p['ma_sp']) ?>]" value="<?= (int)$item['qty'] ?>" min="0"></td>
+        <td style="white-space: nowrap;">
+          <a class="btn btn-secondary" style="padding:6px 10px; display:inline-block; text-decoration:none;" href="cart.php?action=dec&id=<?= urlencode($p['ma_sp']) ?>">-</a>
+          <input name="qty[<?= h($p['ma_sp']) ?>]" value="<?= (int)$item['qty'] ?>" min="1" style="width:70px; text-align:center;">
+          <a class="btn btn-secondary" style="padding:6px 10px; display:inline-block; text-decoration:none;" href="cart.php?action=inc&id=<?= urlencode($p['ma_sp']) ?>">+</a>
+        </td>
         <td><?= format_vnd((float)$item['line_total']) ?></td>
-        <td><a class="delete-btn" href="cart.php?action=remove&id=<?= urlencode($p['ma_sp']) ?>">✖</a></td>
+        <td><a class="delete-btn" style="text-decoration:none;" href="cart.php?action=remove&id=<?= urlencode($p['ma_sp']) ?>">✖</a></td>
       </tr>
       <?php endforeach; ?>
     </tbody>
@@ -132,7 +151,6 @@ if ($cart) {
   <div class="total">Tổng: <?= format_vnd($total) ?></div>
 
   <div class="buttons">
-    <button class="btn btn-secondary" type="submit">Cập nhật giỏ hàng</button>
     <a href="checkout.php" class="btn btn-primary">Thanh toán</a>
   </div>
   </form>
