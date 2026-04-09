@@ -1,6 +1,7 @@
 // =============================================================
 // JSAdmin/giaban.js  –  Logic Quản lý Giá Bán
-// Logic mới: tìm sản phẩm tồn tại → cập nhật giá bán (không tạo mới)
+// Luồng mới: admin nhập tự do → bấm lưu → server check SP tồn tại → cập nhật
+// Autocomplete chỉ là gợi ý nhanh để tự điền, không bắt buộc dùng
 // =============================================================
 
 const API_URL    = typeof GIABAN_API !== 'undefined' ? GIABAN_API : '../Admin/process_giaban.php';
@@ -12,7 +13,7 @@ const $      = id => document.getElementById(id);
 
 let _allData    = [];
 let _loaiData   = [];
-let _spDangChon = null;   // sản phẩm đang được chọn trong form
+let _spDangChon = null;   // object SP chọn qua autocomplete (có thể null nếu nhập thủ công)
 
 /* ════════════════════════════════════════════════
    TOAST
@@ -27,7 +28,7 @@ function showToast(msg, isError = false) {
 }
 
 /* ════════════════════════════════════════════════
-   TÍNH GIÁ BÁN
+   TÍNH GIÁ BÁN REAL-TIME
    ════════════════════════════════════════════════ */
 function tinhGiaBan(giaVon, loiNhuanLoai, loiNhuanSanPham) {
   const gv   = parseFloat(giaVon)          || 0;
@@ -69,7 +70,7 @@ function updateSuaPreview() {
 }
 
 /* ════════════════════════════════════════════════
-   TẢI DANH SÁCH LOẠI → dropdown modal sửa
+   TẢI LOẠI cho dropdown modal sửa
    ════════════════════════════════════════════════ */
 async function taiLoai() {
   try {
@@ -85,22 +86,7 @@ async function taiLoai() {
 }
 
 /* ════════════════════════════════════════════════
-   LOCK / UNLOCK form chính
-   ════════════════════════════════════════════════ */
-function moKhoaForm(lock) {
-  const fields = $('formGiaBanFields');
-  const btn    = $('btnThem');
-  if (lock) {
-    fields.classList.add('form-fields-locked');
-    btn.disabled = true;
-  } else {
-    fields.classList.remove('form-fields-locked');
-    btn.disabled = false;
-  }
-}
-
-/* ════════════════════════════════════════════════
-   AUTOCOMPLETE – tìm sản phẩm theo mã / tên
+   AUTOCOMPLETE – gợi ý nhanh (không bắt buộc)
    ════════════════════════════════════════════════ */
 let _suggestTimer = null;
 
@@ -122,10 +108,12 @@ function khoiDongAutoComplete() {
     }, 250);
   });
 
+  // Ẩn khi click ngoài
   document.addEventListener('click', e => {
     if (!inp.closest('.sp-search-wrap')?.contains(e.target)) dongSuggest();
   });
 
+  // Bàn phím điều hướng
   inp.addEventListener('keydown', e => {
     const items  = list.querySelectorAll('li.suggest-item');
     const active = list.querySelector('li.active');
@@ -139,19 +127,12 @@ function khoiDongAutoComplete() {
       const prev = active ? active.previousElementSibling : items[items.length - 1];
       active?.classList.remove('active');
       prev?.classList.add('active');
-    } // TÌM VÀ THAY ĐOẠN ENTER CŨ THÀNH ĐOẠN NÀY:
-    
-  else if (e.key === 'Enter') {
-    e.preventDefault();
-    const activeItem = list.querySelector('li.active');
-    const firstItem  = list.querySelector('li.suggest-item');
-    
-    if (activeItem) {
-        activeItem.click();
-    } else if (firstItem) {
-        firstItem.click(); // Nếu chưa bấm mũi tên, nhấn Enter chọn luôn dòng đầu
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      list.querySelector('li.active')?.click();
+    } else if (e.key === 'Escape') {
+      dongSuggest();
     }
-}
   });
 }
 
@@ -184,133 +165,105 @@ function dongSuggest() {
   list.innerHTML = '';
 }
 
+/* Khi chọn SP từ gợi ý → tự điền form (không lock) */
 function chonSanPham(sp) {
   _spDangChon = sp;
 
-  // Hiện card SP đã chọn
+  // Hiện card
   $('spDaChonMa').textContent   = sp.ma_sp;
   $('spDaChonTen').textContent  = sp.ten_sp;
   $('spDaChonLoai').textContent = `[${sp.loai}]`;
   $('spDaChon').style.display   = 'block';
 
-  // Điền form
+  // Điền vào form (admin có thể sửa tiếp)
   $('maSPDangChon').value        = sp.ma_sp;
   $('loiNhuanTheoLoai').value    = sp.loi_nhuan_loai   > 0 ? sp.loi_nhuan_loai  : '';
   $('giaVon').value              = sp.gia_von;
   $('loiNhuanTheoSanPham').value = sp.loi_nhuan_san_pham > 0 ? sp.loi_nhuan_san_pham : '';
 
-  // Form lúc này vẫn unlock để admin có thể tùy chỉnh giá vốn, lợi nhuận
-  // Chỉ khi bấm "Cập nhật" mới check sản phẩm có tồn tại
-  moKhoaForm(false);
   updatePreview();
   dongSuggest();
-  $('timSanPham').value = '';  // ← CLEAR input sau khi chọn
+  $('timSanPham').value = '';
 }
 
+/* Bỏ chọn – xoá card nhưng form vẫn mở */
 function boChonSanPham() {
   _spDangChon = null;
-  $('spDaChon').style.display    = 'none';
-  $('maSPDangChon').value        = '';
-  $('loiNhuanTheoLoai').value    = '';
-  $('giaVon').value              = '';
-  $('loiNhuanTheoSanPham').value = '';
-  $('previewGiaBan').textContent = '—';
-  $('previewNote').textContent   = '';
-  moKhoaForm(true);
+  $('spDaChon').style.display = 'none';
+  $('maSPDangChon').value     = '';
+  // Không xoá các field – admin có thể tự nhập
 }
 
 /* ════════════════════════════════════════════════
-   CHECK SẢN PHẨM TỒN TẠI (MỚI)
-   ════════════════════════════════════════════════ */
-async function checkSanPhamTonTai(maSP) {
-  try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ma_sp: maSP,
-        action: 'check_product'
-      })
-    });
-    const data = await res.json();
-    return { success: data.success, message: data.message, product: data.data };
-  } catch (err) {
-    return { success: false, message: 'Lỗi kết nối server!' };
-  }
-}
-
-/* ════════════════════════════════════════════════
-   CẬP NHẬT GIÁ BÁN (PUT) – KIỂM TRA TRƯỚC
+   CẬP NHẬT GIÁ BÁN
+   Luồng: validate cơ bản → gọi PUT
+   process_giaban.php sẽ check SP tồn tại phía server
    ════════════════════════════════════════════════ */
 async function capNhatGiaBan() {
-  // Đầu tiên: lấy mã SP từ input (không bắt buộc phải chọn từ gợi ý)
-  const maSPFromHidden = $('maSPDangChon').value.trim();
-  const maSPFromInput = $('timSanPham').value.trim();
-  const maSP = maSPFromHidden || maSPFromInput;
-
-  if (!maSP) {
-    showToast('❌ Vui lòng nhập hoặc chọn sản phẩm!', true);
-    return;
-  }
-
+  const maSP = $('maSPDangChon').value.trim();
   const gv   = $('giaVon').value;
   const lnSP = $('loiNhuanTheoSanPham').value;
   const lnL  = $('loiNhuanTheoLoai').value;
 
+  // Validate phía client
+  if (!maSP) {
+    showToast('Vui lòng chọn sản phẩm từ gợi ý trước khi lưu!', true);
+    $('timSanPham').focus();
+    return;
+  }
   if (!gv || parseFloat(gv) <= 0) {
-    showToast('❌ Giá vốn không hợp lệ!', true);
+    showToast('Vui lòng nhập Giá vốn hợp lệ!', true);
+    $('giaVon').focus();
     return;
   }
   if (lnSP === '' && (!lnL || parseFloat(lnL) <= 0)) {
-    showToast('❌ Vui lòng nhập ít nhất 1 mức lợi nhuận!', true);
+    showToast('Vui lòng nhập ít nhất 1 mức lợi nhuận!', true);
+    $('loiNhuanTheoSanPham').focus();
     return;
   }
 
   const btn  = $('btnThem');
   const orig = btn.innerHTML;
-  btn.innerHTML = '<span class="spinner"></span> Đang kiểm tra...';
+  btn.innerHTML = '<span class="spinner"></span> Đang kiểm tra & lưu...';
   btn.disabled  = true;
 
   try {
-    // BƯỚC 1: Kiểm tra sản phẩm có tồn tại không
-    const checkResult = await checkSanPhamTonTai(maSP);
-    if (!checkResult.success) {
-      showToast(checkResult.message, true);
-      btn.innerHTML = orig;
-      btn.disabled  = false;
-      return;
-    }
-
-    // BƯỚC 2: Sản phẩm tồn tại, tiến hành cập nhật giá bán
-    btn.innerHTML = '<span class="spinner"></span> Đang lưu...';
-
-    const product = checkResult.product;
-    const res = await fetch(API_URL, {
+    // process_giaban.php PUT sẽ check SP tồn tại phía server
+    const res  = await fetch(API_URL, {
       method:  'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ma_sp:           maSP,
-        maLoai:          product.ma_loai,
-        loiNhuanLoai:    lnL || 0,
-        tenSanPham:      product.ten_sp,
+        maLoai:          _spDangChon?.ma_loai ?? '',
+        loiNhuanLoai:    lnL  || 0,
+        tenSanPham:      _spDangChon?.ten_sp ?? maSP,  // fallback về maSP nếu chưa chọn qua gợi ý
         giaVon:          gv,
         loiNhuanSanPham: lnSP !== '' ? lnSP : 0,
       })
     });
     const data = await res.json();
+
     if (data.success) {
       showToast('✅ ' + data.message);
+      // Reset form sau khi lưu thành công
       boChonSanPham();
+      $('loiNhuanTheoLoai').value    = '';
+      $('giaVon').value              = '';
+      $('loiNhuanTheoSanPham').value = '';
+      $('previewGiaBan').textContent = '—';
+      $('previewNote').textContent   = '';
       taiDuLieu();
     } else {
-      showToast('❌ Lỗi: ' + data.message, true);
+      // Nếu server báo SP không tồn tại → thông báo rõ
+      showToast('❌ ' + data.message, true);
     }
-  } catch (err) {
-    showToast('❌ Lỗi kết nối server!', true);
+  } catch {
+    showToast('Lỗi kết nối server!', true);
   } finally {
     btn.innerHTML = orig;
-    if (_spDangChon) btn.disabled = false;
+    btn.disabled  = false;
   }
+}
 
 /* ════════════════════════════════════════════════
    RENDER BẢNG
@@ -354,7 +307,7 @@ function renderSearchTable(rows) {
 }
 
 /* ════════════════════════════════════════════════
-   TẢI DANH SÁCH SẢN PHẨM
+   TẢI DANH SÁCH
    ════════════════════════════════════════════════ */
 async function taiDuLieu() {
   try {
@@ -466,26 +419,33 @@ async function timKiem(kw) {
     if (data.success) renderSearchTable(data.data);
     else showToast('Lỗi tìm kiếm!', true);
   } catch { showToast('Lỗi kết nối server!', true); }
-
+}
 
 /* ════════════════════════════════════════════════
    KHỞI ĐỘNG
    ════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', async () => {
   await taiLoai();
-  moKhoaForm(true);
   khoiDongAutoComplete();
 
   $('btnBoChon').addEventListener('click', boChonSanPham);
-  $('loiNhuanTheoSanPham').addEventListener('input', updatePreview);
+
+  // Preview real-time khi thay đổi bất kỳ field nào
+  ['giaVon', 'loiNhuanTheoLoai', 'loiNhuanTheoSanPham'].forEach(id =>
+    $(id).addEventListener('input', updatePreview)
+  );
+
+  // Nút cập nhật
   $('btnThem').addEventListener('click', capNhatGiaBan);
 
+  // Confirm xóa
   $('btnCancelDel').addEventListener('click', dongConfirm);
   $('btnOkDel').addEventListener('click', thucHienXoa);
   $('confirmDel').addEventListener('click', e => {
     if (e.target === $('confirmDel')) dongConfirm();
   });
 
+  // Modal sửa
   $('btnDongModal').addEventListener('click', dongModal);
   $('btnCancelModal').addEventListener('click', dongModal);
   $('btnSua').addEventListener('click', luuSua);
@@ -496,6 +456,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     $(id).addEventListener('input', updateSuaPreview)
   );
 
+  // Tìm kiếm bảng
   $('btnTimKiem').addEventListener('click', () => {
     const kw = $('timKiemPhieu').value.trim();
     if (!kw) { showToast('Vui lòng nhập từ khóa!', true); return; }

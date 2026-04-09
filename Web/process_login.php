@@ -38,7 +38,8 @@ if ($data) {
             echo json_encode([
                 'status' => 'success', 
                 'message' => 'Đăng nhập thành công! Đang chuyển hướng...',
-                'redirect' => 'User/User.html' // Chuyển về trang của bạn
+                'redirect' => 'User/User.php
+                ' // Chuyển về trang của bạn
             ]);
         } else {
             // Có email nhưng sai mật khẩu

@@ -1,7 +1,6 @@
 <?php
 // =============================================================
 // htmlAdmin/giaban.php  –  Trang quản lý giá bán (Admin)
-// Đổi tên từ giaban.html → giaban.php
 // =============================================================
 session_start();
 require_once '../includes/db_connect.php';
@@ -43,25 +42,23 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
   <div class="content">
     <div class="container">
 
-      <!-- ── Form cập nhật giá bán ── -->
       <h2>
         <i class="fas fa-dollar-sign" style="color:#0195b2;margin-right:8px;"></i>
         Lợi nhuận &amp; Giá bán
       </h2>
 
-      <!-- ── Tìm sản phẩm (THAY THẾ input tên tự do) ── -->
-      <label for="timSanPham">Tìm sản phẩm <span style="color:#e74c3c">*</span></label>
+      <!-- ── Autocomplete tìm sản phẩm ── -->
+      <label for="timSanPham">Tìm sản phẩm (gõ mã / tên để gợi ý)</label>
       <div class="sp-search-wrap">
         <input type="text" id="timSanPham"
-               placeholder="Nhập mã SP hoặc tên sản phẩm để tìm..."
+               placeholder="Nhập mã SP hoặc tên sản phẩm để tìm nhanh..."
                autocomplete="off" />
         <i class="fas fa-search sp-search-icon"></i>
-        <!-- Dropdown gợi ý -->
         <ul id="spSuggestList" class="sp-suggest-list"></ul>
       </div>
-      <p><i>* Gõ ít nhất 1 ký tự để tìm sản phẩm đã có trong hệ thống</i></p>
+      <p><i>* Chọn sản phẩm từ gợi ý để tự điền thông tin, hoặc nhập thủ công bên dưới</i></p>
 
-      <!-- ── Card hiển thị sản phẩm đã chọn ── -->
+      <!-- Card SP đã chọn qua autocomplete -->
       <div id="spDaChon" class="sp-da-chon" style="display:none;">
         <div class="sp-da-chon-inner">
           <i class="fas fa-box-open"></i>
@@ -76,25 +73,26 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
         </div>
       </div>
 
-      <!-- Hidden field lưu ma_sp đang chọn -->
+      <!-- Hidden: lưu ma_sp đang làm việc -->
       <input type="hidden" id="maSPDangChon" />
 
-      <!-- ── Các trường còn lại (lock cho đến khi chọn SP) ── -->
-      <div id="formGiaBanFields" class="form-fields-locked">
+      <!-- ── Tất cả field đều mở, không lock ── -->
+      <div id="formGiaBanFields">
 
         <label for="loiNhuanTheoLoai">Lợi nhuận theo loại (%)</label>
         <input type="number" id="loiNhuanTheoLoai"
-               min="0" step="0.01" readonly />
-        <p><i>* % lợi nhuận mặc định của loại sản phẩm (chỉ đọc)</i></p>
+               placeholder="Tự điền khi chọn SP qua gợi ý, hoặc nhập thủ công"
+               min="0" step="0.01" />
+        <p><i>* % lợi nhuận mặc định của loại; sẽ dùng nếu không nhập lợi nhuận riêng SP</i></p>
 
         <label for="giaVon">Giá vốn (đồng) <span style="color:#e74c3c">*</span></label>
         <input type="number" id="giaVon"
-               placeholder="Nhập hoặc sửa giá vốn" min="0" />
-        <p><i>* Giá vốn bình quân được sử dụng để tính giá bán</i></p>
+               placeholder="vd: 12000" min="0" />
+        <p><i>* Nhập giá vốn để tính giá bán</i></p>
 
         <label for="loiNhuanTheoSanPham">Lợi nhuận riêng sản phẩm (%)</label>
         <input type="number" id="loiNhuanTheoSanPham"
-               placeholder="Nhập % lợi nhuận muốn áp dụng (để trống = dùng theo loại)"
+               placeholder="vd: 35 (để trống = dùng % theo loại)"
                min="0" step="0.01" />
         <p><i>* Lợi nhuận riêng SP ưu tiên hơn lợi nhuận theo loại</i></p>
 
@@ -105,7 +103,8 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
           <span class="note" id="previewNote"></span>
         </div>
 
-        <button id="btnThem" disabled>
+        <!-- Nút luôn bật, không disabled -->
+        <button id="btnThem">
           <i class="fas fa-save"></i> Cập nhật giá bán
         </button>
 
@@ -239,10 +238,9 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
   <!-- ════ TOAST ════ -->
   <div id="toast"></div>
 
-  <!-- Truyền URL API sang JS -->
   <script>
-    const GIABAN_API  = '../Admin/process_giaban.php';
-    const SP_API      = '../Admin/process_SanPham.php';
+    const GIABAN_API = '../Admin/process_giaban.php';
+    const SP_API     = '../Admin/process_SanPham.php';
   </script>
   <script src="../JSAdmin/giaban.js"></script>
 
