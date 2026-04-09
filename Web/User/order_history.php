@@ -23,9 +23,12 @@ $ttLabels = [
 $orders = [];
 $sql = "SELECT ma_don, dia_chi_giao, phuong, quan, thanh_pho, tong_tien, hoat_dong, trang_thai_tt, ngay_dat
         FROM don_hang
-        WHERE id = ?
+        WHERE username = ?
         ORDER BY ngay_dat DESC";
 $stmt = $conn->prepare($sql);
+if (!$stmt) {
+    die($conn->error);
+}
 $stmt->bind_param('i', $userId);
 $stmt->execute();
 $result = $stmt->get_result();

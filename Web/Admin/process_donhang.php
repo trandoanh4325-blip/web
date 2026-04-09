@@ -1,13 +1,6 @@
 <?php
 // =============================================================
 // Admin/process_donhang.php  –  API Quản lý Đơn Hàng
-// Cấu trúc DB thực tế:
-//   don_hang  : ma_don(PK), id(FK→users.id), ngay_dat, hoat_dong,
-//               trang_thai_tt, dia_chi_giao, phuong, quan,
-//               thanh_pho, ly_do_huy, tong_tien, created_at
-//   users     : id(PK), username, full_name, ...
-//   → JOIN don_hang.id = users.id để lấy username
-//   → Dùng ma_don làm định danh duy nhất cho đơn hàng
 // =============================================================
 
 header('Content-Type: application/json; charset=utf-8');
@@ -33,115 +26,164 @@ function db(): PDO {
     return $pdo;
 }
 
-function ok($data)            { echo json_encode(['ok'=>true,'data'=>$data], JSON_UNESCAPED_UNICODE); exit; }
-function err($msg, $code=400) { http_response_code($code); echo json_encode(['ok'=>false,'message'=>$msg], JSON_UNESCAPED_UNICODE); exit; }
+function ok($data = null, $msg = '') {
+    echo json_encode(['ok' => true, 'message' => $msg, 'data' => $data], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
-$action = $_GET['action'] ?? '';
-
-// ── Cột SELECT dùng chung: JOIN users để lấy username ──
-$SELECT = "
-    dh.ma_don, dh.id AS id_user,
-    u.username,
-    dh.ngay_dat, dh.hoat_dong, dh.trang_thai_tt,
-    dh.dia_chi_giao, dh.phuong, dh.thanh_pho,
-    dh.ly_do_huy, dh.tong_tien, dh.created_at
-";
-
-$FROM_JOIN = "
-    FROM don_hang dh
-    LEFT JOIN users u ON dh.id = u.id
-";
+function err($msg = 'Lỗi hệ thống', $code = 400) {
+    http_response_code($code);
+    echo json_encode(['ok' => false, 'message' => $msg], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 try {
-    switch ($action) {
+    $action = $_GET['action'] ?? '';
+    $method = $_SERVER['REQUEST_METHOD'];
 
-        // ── Lấy tất cả đơn hàng ──
-        case 'get_all':
-            $sql = "SELECT $SELECT $FROM_JOIN ORDER BY dh.ngay_dat DESC";
-            ok(db()->query($sql)->fetchAll());
-            break;
+    if ($method === 'GET') {
+        switch ($action) {
+            
+            // ── 1. Lấy toàn bộ đơn hàng ──
+            case 'get_all':
+                // ĐÃ SỬA: d.username = u.id
+                $st = db()->query(
+                    "SELECT d.ma_don, u.username, d.ngay_dat, d.hoat_dong,
+                            d.trang_thai_tt, d.dia_chi_giao, d.phuong, d.quan,
+                            d.thanh_pho, d.ly_do_huy, d.tong_tien
+                     FROM don_hang d
+                     JOIN users u ON d.username = u.id
+                     ORDER BY d.ngay_dat DESC"
+                );
+                ok($st->fetchAll());
 
-        // ── Tìm kiếm ──
-        case 'search':
-            $where = []; $params = [];
-            if (!empty($_GET['tu_ngay']))    { $where[] = 'dh.ngay_dat >= :tu';        $params[':tu']  = $_GET['tu_ngay']; }
-            if (!empty($_GET['den_ngay']))   { $where[] = 'dh.ngay_dat <= :den';       $params[':den'] = $_GET['den_ngay']; }
-            if (!empty($_GET['trang_thai'])) { $where[] = 'dh.hoat_dong = :tt';        $params[':tt']  = $_GET['trang_thai']; }
-            if (!empty($_GET['username']))   { $where[] = 'u.username LIKE :un';       $params[':un']  = '%'.$_GET['username'].'%'; }
-            if (!empty($_GET['phuong']))     { $where[] = 'dh.phuong LIKE :ph';        $params[':ph']  = '%'.$_GET['phuong'].'%'; }
-            if (!empty($_GET['thanh_pho']))  { $where[] = 'dh.thanh_pho LIKE :tp';    $params[':tp']  = '%'.$_GET['thanh_pho'].'%'; }
+            // ── 2. Chi tiết 1 đơn hàng (kèm SP) ──
+            case 'get_detail':
+                $maDon = trim($_GET['ma_don'] ?? '');
+                if ($maDon === '') err('Thiếu mã đơn');
 
-            $sql = "SELECT $SELECT $FROM_JOIN";
-            if ($where) $sql .= " WHERE " . implode(" AND ", $where);
-            $sql .= " ORDER BY dh.ngay_dat DESC";
+                // ĐÃ SỬA: d.username = u.id
+                $st = db()->prepare(
+                    "SELECT d.ma_don, u.username, d.ngay_dat, d.hoat_dong,
+                            d.trang_thai_tt, d.dia_chi_giao, d.phuong, d.quan,
+                            d.thanh_pho, d.ly_do_huy, d.tong_tien
+                     FROM don_hang d
+                     JOIN users u ON d.username = u.id
+                     WHERE d.ma_don = ?"
+                );
+                $st->execute([$maDon]);
+                $don = $st->fetch();
+                if (!$don) err('Không tìm thấy đơn', 404);
 
-            $st = db()->prepare($sql);
-            $st->execute($params);
-            ok($st->fetchAll());
-            break;
+                // Lấy chi tiết sản phẩm
+                $st2 = db()->prepare(
+                    "SELECT c.ma_sp, s.ten_sp, c.so_luong, c.gia_ban,
+                            (c.so_luong * c.gia_ban) AS thanh_tien
+                     FROM chi_tiet_don_hang c
+                     JOIN san_pham s ON c.ma_sp = s.ma_sp
+                     WHERE c.ma_don = ?"
+                );
+                $st2->execute([$maDon]);
+                $don['chi_tiet'] = $st2->fetchAll();
 
-        // ── Chi tiết 1 đơn (WHERE ma_don) ──
-        case 'get_detail':
-            $maDon = trim($_GET['ma_don'] ?? '');
-            if ($maDon === '') err('Thiếu mã đơn hàng');
+                ok($don);
 
-            $st = db()->prepare("SELECT $SELECT $FROM_JOIN WHERE dh.ma_don = :ma_don");
-            $st->execute([':ma_don' => $maDon]);
-            $row = $st->fetch();
-            if (!$row) err('Không tìm thấy đơn hàng');
-            ok($row);
-            break;
+            // ── 3. Tìm kiếm đơn hàng ──
+            case 'search':
+                $tu    = trim($_GET['tu_ngay'] ?? '');
+                $den   = trim($_GET['den_ngay'] ?? '');
+                $hd    = trim($_GET['hoat_dong'] ?? '');
+                $user  = trim($_GET['username'] ?? '');
+                $ph    = trim($_GET['phuong'] ?? '');
+                $tp    = trim($_GET['thanh_pho'] ?? '');
 
-        // ── Sản phẩm trong đơn (JOIN san_pham theo ma_sp) ──
-        case 'get_items':
-            $maDon = trim($_GET['ma_don'] ?? '');
-            if ($maDon === '') ok([]);
+                $w = ["1=1"];
+                $p = [];
 
-            $st = db()->prepare("
-                SELECT ct.ma_don, ct.ma_sp, ct.so_luong, ct.gia_ban,
-                       sp.ten_sp, sp.hinh_anh
-                FROM   chi_tiet_don_hang ct
-                LEFT JOIN san_pham sp ON ct.ma_sp = sp.ma_sp
-                WHERE  ct.ma_don = :ma_don
-            ");
-            $st->execute([':ma_don' => $maDon]);
-            ok($st->fetchAll());
-            break;
+                if ($tu !== '') {
+                    $w[] = "DATE(d.ngay_dat) >= :tu";
+                    $p[':tu'] = $tu;
+                }
+                if ($den !== '') {
+                    $w[] = "DATE(d.ngay_dat) <= :den";
+                    $p[':den'] = $den;
+                }
+                if ($hd !== '' && $hd !== 'all') {
+                    $w[] = "d.hoat_dong = :hd";
+                    $p[':hd'] = $hd;
+                }
+                if ($user !== '') {
+                    $w[] = "u.username LIKE :u";
+                    $p[':u'] = "%$user%";
+                }
+                if ($ph !== '') {
+                    $w[] = "d.phuong LIKE :ph";
+                    $p[':ph'] = "%$ph%";
+                }
+                if ($tp !== '') {
+                    $w[] = "d.thanh_pho LIKE :tp";
+                    $p[':tp'] = "%$tp%";
+                }
 
-        // ── Cập nhật trạng thái (WHERE ma_don) ──
-        case 'update_status':
-            $b        = json_decode(file_get_contents('php://input'), true) ?? [];
-            $maDon    = trim($b['ma_don']    ?? '');
-            $hoatDong = trim($b['hoat_dong'] ?? '');
-            $lyDo     = trim($b['ly_do_huy'] ?? '');
+                $whereSql = implode(' AND ', $w);
+                
+                // ĐÃ SỬA: d.username = u.id
+                $sql = "SELECT d.ma_don, u.username, d.ngay_dat, d.hoat_dong,
+                               d.trang_thai_tt, d.dia_chi_giao, d.phuong, d.quan,
+                               d.thanh_pho, d.ly_do_huy, d.tong_tien
+                        FROM don_hang d
+                        JOIN users u ON d.username = u.id
+                        WHERE $whereSql
+                        ORDER BY d.ngay_dat DESC";
 
-            if ($maDon === '' || $hoatDong === '') err('Dữ liệu không hợp lệ');
+                $st = db()->prepare($sql);
+                $st->execute($p);
+                ok($st->fetchAll());
 
-            $trangThaiTT = match($hoatDong) {
-                'dang_cho'                                => 'chua_xac_nhan',
-                'dang_chuan_bi','cho_lay_hang',
-                'dang_van_chuyen'                         => 'da_xac_nhan',
-                'giao_thanh_cong'                         => 'giao_thanh_cong',
-                'da_huy'                                  => 'da_huy',
-                default                                   => 'chua_xac_nhan',
-            };
-
-            $st = db()->prepare(
-                "UPDATE don_hang
-                 SET hoat_dong = :hd, trang_thai_tt = :tt, ly_do_huy = :ly
-                 WHERE ma_don = :ma_don"
-            );
-            $st->execute([
-                ':hd'     => $hoatDong,
-                ':tt'     => $trangThaiTT,
-                ':ly'     => $lyDo,
-                ':ma_don' => $maDon,
-            ]);
-            ok(['updated' => true]);
-            break;
-
-        default:
-            err('Action không hợp lệ', 400);
+            default: err('Action GET không hợp lệ');
+        }
     }
+    elseif ($method === 'POST') {
+        switch ($action) {
+            
+            // ── Cập nhật trạng thái (WHERE ma_don) ──
+            case 'update_status':
+                $b        = json_decode(file_get_contents('php://input'), true) ?? [];
+                $maDon    = trim($b['ma_don']    ?? '');
+                $hoatDong = trim($b['hoat_dong'] ?? '');
+                $lyDo     = trim($b['ly_do_huy'] ?? '');
 
-} catch (Exception $e) { err($e->getMessage(), 500); }
+                if ($maDon === '' || $hoatDong === '') err('Dữ liệu không hợp lệ');
+
+                $trangThaiTT = match($hoatDong) {
+                    'dang_cho'                                => 'chua_xac_nhan',
+                    'dang_chuan_bi','cho_lay_hang',
+                    'dang_van_chuyen'                         => 'da_xac_nhan',
+                    'giao_thanh_cong'                         => 'giao_thanh_cong',
+                    'da_huy'                                  => 'da_huy',
+                    default                                   => 'chua_xac_nhan',
+                };
+
+                $st = db()->prepare(
+                    "UPDATE don_hang
+                     SET hoat_dong = :hd, trang_thai_tt = :tt, ly_do_huy = :ly
+                     WHERE ma_don = :ma_don"
+                );
+                $st->execute([
+                    ':hd'     => $hoatDong,
+                    ':tt'     => $trangThaiTT,
+                    ':ly'     => $lyDo,
+                    ':ma_don' => $maDon
+                ]);
+
+                if ($st->rowCount() === 0) {
+                    err('Không tìm thấy đơn hàng hoặc trạng thái không đổi');
+                }
+                ok(null, 'Đã cập nhật trạng thái');
+
+            default: err('Action POST không hợp lệ');
+        }
+    }
+} catch (Exception $e) {
+    err('Lỗi SQL: ' . $e->getMessage(), 500);
+}

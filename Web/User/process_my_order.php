@@ -32,7 +32,7 @@ try {
             }
             $stmt = $conn->prepare(
                 'SELECT ma_don, ngay_dat, hoat_dong, trang_thai_tt, dia_chi_giao, phuong, quan, thanh_pho, ly_do_huy, tong_tien
-                 FROM don_hang WHERE ma_don = ? AND id = ?'
+                 FROM don_hang WHERE ma_don = ? AND username = ?'
             );
             $stmt->bind_param('si', $maDon, $userId);
             $stmt->execute();
@@ -48,7 +48,7 @@ try {
             if ($maDon === '') {
                 json_ok([]);
             }
-            $chk = $conn->prepare('SELECT 1 FROM don_hang WHERE ma_don = ? AND id = ?');
+            $chk = $conn->prepare('SELECT 1 FROM don_hang WHERE ma_don = ? AND username = ?');
             $chk->bind_param('si', $maDon, $userId);
             $chk->execute();
             if ($chk->get_result()->num_rows === 0) {
@@ -80,7 +80,7 @@ try {
             if ($maDon === '') {
                 json_err('Thiếu mã đơn hàng.');
             }
-            $stmt = $conn->prepare('SELECT hoat_dong, trang_thai_tt FROM don_hang WHERE ma_don = ? AND id = ?');
+            $stmt = $conn->prepare('SELECT hoat_dong, trang_thai_tt FROM don_hang WHERE ma_don = ? AND username = ?');
             $stmt->bind_param('si', $maDon, $userId);
             $stmt->execute();
             $row = $stmt->get_result()->fetch_assoc();
@@ -95,7 +95,7 @@ try {
             }
             $newTt = $row['trang_thai_tt'] === 'da_thanh_toan' ? 'hoan_tien' : $row['trang_thai_tt'];
             $upd = $conn->prepare(
-                'UPDATE don_hang SET hoat_dong = \'da_huy\', trang_thai_tt = ?, ly_do_huy = ? WHERE ma_don = ? AND id = ? AND hoat_dong = \'dang_cho\''
+                'UPDATE don_hang SET hoat_dong = \'da_huy\', trang_thai_tt = ?, ly_do_huy = ? WHERE ma_don = ? AND username = ? AND hoat_dong = \'dang_cho\''
             );
             $upd->bind_param('sssi', $newTt, $lyDo, $maDon, $userId);
             $upd->execute();

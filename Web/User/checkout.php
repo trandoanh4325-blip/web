@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $orderCode = 'DH' . date('YmdHis') . random_int(100, 999);
             $paymentStatus = $paymentMethod === 'online' ? 'da_thanh_toan' : 'chua_thanh_toan';
-            $orderStmt = $conn->prepare("INSERT INTO don_hang (ma_don, id, dia_chi_giao, phuong, quan, thanh_pho, tong_tien, trang_thai_tt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $orderStmt = $conn->prepare("INSERT INTO don_hang (ma_don, username, dia_chi_giao, phuong, quan, thanh_pho, tong_tien, trang_thai_tt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             $orderStmt->bind_param('sissssds', $orderCode, $userId, $shippingAddress, $wardValue, $districtValue, $cityValue, $total, $paymentStatus);
             $orderStmt->execute();
 

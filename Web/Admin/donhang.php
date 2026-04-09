@@ -221,7 +221,7 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
 
   <!-- API URL truyền sang JS qua biến PHP -->
   <script>
-    const PROCESS_URL = '../Admin/process_donhang.php';
+    const PROCESS_URL = 'process_donhang.php';
   </script>
   <script src="../JSAdmin/donhang.js"></script>
 

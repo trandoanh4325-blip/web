@@ -1,7 +1,3 @@
--- =====================================================
--- DATABASE: shop_hoa_db (Hệ thống quản lý bán hoa)
--- =====================================================
-
 -- 1. BẢNG USERS
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

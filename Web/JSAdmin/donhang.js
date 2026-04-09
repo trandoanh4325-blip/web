@@ -3,7 +3,7 @@
    Dùng ma_don làm định danh đơn, username lấy từ JOIN users
    ============================================================ */
 
-const API_URL = typeof PROCESS_URL !== 'undefined' ? PROCESS_URL : '../Admin/process_donhang.php';
+const API_URL = typeof PROCESS_URL !== 'undefined' ? PROCESS_URL : 'process_donhang.php';
 
 /* ===== MAP HOẠT ĐỘNG → BADGE ===== */
 const HOAT_DONG_MAP = {
@@ -143,14 +143,19 @@ function xemChiTiet(maDon) {
     modal.style.cssText = 'display:flex;position:fixed;inset:0;background:rgba(15,15,30,0.6);z-index:9999;align-items:center;justify-content:center;padding:16px;';
     setTimeout(() => modal.classList.add('open'), 10);
 
-    // Gọi 2 API song song, dùng ma_don
-    Promise.all([
-        fetch(`${API_URL}?action=get_detail&ma_don=${encodeURIComponent(maDon)}`).then(r => r.json()),
-        fetch(`${API_URL}?action=get_items&ma_don=${encodeURIComponent(maDon)}`).then(r => r.json()),
-    ]).then(([resDetail, resItems]) => {
-        if (!resDetail.ok) { showToast('Không lấy được chi tiết', 'error'); return; }
-        renderModal(resDetail.data, resItems.ok ? resItems.data : []);
-    }).catch(() => showToast('Lỗi kết nối', 'error'));
+    // Chỉ cần gọi 1 API duy nhất vì PHP đã trả về kèm danh sách sản phẩm rồi
+    fetch(`${API_URL}?action=get_detail&ma_don=${encodeURIComponent(maDon)}`)
+    .then(r => r.json())
+    .then(res => {
+        if (!res.ok) { 
+            showToast('Không lấy được chi tiết', 'error'); 
+            return; 
+        }
+        
+        // CHÌA KHÓA LÀ ĐÂY: Truyền đúng mảng chi_tiet vào hàm renderModal giữ nguyên form của bạn
+        renderModal(res.data, res.data.chi_tiet || []);
+    })
+    .catch(() => showToast('Lỗi kết nối', 'error'));
 }
 
 /* ===== RENDER NỘI DUNG MODAL ===== */
