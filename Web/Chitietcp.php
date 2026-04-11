@@ -18,6 +18,10 @@ if (!$product) {
     echo '<div style="text-align:center; margin-top: 50px;"><h2>Không tìm thấy sản phẩm.</h2><a href="Main.php">Quay lại trang chủ</a></div>';
     exit();
 }
+$imgStmt = $conn->prepare("SELECT duong_dan FROM san_pham_hinh_anh WHERE ma_sp = ? ORDER BY thu_tu ASC");
+$imgStmt->bind_param('s', $id);
+$imgStmt->execute();
+$list_images = $imgStmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -55,13 +59,20 @@ if (!$product) {
 
   <div class="product-detail">
     <div class="image-section">
-      <!-- Đổ link ảnh từ DB -->
-      <img id="mainImage" src="<?= h($product['hinh_anh'] ?: 'Image/sp.jpg') ?>" alt="<?= h($product['ten_sp']) ?>" class="main-img">
+      <?php 
+          // Cùng cấp nên chỉ dùng ImageSanPham/
+          $mainImgPath = !empty($product['hinh_anh']) ? 'ImageSanPham/' . $product['hinh_anh'] : 'ImageSanPham/sp.jpg'; 
+      ?>
+      <img id="mainImage" src="<?= h($mainImgPath) ?>" alt="<?= h($product['ten_sp']) ?>" class="main-img">
+      
       <div class="thumbnail-container">
-        <img src="<?= h($product['hinh_anh'] ?: 'Image/sp.jpg') ?>" class="thumbnail">
-        <img src="<?= h($product['hinh_anh'] ?: 'Image/sp.jpg') ?>" class="thumbnail">
-        <img src="<?= h($product['hinh_anh'] ?: 'Image/sp.jpg') ?>" class="thumbnail">
-      </div>
+        <img src="<?= h($mainImgPath) ?>" class="thumbnail" alt="thumb-main" onclick="document.getElementById('mainImage').src=this.src;">
+        
+        <?php foreach ($list_images as $img): ?>
+            <?php $thumbPath = 'ImageSanPham/' . $img['duong_dan']; ?>
+            <img src="<?= h($thumbPath) ?>" class="thumbnail" alt="thumb" onclick="document.getElementById('mainImage').src=this.src;">
+        <?php endforeach; ?>
+    </div>
     </div>
 
     <div class="info-section">
@@ -70,7 +81,7 @@ if (!$product) {
       <p class="price">Giá bán: <span><?= format_vnd((float)$product['gia_ban']) ?></span></p>
 
       <div class="voucher">
-        <i class="fa fa-ticket"></i> <span>Miễn phí vận chuyển cho đơn hàng trên 500.000đ</span>
+        <i class="fa fa-ticket"></i> <span>Miễn phí vận chuyển cho tất cả đơn hàng</span>
       </div>
 
       <div class="option">

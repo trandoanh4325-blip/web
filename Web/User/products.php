@@ -140,7 +140,8 @@ function build_url(int $targetPage): string
             <div class="grid">
                 <?php foreach ($products as $p): ?>
                     <div class="card">
-                        <img src="<?= h($p['hinh_anh'] ?: '../Image/sp.jpg') ?>" alt="<?= h($p['ten_sp']) ?>">
+                        <?php $imgPath = !empty($p['hinh_anh']) ? '../ImageSanPham/' . $p['hinh_anh'] : '../ImageSanPham/sp.jpg'; ?>
+<img src="<?= h($imgPath) ?>" alt="<?= h($p['ten_sp']) ?>">
                         <h4><?= h($p['ten_sp']) ?></h4>
                         <div class="cate"><?= h($p['ten_loai']) ?></div>
                         <div class="price"><?= format_vnd((float)$p['gia_ban']) ?></div>

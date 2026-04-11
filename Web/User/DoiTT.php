@@ -56,31 +56,37 @@ $user = $result->fetch_assoc();
                 <div class="input-group">
                     <i class="fa-solid fa-id-card"></i>
                     <input type="text" id="upd-username" placeholder="<?php echo htmlspecialchars($user['username']); ?>">
+                    <span class="input-error-msg" id="err-upd-username"></span>
                 </div>
                 
                 <div class="input-group">
                     <i class="fa-solid fa-user"></i>
                     <input type="text" id="upd-fullname" placeholder="<?php echo htmlspecialchars($user['full_name']); ?>">
+                    <span class="input-error-msg" id="err-upd-fullname"></span>
                 </div>
                 
                 <div class="input-group">
                     <i class="fa-solid fa-phone"></i>
                     <input type="tel" id="upd-phone" placeholder="<?php echo htmlspecialchars($user['phone']); ?>">
+                    <span class="input-error-msg" id="err-upd-phone"></span>
                 </div>
                 
                 <div class="input-group">
                     <i class="fa-solid fa-location-dot"></i>
                     <input type="text" id="upd-address" placeholder="<?php echo htmlspecialchars($user['address']); ?>">
+                    <span class="input-error-msg" id="err-upd-address"></span>
                 </div>
                 
                 <div class="input-group">
                     <i class="fa-solid fa-envelope"></i>
                     <input type="email" id="upd-email" placeholder="<?php echo htmlspecialchars($user['email']); ?>">
+                    <span class="input-error-msg" id="err-upd-email"></span>
                 </div>
                 
                 <div class="input-group">
                     <i class="fa-solid fa-lock"></i>
                     <input type="password" id="upd-password" placeholder="Nhập mật khẩu mới nếu muốn đổi...">
+                    <span class="input-error-msg" id="err-upd-password"></span>
                 </div>
 
                 <div class="action-buttons">

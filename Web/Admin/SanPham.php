@@ -161,7 +161,7 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
         </div>
       </div>
 
-      <!-- Hàng 4: Giá vốn, Tỷ lệ LN, Giá bán -->
+      <!-- Hàng 4: Giá vốn, Tỷ lệ LN (Giá bán quản lý ở trang Giá bán) -->
       <div class="form-row">
         <div class="form-group">
           <label>Giá vốn (VND)</label>
@@ -170,11 +170,7 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
         <div class="form-group">
           <label>Tỷ lệ lợi nhuận (%)</label>
           <input type="number" id="tyleLN" min="0" max="1000" step="0.1" placeholder="0" />
-          <small style="color:#888;font-size:11px">Giá bán sẽ tự động tính</small>
-        </div>
-        <div class="form-group">
-          <label>Giá bán (VND)</label>
-          <input type="number" id="giaBan" min="0" step="1000" placeholder="Tự động tính" />
+          <small style="color:#888;font-size:11px">Giá bán được tính tự động và quản lý tại trang <a href="giaban.php">Giá bán</a></small>
         </div>
       </div>
 

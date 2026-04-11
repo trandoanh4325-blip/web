@@ -13,6 +13,11 @@ if (!$product) {
     echo 'Không tìm thấy sản phẩm.';
     exit();
 }
+// Lấy danh sách ảnh phụ từ bảng san_pham_hinh_anh
+$imgStmt = $conn->prepare("SELECT duong_dan FROM san_pham_hinh_anh WHERE ma_sp = ? ORDER BY thu_tu ASC");
+$imgStmt->bind_param('s', $id);
+$imgStmt->execute();
+$list_images = $imgStmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -45,20 +50,29 @@ if (!$product) {
     </div>
 </div>
 
+
 <div class="product-detail">
     <div class="image-section">
-        <img id="mainImage" src="<?= h($product['hinh_anh'] ?: '../Image/sp.jpg') ?>" alt="<?= h($product['ten_sp']) ?>" class="main-img">
+        <?php 
+            // Đường dẫn ảnh chính
+            $mainImgPath = !empty($product['hinh_anh']) ? '../ImageSanPham/' . $product['hinh_anh'] : '../ImageSanPham/sp.jpg'; 
+        ?>
+        <img id="mainImage" src="<?= h($mainImgPath) ?>" alt="<?= h($product['ten_sp']) ?>" class="main-img">
+        
         <div class="thumbnail-container">
-            <img src="<?= h($product['hinh_anh'] ?: '../Image/sp.jpg') ?>" class="thumbnail" alt="thumb1">
-            <img src="<?= h($product['hinh_anh'] ?: '../Image/sp.jpg') ?>" class="thumbnail" alt="thumb2">
-            <img src="<?= h($product['hinh_anh'] ?: '../Image/sp.jpg') ?>" class="thumbnail" alt="thumb3">
-        </div>
+            <img src="<?= h($mainImgPath) ?>" class="thumbnail" alt="thumb-main" onclick="document.getElementById('mainImage').src=this.src;">
+            
+            <?php foreach ($list_images as $img): ?>
+                <?php $thumbPath = '../ImageSanPham/' . $img['duong_dan']; ?>
+                <img src="<?= h($thumbPath) ?>" class="thumbnail" alt="thumb" onclick="document.getElementById('mainImage').src=this.src;">
+            <?php endforeach; ?>
+    </div>
     </div>
 
     <div class="info-section">
         <h2 class="product-title"><?= h($product['ten_sp']) ?></h2>
         <p class="price">Giá bán: <span><?= format_vnd((float)$product['gia_ban']) ?></span></p>
-        <div class="voucher"><i class="fa fa-ticket"></i> <span>Miễn phí vận chuyển cho đơn hàng trên 500.000đ</span></div>
+        <div class="voucher"><i class="fa fa-ticket"></i> <span>Miễn phí vận chuyển cho tất cả đơn hàng</span></div>
 
         <div class="option"><label>Phân loại:</label> <?= h($product['ten_loai']) ?></div>
         <div class="option"><label>Mã SP:</label> <?= h($product['ma_sp']) ?></div>
@@ -66,17 +80,45 @@ if (!$product) {
         <div class="option"><label>Số lượng:</label> <input type="number" id="quantity" value="1" min="1" max="<?= (int)$product['so_luong_ton'] ?>"></div>
 
         <div class="buttons">
-            <a href="cart.php?action=add&id=<?= urlencode($product['ma_sp']) ?>"><button class="add-cart">Thêm vào giỏ hàng</button></a>
-            <a href="checkout.php?buy_now=<?= urlencode($product['ma_sp']) ?>"><button class="buy-now">Mua ngay</button></a>
-        </div>
-        <div class="short-desc">
-            <p>Sản phẩm được chuẩn bị cẩn thận, mang phong cách thanh lịch, phù hợp làm quà tặng cho người thân và bạn bè.</p>
-        </div>
+    <!-- 🔥 FIX: Thêm giỏ -->
+    <button class="add-cart" onclick="addToCart()">Thêm vào giỏ hàng</button>
 
-        <div class="shop-info">
-            <img src="../Image/logostore-Photoroom.png" alt="Logo shop">
-            <h3>Florentino - Gifts That Bloom</h3>
-        </div>
+    <!-- 🔥 FIX: Mua ngay -->
+    <button class="buy-now" onclick="buyNow()">Mua ngay</button>
+</div>
+
+<script>
+function checkStock() {
+    let qtyInput = document.getElementById("quantity");
+    let qty = parseInt(qtyInput.value);
+    let stock = parseInt(qtyInput.getAttribute("max"));
+
+    if (qty > stock) {
+        // Thay alert bằng hàm mới
+        showCustomAlert("Sản phẩm này chỉ còn lại " + stock + " cái trong kho!", qtyInput);
+        return false;
+    }
+    if (qty < 1 || isNaN(qty)) {
+        showCustomAlert("Số lượng không hợp lệ!", qtyInput);
+        return false;
+    }
+    return true;
+}
+
+function addToCart() {
+    if (!checkStock()) return; 
+    let qty = document.getElementById("quantity").value;
+    let id = "<?= $product['ma_sp'] ?>";
+    window.location.href = "cart.php?action=add&id=" + id + "&qty=" + qty;
+}
+
+function buyNow() {
+    if (!checkStock()) return; 
+    let qty = document.getElementById("quantity").value;
+    let id = "<?= $product['ma_sp'] ?>";
+    window.location.href = "checkout.php?buy_now=" + id + "&qty=" + qty;
+}
+</script>
     </div>
 </div>
 
@@ -130,5 +172,103 @@ if (!$product) {
         </div>
     </footer>
 </div>
+<style>
+/* Làm mờ nền phía sau */
+.custom-alert-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+/* Hiển thị popup */
+.custom-alert-overlay.show {
+    visibility: visible;
+    opacity: 1;
+}
+/* Khối nội dung popup */
+.custom-alert-box {
+    background: #fff;
+    padding: 30px 20px;
+    border-radius: 12px;
+    text-align: center;
+    width: 350px;
+    max-width: 90%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    transform: translateY(-30px);
+    transition: transform 0.3s ease;
+}
+.custom-alert-overlay.show .custom-alert-box {
+    transform: translateY(0);
+}
+/* Icon cảnh báo */
+.custom-alert-icon i {
+    font-size: 55px;
+    color: #e74c3c;
+    margin-bottom: 15px;
+}
+.custom-alert-box h3 {
+    margin: 0 0 10px;
+    font-size: 22px;
+    color: #333;
+}
+.custom-alert-box p {
+    margin: 0 0 25px;
+    color: #666;
+    font-size: 16px;
+    line-height: 1.5;
+}
+/* Nút đóng */
+.custom-alert-btn {
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.custom-alert-btn:hover {
+    background: #c0392b;
+}
+</style>
+
+<div id="customAlertOverlay" class="custom-alert-overlay">
+    <div class="custom-alert-box">
+        <div class="custom-alert-icon">
+            <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <h3>Thông báo</h3>
+        <p id="customAlertMessage">Nội dung thông báo sẽ hiện ở đây</p>
+        <button onclick="closeCustomAlert()" class="custom-alert-btn">Đã hiểu</button>
+    </div>
+</div>
+
+<script>
+let currentFocusElement = null; // Lưu lại ô input bị lỗi để focus lại sau khi đóng popup
+
+// Hàm gọi popup thay cho alert()
+function showCustomAlert(message, elementToFocus) {
+    document.getElementById('customAlertMessage').innerText = message;
+    document.getElementById('customAlertOverlay').classList.add('show');
+    currentFocusElement = elementToFocus;
+}
+
+// Hàm đóng popup
+function closeCustomAlert() {
+    document.getElementById('customAlertOverlay').classList.remove('show');
+    if (currentFocusElement) {
+        currentFocusElement.focus(); // Đưa con trỏ chuột về lại ô nhập lỗi
+        currentFocusElement = null;
+    }
+}
+</script>
 </body>
 </html>

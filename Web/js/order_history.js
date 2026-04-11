@@ -90,7 +90,7 @@
     if (items.length) {
       items.forEach(function (it) {
         const line = Number(it.so_luong) * Number(it.gia_ban);
-        const src = it.hinh_anh ? it.hinh_anh : '../Image/sp.jpg';
+        const src = it.hinh_anh ? '../ImageSanPham/' + it.hinh_anh : '../ImageSanPham/sp.jpg';
         const img =
           '<img src="' +
           attrSafe(src) +

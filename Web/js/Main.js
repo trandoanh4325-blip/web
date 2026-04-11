@@ -3,11 +3,11 @@ let slideIndex = 1; // Slide hiện tại
 
       // Cấu hình link tương ứng cho từng slide
       const slideLinks = [
-        "#", // Link cho banner 1
-        "#", // Link cho banner 2
-        "#", // Link cho banner 3
-        "#", // Link cho banner 4
-        "#"  // Link cho banner 5
+        "../User/product_detail.php?id=SP073", // Link cho banner 1
+        "../User/product_detail.php?id=SP071", // Link cho banner 2
+        "../User/product_detail.php?id=SP054", // Link cho banner 3
+        "../User/product_detail.php?id=SP075", // Link cho banner 4
+        "../User/product_detail.php?id=SP065"  // Link cho banner 5
       ];
 
       // Thêm sự kiện click và con trỏ chuột cho từng slide

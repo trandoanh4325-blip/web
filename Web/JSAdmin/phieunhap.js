@@ -11,6 +11,57 @@ let trangThaiDangMo = '';
 let spGoiY          = [];   
 let spDuocChon      = null; 
 
+// =============================================================
+// VALIDATION & ERROR DISPLAY
+// =============================================================
+function showFieldError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    
+    clearFieldError(fieldId);
+    field.classList.add('field-error');
+    field.style.borderColor = '#e74c3c';
+    
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'field-error-message';
+    errorDiv.style.cssText = `
+        color:#e74c3c;font-size:12px;margin-top:4px;margin-bottom:8px;
+        display:flex;align-items:center;gap:4px
+    `;
+    errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+    errorDiv.id = `error-${fieldId}`;
+    
+    field.parentNode.insertBefore(errorDiv, field.nextSibling);
+}
+
+function clearFieldError(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    
+    field.classList.remove('field-error');
+    field.style.borderColor = '';
+    
+    const errorDiv = document.getElementById(`error-${fieldId}`);
+    if (errorDiv) errorDiv.remove();
+}
+
+function bindFieldClearError(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    
+    field.addEventListener('input', () => {
+        if (field.classList.contains('field-error')) {
+            clearFieldError(fieldId);
+        }
+    });
+    
+    field.addEventListener('change', () => {
+        if (field.classList.contains('field-error')) {
+            clearFieldError(fieldId);
+        }
+    });
+} 
+
 document.addEventListener('DOMContentLoaded', () => {
     fetchPhieuNhap();
     bindTaoPhieu();
@@ -160,9 +211,20 @@ async function moPopupPhieu(maPhieu) {
 
 async function luuDauPhieu() {
     if (!maPhieuDangMo) return;
+    
+    clearFieldError('popupNgayNhap');
+    clearFieldError('popupGhiChu');
+    
     const ngay   = document.getElementById('popupNgayNhap').value;
     const ghiChu = document.getElementById('popupGhiChu').value.trim();
-    if (!ngay) { showToast('Vui lòng chọn ngày nhập!', 'warn'); return; }
+    
+    let hasError = false;
+    if (!ngay) {
+        showFieldError('popupNgayNhap', 'Vui lòng chọn ngày nhập');
+        hasError = true;
+    }
+    
+    if (hasError) return;
 
     const res = await pnFetch('phieu-nhap', 'PUT', { ma_phieu: maPhieuDangMo, ngay_nhap: ngay, ghi_chu: ghiChu });
     showToast(res.message, res.success ? 'success' : 'error');
@@ -247,11 +309,30 @@ document.addEventListener('click', e => {
 
 async function themSPVaoPhieu() {
     if (!maPhieuDangMo) return;
-    if (!spDuocChon) { showToast('Vui lòng chọn sản phẩm!', 'warn'); return; }
+    
+    clearFieldError('timSPPhieu');
+    clearFieldError('soLuongThem');
+    clearFieldError('donGiaThem');
+    
+    if (!spDuocChon) {
+        showFieldError('timSPPhieu', 'Vui lòng chọn sản phẩm từ danh sách gợi ý');
+        return;
+    }
+    
     const soLuong = parseInt(document.getElementById('soLuongThem').value || 0);
     const donGia  = parseFloat(document.getElementById('donGiaThem').value || 0);
 
-    if (soLuong <= 0 || donGia < 0) { showToast('Dữ liệu không hợp lệ!', 'warn'); return; }
+    let hasError = false;
+    if (soLuong <= 0) {
+        showFieldError('soLuongThem', 'Số lượng phải lớn hơn 0');
+        hasError = true;
+    }
+    if (donGia < 0) {
+        showFieldError('donGiaThem', 'Giá nhập không được âm');
+        hasError = true;
+    }
+    
+    if (hasError) return;
 
     const res = await pnFetch('chi-tiet', 'POST', {
         ma_phieu : maPhieuDangMo,
@@ -273,8 +354,23 @@ let suaDong_maSp    = null;
 
 function bindSuaDong() {
     document.getElementById('btnLuuSuaDong')?.addEventListener('click', async () => {
+        clearFieldError('suaDongSoLuong');
+        clearFieldError('suaDongDonGia');
+        
         const soLuong = parseInt(document.getElementById('suaDongSoLuong').value);
         const donGia  = parseFloat(document.getElementById('suaDongDonGia').value);
+
+        let hasError = false;
+        if (soLuong <= 0) {
+            showFieldError('suaDongSoLuong', 'Số lượng phải lớn hơn 0');
+            hasError = true;
+        }
+        if (donGia < 0) {
+            showFieldError('suaDongDonGia', 'Giá nhập không được âm');
+            hasError = true;
+        }
+        
+        if (hasError) return;
 
         const res = await pnFetch('chi-tiet', 'PUT', { ma_phieu: suaDong_maPhieu, ma_sp: suaDong_maSp, so_luong: soLuong, don_gia: donGia });
         showToast(res.message, res.success ? 'success' : 'error');
@@ -334,17 +430,108 @@ function todayStr() { return new Date().toISOString().split('T')[0]; }
 function escJ(s) { return (s || '').replace(/'/g, "\\'").replace(/"/g, '\\"'); }
 function badgeTrangThai(tt) { return tt === 'hoan_thanh' ? `<span class="badge-hienthi"><i class="fas fa-check"></i> Hoàn thành</span>` : `<span class="badge-chuaht"><i class="fas fa-clock"></i> Chưa hoàn thành</span>`; }
 
-function showToast(msg, type = 'success') {
-    let wrap = document.getElementById('toastWrap');
-    if (!wrap) {
-        wrap = document.createElement('div'); wrap.id = 'toastWrap';
-        wrap.style.cssText = 'position:fixed;top:20px;right:20px;z-index:99999;display:flex;flex-direction:column;gap:8px';
-        document.body.appendChild(wrap);
-    }
-    const colors = { success:'#27ae60', error:'#e74c3c', warn:'#f39c12' }, icons = { success:'✅', error:'❌', warn:'⚠️' };
-    const div = document.createElement('div');
-    div.style.cssText = `background:${colors[type]||'#333'};color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;box-shadow:0 4px 18px rgba(0,0,0,.25);display:flex;gap:9px;animation:pnSlide .3s ease`;
-    div.innerHTML = `<span>${icons[type]||''}</span><span>${msg}</span>`;
-    wrap.appendChild(div);
-    setTimeout(() => { div.style.transition='opacity .4s'; div.style.opacity='0'; setTimeout(()=>div.remove(), 420); }, 3800);
+function showToast(msg, type = 'success', title = null) {
+    // Tạo overlay
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+        position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);
+        display:flex;align-items:center;justify-content:center;z-index:99999;
+        animation:fadeIn 0.3s ease
+    `;
+
+    // Xác định icon, tiêu đề, và màu sắc
+    const configs = {
+        success: { icon: '✓', bgColor: '#27ae60', defaultTitle: 'Thành công!' },
+        error: { icon: '✕', bgColor: '#e74c3c', defaultTitle: 'Lỗi!' },
+        warn: { icon: '⚠', bgColor: '#f39c12', defaultTitle: 'Cảnh báo!' }
+    };
+    const config = configs[type] || configs.success;
+    const finalTitle = title || config.defaultTitle;
+
+    // Tạo dialog box
+    const box = document.createElement('div');
+    box.style.cssText = `
+        background:white;border-radius:12px;padding:30px 40px;text-align:center;
+        box-shadow:0 8px 32px rgba(0,0,0,0.2);max-width:420px;width:90%;
+        animation:slideUp 0.4s ease;position:relative
+    `;
+
+    // Icon tròn
+    const iconDiv = document.createElement('div');
+    iconDiv.style.cssText = `
+        width:60px;height:60px;margin:0 auto 16px;border-radius:50%;display:flex;
+        align-items:center;justify-content:center;background:${config.bgColor};color:white;
+        font-size:32px;font-weight:bold
+    `;
+    iconDiv.textContent = config.icon;
+
+    // Tiêu đề
+    const titleDiv = document.createElement('h2');
+    titleDiv.style.cssText = 'margin:0 0 8px;font-size:18px;color:#333;font-weight:600';
+    titleDiv.textContent = finalTitle;
+
+    // Nội dung
+    const msgDiv = document.createElement('p');
+    msgDiv.style.cssText = 'margin:0 0 24px;font-size:14px;color:#666;line-height:1.5';
+    msgDiv.textContent = msg;
+
+    // Nút đóng
+    const btn = document.createElement('button');
+    btn.style.cssText = `
+        background:${config.bgColor};color:white;border:none;padding:10px 28px;
+        border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;
+        transition:opacity 0.2s
+    `;
+    btn.textContent = 'Đóng';
+    btn.onmouseover = () => btn.style.opacity = '0.9';
+    btn.onmouseout = () => btn.style.opacity = '1';
+    btn.addEventListener('click', () => {
+        overlay.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => overlay.remove(), 300);
+    });
+
+    box.appendChild(iconDiv);
+    box.appendChild(titleDiv);
+    box.appendChild(msgDiv);
+    box.appendChild(btn);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // Tự động đóng sau 4 giây
+    setTimeout(() => {
+        if (overlay.parentNode) {
+            overlay.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => overlay.remove(), 300);
+        }
+    }, 4000);
 }
+
+// Thêm CSS animations cho toast + validation
+if (!document.querySelector('style[data-toast-pn]')) {
+    const toastStyle = document.createElement('style');
+    toastStyle.setAttribute('data-toast-pn', 'true');
+    toastStyle.textContent = `
+        @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        @keyframes fadeOut { from{opacity:1} to{opacity:0} }
+        .field-error { background-color:rgba(231,76,60,0.05)!important;border-color:#e74c3c!important;transition:border-color 0.2s }
+        .field-error-message { color:#e74c3c;font-size:12px;margin-top:4px;margin-bottom:8px;display:flex;align-items:center;gap:4px }
+        input:focus,select:focus,textarea:focus { outline:none;border-color:#0195b2 }
+    `;
+    document.head.appendChild(toastStyle);
+}
+
+// Auto-bind error clearing cho các input fields
+document.addEventListener('DOMContentLoaded', () => {
+    const fieldIds = ['timSPPhieu', 'soLuongThem', 'donGiaThem', 'suaDongSoLuong', 'suaDongDonGia', 'popupNgayNhap', 'popupGhiChu'];
+    fieldIds.forEach(id => {
+        const field = document.getElementById(id);
+        if (field) {
+            field.addEventListener('input', () => {
+                if (field.classList.contains('field-error')) {
+                    clearFieldError(id);
+                }
+            });
+        }
+    });
+});

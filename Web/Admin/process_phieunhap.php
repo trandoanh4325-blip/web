@@ -260,27 +260,28 @@ function handleHoanThanh(array $body): void
     $pdo->beginTransaction();
     try {
         foreach ($chiTiets as $ct) {
-            // Lấy tồn kho và giá vốn hiện tại TRƯỚC khi cộng thêm
+            // Lấy tồn kho và giá vốn hiện tại.
+            // LƯU Ý: Trigger trg_NhapHang_TangKho đã cộng so_luong_ton khi INSERT
+            // vào chi_tiet_phieu_nhap, nên so_luong_ton hiện tại đã bao gồm số lượng nhập.
             $stSP = $pdo->prepare('SELECT so_luong_ton, gia_von FROM san_pham WHERE ma_sp=?');
             $stSP->execute([$ct['ma_sp']]);
             $sp = $stSP->fetch();
 
-            $soLuongTonCu  = (float)($sp['so_luong_ton'] ?? 0);
-            $giaVonCu      = (float)($sp['gia_von']      ?? 0);
-            $soLuongNhap   = (float)$ct['so_luong'];
-            $giaNhapMoi    = (float)$ct['don_gia'];
+            $soLuongTonHienTai = (float)($sp['so_luong_ton'] ?? 0); // Đã bao gồm lô nhập này
+            $giaVonCu          = (float)($sp['gia_von']      ?? 0);
+            $soLuongNhap       = (float)$ct['so_luong'];
+            $giaNhapMoi        = (float)$ct['don_gia'];
 
-            // Bình quân gia quyền
-            $soLuongTonMoi = $soLuongTonCu + $soLuongNhap;
-            $giaVonMoi = ($soLuongTonMoi > 0)
-                ? ($soLuongTonCu * $giaVonCu + $soLuongNhap * $giaNhapMoi) / $soLuongTonMoi
+            // Tồn kho TRƯỚC lô nhập này (trigger đã cộng rồi nên phải trừ ra)
+            $soLuongTonTruoc = max(0, $soLuongTonHienTai - $soLuongNhap);
+
+            // Bình quân gia quyền: dùng tồn trước và tồn hiện tại (đã gồm lô mới)
+            $giaVonMoi = ($soLuongTonHienTai > 0)
+                ? ($soLuongTonTruoc * $giaVonCu + $soLuongNhap * $giaNhapMoi) / $soLuongTonHienTai
                 : $giaNhapMoi;
 
-            // Cộng số lượng
-            $pdo->prepare('UPDATE san_pham SET so_luong_ton = so_luong_ton + ? WHERE ma_sp=?')
-                ->execute([$soLuongNhap, $ct['ma_sp']]);
-
-            // Cập nhật giá vốn (bình quân) và giá bán
+            // KHÔNG cộng so_luong_ton thêm nữa — trigger đã xử lý khi INSERT chi tiết
+            // Chỉ cập nhật giá vốn (bình quân) và giá bán
             $pdo->prepare('UPDATE san_pham SET gia_von = ?, gia_ban = ROUND(? * (1 + ty_le_loi_nhuan / 100)) WHERE ma_sp=?')
                 ->execute([$giaVonMoi, $giaVonMoi, $ct['ma_sp']]);
         }

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/shop_helpers.php';
+require_once __DIR__ . '/../includes/db_connect.php';
 ensure_logged_in();
 
 $userId = (int)$_SESSION['user_id'];
@@ -13,10 +14,20 @@ if (!$user) {
 }
 
 $cart = get_cart();
-$buyNowId = trim($_GET['buy_now'] ?? '');
-if ($buyNowId !== '' && empty($cart)) {
-    $cart[$buyNowId] = 1;
-    set_cart($cart);
+$buyNowId = $_GET['buy_now'] ?? '';
+
+if ($buyNowId) {
+
+    // 🔥 lấy qty
+    $qty = (int)($_GET['qty'] ?? 1);
+    $qty = max(1, $qty);
+
+    // 🔥 CHỈ lấy sản phẩm này
+    $cart = [$buyNowId => $qty];
+
+} else {
+    // 👉 bình thường mới dùng giỏ
+    $cart = get_cart();
 }
 
 $items = [];
@@ -69,8 +80,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = $receiver;
         $phone = $receiverPhone;
     } else {
-        $shippingAddress = trim($user['address']);
+    $shippingAddress = trim($user['address']);
+
+    // ✅ FIX NGAY TẠI ĐÂY
+    if (empty($name)) {
+        $name = $user['full_name'];
     }
+
+    if (empty($phone)) {
+        $phone = $user['phone'];
+    }
+}
 
     if (!$error && !$name) {
         $error = 'Họ tên không được bỏ trống.';
@@ -173,7 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if ($error): ?><div class="err"><?= h($error) ?></div><?php endif; ?>
         <form method="post">
             <label>Họ và tên</label>
-            <input type="text" name="full_name" value="<?= h($user['full_name']) ?>" required>
+            <input type="text" name="full_name" value="<?= h($user['full_name']) ?>" readonly>
 
             <label>Số điện thoại</label>
             <input type="text" name="phone" value="<?= h($user['phone']) ?>" required>
@@ -206,7 +226,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div id="bank_info" class="bank-info">
                 Chủ TK: Florentino Shop<br>
-                STK: 123456789 - Ngân hàng ACB<br>
+                STK: 519112006 - Ngân hàng MB Bank<br>
                 Nội dung CK: DH_[Mã đơn]
             </div>
 
@@ -216,8 +236,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="box">
         <h3>Tóm tắt đơn hàng</h3>
         <?php foreach ($items as $it): ?>
+
             <div class="item">
-                <img src="<?= h($it['product']['hinh_anh'] ?: '../Image/sp.jpg') ?>" alt="">
+                <?php $imgPath = !empty($it['product']['hinh_anh']) ? '../ImageSanPham/' . $it['product']['hinh_anh'] : '../ImageSanPham/sp.jpg'; ?>
+<img src="<?= h($imgPath) ?>" alt="<?= h($it['product']['ten_sp']) ?>">
                 <div><?= h($it['product']['ten_sp']) ?> x <?= (int)$it['qty'] ?></div>
                 <div><?= format_vnd((float)$it['line_total']) ?></div>
             </div>

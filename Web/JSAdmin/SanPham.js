@@ -18,6 +18,72 @@ let isLoadingSp    = false;
 let originalSpData = null; // Snapshot dữ liệu ban đầu khi mở popup sửa
 
 // =============================================================
+// VALIDATION & ERROR DISPLAY
+// =============================================================
+function showFieldError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    
+    // Xóa error cũ nếu có
+    clearFieldError(fieldId);
+    
+    // Thêm class error vào field
+    field.classList.add('field-error');
+    field.style.borderColor = '#e74c3c';
+    
+    // Tạo error message element
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'field-error-message';
+    errorDiv.style.cssText = `
+        color:#e74c3c;font-size:12px;margin-top:4px;margin-bottom:8px;
+        display:flex;align-items:center;gap:4px
+    `;
+    errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+    errorDiv.id = `error-${fieldId}`;
+    
+    // Chèn sau field
+    field.parentNode.insertBefore(errorDiv, field.nextSibling);
+}
+
+function clearFieldError(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    
+    field.classList.remove('field-error');
+    field.style.borderColor = '';
+    
+    const errorDiv = document.getElementById(`error-${fieldId}`);
+    if (errorDiv) errorDiv.remove();
+}
+
+function clearAllFieldErrors(formId) {
+    const form = document.getElementById(formId) || document.querySelector(formId);
+    if (!form) return;
+    
+    const fields = form.querySelectorAll('input, select, textarea');
+    fields.forEach(field => {
+        if (field.id) clearFieldError(field.id);
+    });
+}
+
+function bindFieldClearError(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    
+    field.addEventListener('input', () => {
+        if (field.classList.contains('field-error')) {
+            clearFieldError(fieldId);
+        }
+    });
+    
+    field.addEventListener('change', () => {
+        if (field.classList.contains('field-error')) {
+            clearFieldError(fieldId);
+        }
+    });
+}
+
+// =============================================================
 // KHỞI TẠO
 // =============================================================
 document.addEventListener('DOMContentLoaded', async () => {
@@ -121,15 +187,29 @@ function bindFormLoai() {
 }
 
 async function submitAddLoai() {
+    clearAllFieldErrors('#formLoaiSanPham');
+    
     const tenLoai  = document.getElementById('tenLoai').value.trim();
     const ngayThem = document.getElementById('tungay').value;
-    if (!tenLoai)   { showToast('Vui lòng nhập tên loại!', 'error'); return; }
-    if (!ngayThem)  { showToast('Vui lòng chọn ngày!', 'error'); return; }
+    let hasError = false;
+    
+    if (!tenLoai) {
+        showFieldError('tenLoai', 'Vui lòng nhập tên loại sản phẩm');
+        hasError = true;
+    }
+    if (!ngayThem) {
+        showFieldError('tungay', 'Vui lòng chọn ngày thêm');
+        hasError = true;
+    }
+    
+    if (hasError) return;
 
     const res = await apiFetch('loai-san-pham', 'POST', { ten_loai: tenLoai, ngay_them: ngayThem });
     if (res.success) {
         showToast(res.message, 'success');
         document.getElementById('tenLoai').value = '';
+        document.getElementById('tungay').value = new Date().toISOString().split('T')[0];
+        clearAllFieldErrors('#formLoaiSanPham');
         await fetchLoaiList();
         renderLoaiTable();
     } else {
@@ -225,7 +305,7 @@ function renderSpTable(filter = {}) {
             <td>${sp.so_luong_ton}</td>
             <td>${fmtVND(sp.gia_von)}</td>
             <td>${sp.ty_le_loi_nhuan}%</td>
-            <td>${fmtVND(sp.gia_ban)}</td>
+            <td><a href="giaban.php" title="Quản lý giá bán" style="color:#0195b2;font-weight:600;text-decoration:none;">${fmtVND(sp.gia_ban)} <i class="fas fa-external-link-alt" style="font-size:10px"></i></a></td>
             <td>${(sp.mo_ta || '').substring(0, 40)}...</td>
             <td><span class="badge-${sp.hien_trang}">${sp.hien_trang === 'hien_thi' ? 'Hiển thị' : 'Ẩn'}</span></td>
             <td>
@@ -327,6 +407,7 @@ function bindFormThem() {
 }
 
 async function submitAddSp() {
+    clearAllFieldErrors('#formThemSanPham');
     const form = document.getElementById('formThemSanPham');
 
     const payload = {
@@ -342,10 +423,44 @@ async function submitAddSp() {
         hienTrang:  form.querySelector('#hienTrang')?.value || 'hien_thi',
     };
 
-    if (!payload.maSP) { showToast('Vui lòng nhập mã sản phẩm!', 'error'); return; }
-    if (!payload.tenSP) { showToast('Vui lòng nhập tên sản phẩm!', 'error'); return; }
-    if (!payload.loaiSP) { showToast('Vui lòng chọn loại sản phẩm!', 'error'); return; }
-    if (filesThemTam.length === 0) { showToast('Vui lòng chọn ít nhất 1 hình ảnh!', 'error'); return; }
+    let hasError = false;
+
+    if (!payload.maSP) {
+        showFieldError('maSP', 'Vui lòng nhập mã sản phẩm');
+        hasError = true;
+    }
+    if (!payload.tenSP) {
+        showFieldError('tenSP', 'Vui lòng nhập tên sản phẩm');
+        hasError = true;
+    }
+    if (!payload.loaiSP) {
+        showFieldError('loaiSP', 'Vui lòng chọn loại sản phẩm');
+        hasError = true;
+    }
+    if (payload.soLuongTon < 0) {
+        showFieldError('soLuongTon', 'Số lượng không được âm');
+        hasError = true;
+    }
+    if (payload.giaVon < 0) {
+        showFieldError('giaVon', 'Giá vốn không được âm');
+        hasError = true;
+    }
+    if (payload.tyleLN < 0 || payload.tyleLN > 200) {
+        showFieldError('tyleLN', 'Tỷ lệ lợi nhuận từ 0-200%');
+        hasError = true;
+    }
+    if (filesThemTam.length === 0) {
+        const previewBox = document.getElementById('previewThem');
+        if (previewBox) {
+            const msg = document.createElement('div');
+            msg.style.cssText = 'color:#e74c3c;font-size:12px;margin-top:4px';
+            msg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Vui lòng chọn ít nhất 1 hình ảnh';
+            previewBox.parentNode.insertBefore(msg, previewBox.nextSibling);
+        }
+        hasError = true;
+    }
+
+    if (hasError) return;
 
     // Upload hình ảnh
     const hinhPaths = [];
@@ -604,6 +719,8 @@ async function confirmXoaHinh(maSp, thuTu) {
 }
 
 async function submitEditSp() {
+    clearAllFieldErrors('#formSuaSanPham');
+    
     if (!editingSpMa) { showToast('Không tìm thấy sản phẩm!', 'error'); return; }
 
     const form = document.getElementById('formSuaSanPham');
@@ -624,9 +741,34 @@ async function submitEditSp() {
         ngay_them: todayStr()
     };
 
-    if (!spData.ma_sp) { showToast('Vui lòng nhập mã sản phẩm!', 'error'); return; }
-    if (!spData.ten_sp) { showToast('Vui lòng nhập tên sản phẩm!', 'error'); return; }
-    if (!spData.ma_loai) { showToast('Vui lòng chọn loại sản phẩm!', 'error'); return; }
+    let hasError = false;
+    
+    if (!spData.ma_sp) {
+        showFieldError('suaMaSP', 'Vui lòng nhập mã sản phẩm');
+        hasError = true;
+    }
+    if (!spData.ten_sp) {
+        showFieldError('suaTenSP', 'Vui lòng nhập tên sản phẩm');
+        hasError = true;
+    }
+    if (!spData.ma_loai) {
+        showFieldError('suaLoaiSP', 'Vui lòng chọn loại sản phẩm');
+        hasError = true;
+    }
+    if (spData.so_luong_ton < 0) {
+        showFieldError('suaSoLuongTon', 'Số lượng không được âm');
+        hasError = true;
+    }
+    if (spData.gia_von < 0) {
+        showFieldError('suaGiaVon', 'Giá vốn không được âm');
+        hasError = true;
+    }
+    if (spData.ty_le_loi_nhuan < 0 || spData.ty_le_loi_nhuan > 200) {
+        showFieldError('suaTyleLN', 'Tỷ lệ lợi nhuận từ 0-200%');
+        hasError = true;
+    }
+    
+    if (hasError) return;
 
     // Upload ảnh mới nếu có
     for (const file of filesSuaTam) {
@@ -704,20 +846,82 @@ function populateLoaiSelect(sel) {
 }
 
 // =============================================================
-// TOAST NOTIFICATION
+// TOAST NOTIFICATION - Dialog ở giữa màn hình
 // =============================================================
-function showToast(msg, type = 'success') {
-    const div = document.createElement('div');
-    div.style.cssText = `
-        position:fixed;top:16px;right:16px;z-index:9999;
-        padding:12px 20px;border-radius:8px;font-size:14px;
-        background:${type === 'success' ? '#d4edda' : '#f8d7da'};
-        color:${type === 'success' ? '#155724' : '#721c24'};
-        animation:spSlide 0.3s ease;box-shadow:0 2px 8px rgba(0,0,0,0.1)
+function showToast(msg, type = 'success', title = null) {
+    // Tạo overlay
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+        position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);
+        display:flex;align-items:center;justify-content:center;z-index:99999;
+        animation:fadeIn 0.3s ease
     `;
-    div.textContent = msg;
-    document.body.appendChild(div);
-    setTimeout(() => div.remove(), 3000);
+
+    // Xác định icon, tiêu đề, và màu sắc
+    const configs = {
+        success: { icon: '✓', bgColor: '#27ae60', defaultTitle: 'Thành công!' },
+        error: { icon: '✕', bgColor: '#e74c3c', defaultTitle: 'Lỗi!' },
+        warn: { icon: '⚠', bgColor: '#f39c12', defaultTitle: 'Cảnh báo!' }
+    };
+    const config = configs[type] || configs.success;
+    const finalTitle = title || config.defaultTitle;
+
+    // Tạo dialog box
+    const box = document.createElement('div');
+    box.style.cssText = `
+        background:white;border-radius:12px;padding:30px 40px;text-align:center;
+        box-shadow:0 8px 32px rgba(0,0,0,0.2);max-width:420px;width:90%;
+        animation:slideUp 0.4s ease;position:relative
+    `;
+
+    // Icon tròn
+    const iconDiv = document.createElement('div');
+    iconDiv.style.cssText = `
+        width:60px;height:60px;margin:0 auto 16px;border-radius:50%;display:flex;
+        align-items:center;justify-content:center;background:${config.bgColor};color:white;
+        font-size:32px;font-weight:bold
+    `;
+    iconDiv.textContent = config.icon;
+
+    // Tiêu đề
+    const titleDiv = document.createElement('h2');
+    titleDiv.style.cssText = 'margin:0 0 8px;font-size:18px;color:#333;font-weight:600';
+    titleDiv.textContent = finalTitle;
+
+    // Nội dung
+    const msgDiv = document.createElement('p');
+    msgDiv.style.cssText = 'margin:0 0 24px;font-size:14px;color:#666;line-height:1.5';
+    msgDiv.textContent = msg;
+
+    // Nút đóng
+    const btn = document.createElement('button');
+    btn.style.cssText = `
+        background:${config.bgColor};color:white;border:none;padding:10px 28px;
+        border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;
+        transition:opacity 0.2s
+    `;
+    btn.textContent = 'Đóng';
+    btn.onmouseover = () => btn.style.opacity = '0.9';
+    btn.onmouseout = () => btn.style.opacity = '1';
+    btn.addEventListener('click', () => {
+        overlay.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => overlay.remove(), 300);
+    });
+
+    box.appendChild(iconDiv);
+    box.appendChild(titleDiv);
+    box.appendChild(msgDiv);
+    box.appendChild(btn);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // Tự động đóng sau 4 giây
+    setTimeout(() => {
+        if (overlay.parentNode) {
+            overlay.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => overlay.remove(), 300);
+        }
+    }, 4000);
 }
 
 // =============================================================
@@ -744,7 +948,9 @@ function escHtml(str) {
 // CSS cho toast + badge
 const _style = document.createElement('style');
 _style.textContent = `
-@keyframes spSlide { from{transform:translateX(110%);opacity:0} to{transform:translateX(0);opacity:1} }
+@keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes fadeOut { from{opacity:1} to{opacity:0} }
 .badge-hienthi { background:#d4edda;color:#155724;padding:3px 9px;border-radius:12px;font-size:11px;white-space:nowrap }
 .badge-an      { background:#f8d7da;color:#721c24;padding:3px 9px;border-radius:12px;font-size:11px;white-space:nowrap }
 .popup-large   { width:min(680px,95vw)!important;max-height:90vh;overflow-y:auto }
@@ -755,11 +961,13 @@ _style.textContent = `
 .form-group select,
 .form-group textarea {
   padding:8px 10px;border:1px solid #ccc;border-radius:7px;
-  font-size:14px;box-sizing:border-box;width:100%
+  font-size:14px;box-sizing:border-box;width:100%;transition:border-color 0.2s
 }
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus { border-color:#0195b2;outline:none }
+.field-error { background-color:rgba(231,76,60,0.05)!important;border-color:#e74c3c!important }
+.field-error-message { color:#e74c3c;font-size:12px;margin-top:4px;margin-bottom:8px;display:flex;align-items:center;gap:4px }
 .full-width { flex:1 1 100%!important }
 .required   { color:#e74c3c }
 `;

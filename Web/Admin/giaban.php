@@ -82,10 +82,9 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
                min="0" step="0.01" />
         <p><i>* % lợi nhuận mặc định của loại; sẽ dùng nếu không nhập lợi nhuận riêng SP</i></p>
 
-        <label for="giaVon">Giá vốn (đồng) <span style="color:#e74c3c">*</span></label>
-        <input type="number" id="giaVon"
-               placeholder="vd: 12000" min="0" />
-        <p><i>* Nhập giá vốn để tính giá bán</i></p>
+        <label for="giaVon">Giá vốn bình quân (đồng)</label>
+        <input type="number" id="giaVon" placeholder="Tự động lấy từ phiếu nhập..." readonly style="background-color: #e9ecef; color: #666; cursor: not-allowed;" />
+        <p><i>* Giá vốn tự động cập nhật từ hệ thống Phiếu Nhập, không thể sửa thủ công.</i></p>
 
         <label for="loiNhuanTheoSanPham">Lợi nhuận riêng sản phẩm (%)</label>
         <input type="number" id="loiNhuanTheoSanPham"
@@ -194,7 +193,7 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
         <input type="text" id="suaTen" placeholder="Tên sản phẩm" />
 
         <label for="suaGiaVon">Giá vốn (đồng)</label>
-        <input type="number" id="suaGiaVon" placeholder="vd: 12000" min="0" />
+        <input type="number" id="suaGiaVon" readonly style="background-color: #e9ecef; color: #666; cursor: not-allowed;" />
         <p><i>* Giá vốn bình quân được tự động cập nhật khi hoàn thành phiếu nhập hàng</i></p>
 
         <label for="suaLoiNhuanSP">Lợi nhuận riêng sản phẩm (%)</label>

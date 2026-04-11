@@ -173,7 +173,7 @@ $adminName = htmlspecialchars($_SESSION['admin_name'] ?? 'Admin', ENT_QUOTES, 'U
                             Tổng cộng: <span id="tongTienChiTiet">0 đ</span>
                         </div>
                         <button type="button" id="btnHoanThanhPhieu" class="btn-red-final">
-                            <i class="fas fa-check-circle"></i> Hoàn thành & Lưu phiếu
+                            <i class="fas fa-check-circle"></i> Hoàn thành phiếu nhập
                         </button>
                     </div>
                 </div>

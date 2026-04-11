@@ -28,7 +28,7 @@
                 formRegister.classList.add('active');
                 
                 // Chỉnh chiều cao khung bọc vừa với form đăng ký (tăng chiều cao cho trường địa chỉ)
-                wrapper.style.height = '540px'; 
+                wrapper.style.height = '650px'; 
             }
         }
 
@@ -115,58 +115,139 @@ function handleLogin(e) {
     });
 }
 
-        function handleRegister(e) {
+        // === CÁC BIẾN VÀ LUẬT VALIDATE (THÊM VÀO SCRIPT.JS) ===
+const regInputs = {
+    username: document.getElementById('reg-username'),
+    email: document.getElementById('reg-email'),
+    password: document.getElementById('reg-password'),
+    phone: document.getElementById('reg-phone'),
+    name: document.getElementById('reg-name'),
+    address: document.getElementById('reg-address')
+};
+
+// Khai báo Regex và câu thông báo
+const validators = {
+    username: {
+        required: true,
+        regex: /^[a-zA-Z0-9_]{3,20}$/,
+        errorMsg: "Tên đăng nhập không dấu, không khoảng trắng, 3-20 ký tự."
+    },
+    email: {
+        required: true,
+        regex: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+        errorMsg: "Email không đúng định dạng (VD: abc@gmail.com)."
+    },
+    password: {
+        required: true,
+        regex: /^.{6,}$/,
+        errorMsg: "Mật khẩu phải có ít nhất 6 ký tự."
+    },
+    phone: {
+        required: false, // Không bắt buộc, nhưng nếu nhập thì phải chuẩn
+        regex: /^(0[3|5|7|8|9])+([0-9]{8})\b/,
+        errorMsg: "Số điện thoại không hợp lệ (10 số, bắt đầu 03, 05, 07, 08, 09)."
+    }
+};
+
+// Hàm kiểm tra từng Input
+function validateInput(field) {
+    const inputElement = regInputs[field];
+    const errorElement = document.getElementById(`err-${field}`);
+    const value = inputElement.value.trim();
+    const rule = validators[field];
+
+    if (!rule) return true; // Các trường không có luật (name, address) luôn qua
+
+    // 1. Kiểm tra bắt buộc nhập
+    if (rule.required && value === "") {
+        errorElement.innerText = "⚠️ Trường này là bắt buộc nhập!";
+        inputElement.classList.add('invalid-input');
+        inputElement.classList.remove('valid-input');
+        return false;
+    }
+
+    // 2. Kiểm tra định dạng (nếu có nhập)
+    if (value !== "" && rule.regex && !rule.regex.test(value)) {
+        errorElement.innerText = `⚠️ ${rule.errorMsg}`;
+        inputElement.classList.add('invalid-input');
+        inputElement.classList.remove('valid-input');
+        return false;
+    }
+
+    // 3. Hợp lệ
+    errorElement.innerText = "";
+    inputElement.classList.remove('invalid-input');
+    if (value !== "") inputElement.classList.add('valid-input'); // Viền xanh khi chuẩn
+    return true;
+}
+
+// Bắt sự kiện Gõ phím (input) và Rời ô nhập (blur)
+Object.keys(validators).forEach(field => {
+    regInputs[field].addEventListener('input', () => validateInput(field));
+    regInputs[field].addEventListener('blur', () => validateInput(field));
+});
+
+// === THAY THẾ HÀM handleRegister CŨ BẰNG HÀM NÀY ===
+function handleRegister(e) {
     e.preventDefault();
     
-    const username = document.getElementById('reg-username').value.trim();
-    const name = document.getElementById('reg-name').value.trim();
-    const phone = document.getElementById('reg-phone').value.trim();
-    const address = document.getElementById('reg-address').value.trim();
-    const email = document.getElementById('reg-email').value.trim();
-    const password = document.getElementById('reg-password').value.trim();
-    
-    if (username && name && phone && address && email && password) {
-        // Đóng gói dữ liệu thành Object
-        const userData = {
-            username: username,
-            name: name,
-            phone: phone,
-            address: address,
-            email: email,
-            password: password
-        };
+    // Kiểm tra toàn bộ form một lần nữa trước khi gửi
+    let isValidForm = true;
+    Object.keys(validators).forEach(field => {
+        if (!validateInput(field)) {
+            isValidForm = false;
+        }
+    });
 
-        // Gửi dữ liệu qua PHP bằng Fetch API
-        fetch('process_register.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(userData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                // Gọi Modal của bạn với thông báo từ PHP
-                showModal("Thành công!", data.message, "success");
-                
-                // Tự động chuyển sang tab đăng nhập sau 2s
-                setTimeout(function() {
-                    closeModal();
-                    document.getElementById('form-register').reset(); // Xóa trắng form
-                    switchTab('login');
-                }, 2000);
-            } else {
-                // Gọi Modal báo lỗi từ PHP (VD: Trùng email)
-                showModal("Lỗi", "⚠️ " + data.message, "error");
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showModal("Lỗi", "⚠️ Không thể kết nối đến máy chủ.", "error");
-        });
-
-    } else {
-        showModal("Lỗi", "⚠️ Vui lòng điền đầy đủ thông tin.", "error");
+    if (!isValidForm) {
+        showModal("Lỗi", "⚠️ Vui lòng kiểm tra lại các thông tin màu đỏ.", "error");
+        return; // Dừng lại, không gửi fetch lên Server
     }
+
+    // Lấy dữ liệu
+    const userData = {
+        username: regInputs.username.value.trim(),
+        name: regInputs.name.value.trim(),
+        phone: regInputs.phone.value.trim(),
+        address: regInputs.address.value.trim(),
+        email: regInputs.email.value.trim(),
+        password: regInputs.password.value.trim()
+    };
+
+    // Gửi dữ liệu qua PHP bằng Fetch API
+    fetch('process_register.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showModal("Thành công!", data.message, "success");
+            
+            // Xóa rác trên form và chuyển tab
+            setTimeout(function() {
+                closeModal();
+                document.getElementById('form-register').reset(); 
+                
+                // Reset lại màu viền xanh/đỏ
+                Object.values(regInputs).forEach(input => {
+                    input.classList.remove('valid-input', 'invalid-input');
+                });
+                Object.keys(validators).forEach(field => {
+                    document.getElementById(`err-${field}`).innerText = "";
+                });
+
+                switchTab('login');
+            }, 2000);
+        } else {
+            showModal("Lỗi", "⚠️ " + data.message, "error");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showModal("Lỗi", "⚠️ Không thể kết nối đến máy chủ.", "error");
+    });
 }

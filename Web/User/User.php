@@ -106,9 +106,14 @@ $featured = $productStmt->get_result()->fetch_all(MYSQLI_ASSOC);
         <?php endif; ?>
         
         <?php foreach ($featured as $sp): ?>
+        <?php 
+          // Lùi ra 1 thư mục (../) để từ 'User' ra 'web', rồi trỏ vào 'ImageSanPham'
+          $imgPath = !empty($sp['hinh_anh']) ? '../ImageSanPham/' . $sp['hinh_anh'] : '../ImageSanPham/sp.jpg'; 
+        ?>
         <div class="goi-y-card js-product-item">
           <a href="product_detail.php?id=<?= urlencode($sp['ma_sp']) ?>">
-          <img src="<?= h($sp['hinh_anh'] ?: '../Image/sp.jpg') ?>" alt="<?= h($sp['ten_sp']) ?>"></a>
+            <img src="<?= h($imgPath) ?>" alt="<?= h($sp['ten_sp']) ?>">
+          </a>
           <div class="goi-y-info">
             <p><?= h($sp['ten_sp']) ?></p>
             <span class="gia"><?= format_vnd((float)$sp['gia_ban']) ?></span>

@@ -47,17 +47,102 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==================== LOGIC TRANG ĐỔI THÔNG TIN ====================
+
+// 1. Khai báo các input và bộ luật kiểm tra (không có required)
+const updInputs = {
+    username: document.getElementById('upd-username'),
+    fullname: document.getElementById('upd-fullname'),
+    phone: document.getElementById('upd-phone'),
+    address: document.getElementById('upd-address'),
+    email: document.getElementById('upd-email'),
+    password: document.getElementById('upd-password')
+};
+
+const updValidators = {
+    username: {
+        regex: /^[a-zA-Z0-9_]{3,20}$/,
+        errorMsg: "Tên đăng nhập không dấu, không khoảng trắng, 3-20 ký tự."
+    },
+    email: {
+        regex: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+        errorMsg: "Email không đúng định dạng (VD: abc@gmail.com)."
+    },
+    password: {
+        regex: /^.{6,}$/,
+        errorMsg: "Mật khẩu phải có ít nhất 6 ký tự."
+    },
+    phone: {
+        regex: /^(0[3|5|7|8|9])+([0-9]{8})\b/,
+        errorMsg: "Số điện thoại không hợp lệ (10 số, bắt đầu 03, 05, 07, 08, 09)."
+    }
+    // fullname và address không có regex cụ thể, gõ gì cũng được
+};
+
+// 2. Hàm kiểm tra từng trường
+function validateUpdInput(field) {
+    const inputElement = updInputs[field];
+    if (!inputElement) return true; // Bỏ qua nếu không tìm thấy input trên trang
+
+    const errorElement = document.getElementById(`err-upd-${field}`);
+    const value = inputElement.value.trim();
+    const rule = updValidators[field];
+
+    // NẾU BỎ TRỐNG -> Hợp lệ (Vì đây là form cập nhật, không nhập nghĩa là không đổi)
+    if (value === "") {
+        if (errorElement) errorElement.innerText = "";
+        inputElement.classList.remove('invalid-input', 'valid-input');
+        return true; 
+    }
+
+    // NẾU CÓ NHẬP -> Bắt đầu kiểm tra Regex (nếu trường đó có luật Regex)
+    if (rule && rule.regex && !rule.regex.test(value)) {
+        if (errorElement) errorElement.innerText = `⚠️ ${rule.errorMsg}`;
+        inputElement.classList.add('invalid-input');
+        inputElement.classList.remove('valid-input');
+        return false;
+    }
+
+    // NẾU NHẬP ĐÚNG LUẬT
+    if (errorElement) errorElement.innerText = "";
+    inputElement.classList.remove('invalid-input');
+    inputElement.classList.add('valid-input'); // Đổi màu viền thành xanh báo hiệu OK
+    return true;
+}
+
+// 3. Bắt sự kiện Gõ phím (input) và Rời ô nhập (blur) cho toàn bộ form
+Object.keys(updInputs).forEach(field => {
+    if (updInputs[field]) {
+        updInputs[field].addEventListener('input', () => validateUpdInput(field));
+        updInputs[field].addEventListener('blur', () => validateUpdInput(field));
+    }
+});
+
+// 4. Xử lý khi bấm nút "Lưu thay đổi"
 window.handleSaveInfo = function(e) {
-    if(e) e.preventDefault(); // CHẶN RELOAD TRANG
+    if(e) e.preventDefault(); // Chặn reload trang
     
-    // Thu thập dữ liệu
+    // Kiểm tra toàn bộ form 1 lần nữa trước khi gửi
+    let isValidForm = true;
+    Object.keys(updInputs).forEach(field => {
+        if (!validateUpdInput(field)) {
+            isValidForm = false;
+        }
+    });
+
+    // Nếu có ô nào nhập sai định dạng thì dừng lại báo lỗi
+    if (!isValidForm) {
+        alert("⚠️ Vui lòng sửa các thông tin đang bị lỗi (chữ màu đỏ) trước khi lưu!");
+        return; 
+    }
+    
+    // Nếu pass hết (để trống hoặc nhập đúng định dạng) -> Thu thập dữ liệu
     const updateData = {
-        username: document.getElementById('upd-username').value.trim(),
-        fullname: document.getElementById('upd-fullname').value.trim(),
-        phone: document.getElementById('upd-phone').value.trim(),
-        address: document.getElementById('upd-address').value.trim(),
-        email: document.getElementById('upd-email').value.trim(),
-        password: document.getElementById('upd-password').value.trim()
+        username: updInputs.username.value.trim(),
+        fullname: updInputs.fullname.value.trim(),
+        phone: updInputs.phone.value.trim(),
+        address: updInputs.address.value.trim(),
+        email: updInputs.email.value.trim(),
+        password: updInputs.password.value.trim()
     };
 
     // Gửi qua PHP

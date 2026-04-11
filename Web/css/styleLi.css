@@ -254,3 +254,27 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(1, 149, 178, 0.4);
         }
+        /* CSS cho phần hiển thị lỗi Validate */
+.input-group {
+    position: relative;
+    margin-bottom: 22px; /* Tăng thêm một chút khoảng cách để chứa text lỗi */
+}
+
+.input-error-msg {
+    display: block;
+    color: #ff4d4d;
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: left;
+    padding-left: 5px;
+    min-height: 15px; 
+    font-weight: 500;
+}
+
+/* Đổi màu viền input khi nhập đúng hoặc sai */
+input.invalid-input {
+    border: 1px solid #ff4d4d !important;
+}
+input.valid-input {
+    border: 1px solid #28a745 !important;
+}

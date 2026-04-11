@@ -165,7 +165,8 @@ function build_url(int $targetPage): string
                   <div class="card">
                       <!-- Ảnh link tới Chi tiết CP -->
                       <a href="Chitietcp.php?id=<?= urlencode($p['ma_sp']) ?>">
-                        <img src="<?= h($p['hinh_anh'] ?: 'Image/sp.jpg') ?>" alt="<?= h($p['ten_sp']) ?>">
+                        <?php $imgPath = !empty($p['hinh_anh']) ? 'ImageSanPham/' . $p['hinh_anh'] : 'ImageSanPham/sp.jpg'; ?>
+                        <img src="<?= h($imgPath) ?>" alt="<?= h($p['ten_sp']) ?>">
                       </a>
                       <h4 style="margin: 10px 0 5px; color:#333; font-size: 16px;"><?= h($p['ten_sp']) ?></h4>
                       <div class="cate"><?= h($p['ten_loai']) ?></div>

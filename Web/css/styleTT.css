@@ -546,3 +546,21 @@ body {
 .conthuong_img:hover { 
     transform: scale(1.05); 
 }
+/* CSS cho hiển thị lỗi Validate */
+.input-error-msg {
+    display: block;
+    color: #ff4d4d;
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: left;
+    min-height: 15px; 
+    font-weight: 500;
+}
+
+/* Đổi màu viền input khi nhập đúng hoặc sai */
+input.invalid-input {
+    border: 1px solid #ff4d4d !important;
+}
+input.valid-input {
+    border: 1px solid #28a745 !important;
+}

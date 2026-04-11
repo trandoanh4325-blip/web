@@ -1,6 +1,6 @@
 <?php
 session_start();
-// Gọi file kết nối CSDL và các hàm tiện ích (giống User.php nhưng KHÔNG bắt buộc đăng nhập)
+// Gọi file kết nối CSDL và các hàm tiện ích
 require_once __DIR__ . '/includes/shop_helpers.php';
 
 // Lấy danh mục nếu có lọc
@@ -15,8 +15,8 @@ if ($category !== '') {
     $params[] = $category;
 }
 
-// Truy vấn sản phẩm động giống như User.php
-$productSql = "SELECT ma_sp, ten_sp, gia_ban, hinh_anh FROM san_pham $where ORDER BY ngay_them DESC LIMIT 8";
+// 1. ĐÃ BỎ "LIMIT 8" ĐỂ LẤY TOÀN BỘ SẢN PHẨM TRONG DATABASE
+$productSql = "SELECT ma_sp, ten_sp, gia_ban, hinh_anh FROM san_pham $where ORDER BY ngay_them DESC";
 $productStmt = $conn->prepare($productSql);
 if ($types !== '') {
     $productStmt->bind_param($types, ...$params);
@@ -87,32 +87,34 @@ $featured = $productStmt->get_result()->fetch_all(MYSQLI_ASSOC);
       <div class="danhsach-container">
         <h2 class="danhsach-title">DANH MỤC</h2>
         <div class="danhsach-grid">
-          <div class="danh-muc"><a href="products.php?category=LSP001"><img src="Image/1.webp" alt="thiep"/></a><p>Thiệp và Phụ kiện</p></div>
-          <div class="danh-muc"><a href="products.php?category=LSP002"><img src="Image/2.jpg" alt="trangtri"/></a><p>Đồ trang trí</p></div>
-          <div class="danh-muc"><a href="products.php?category=LSP003"><img src="Image/3.webp" alt="setqua"/></a><p>Set quà tặng</p></div>
-          <div class="danh-muc"><a href="products.php?category=LSP004"><img src="Image/4.jpg" alt="handmade"/></a><p>Handmade</p></div>
-          <div class="danh-muc"><a href="products.php?category=LSP005"><img src="Image/5.jpg" alt="luuniem"/></a><p>Quà lưu niệm</p></div>
-          <div class="danh-muc"><a href="products.php?category=LSP006"><img src="Image/6.jpg" alt="Quatang"/></a><p>Quà tặng & Giỏ quà</p></div>
-          <div class="danh-muc"><a href="products.php?category=LSP007"><img src="Image/7.webp" alt="hoagiay"/></a><p>Hoa giấy</p></div>
-          <div class="danh-muc"><a href="products.php?category=LSP008"><img src="Image/8.jpg" alt="hoathat"/></a><p>Hoa thật 100%</p></div>
+          <div class="danh-muc"><a href="Hienthicp.php?category=LSP001"><img src="Image/1.webp" alt="thiep"/></a><p>Thiệp và Phụ kiện</p></div>
+          <div class="danh-muc"><a href="Hienthicp.php?category=LSP002"><img src="Image/2.jpg" alt="trangtri"/></a><p>Đồ trang trí</p></div>
+          <div class="danh-muc"><a href="Hienthicp.php?category=LSP003"><img src="Image/3.webp" alt="setqua"/></a><p>Set quà tặng</p></div>
+          <div class="danh-muc"><a href="Hienthicp.php?category=LSP004"><img src="Image/4.jpg" alt="handmade"/></a><p>Handmade</p></div>
+          <div class="danh-muc"><a href="Hienthicp.php?category=LSP005"><img src="Image/5.jpg" alt="luuniem"/></a><p>Quà lưu niệm</p></div>
+          <div class="danh-muc"><a href="Hienthicp.php?category=LSP006"><img src="Image/6.jpg" alt="Quatang"/></a><p>Quà tặng & Giỏ quà</p></div>
+          <div class="danh-muc"><a href="Hienthicp.php?category=LSP007"><img src="Image/7.webp" alt="hoagiay"/></a><p>Hoa giấy</p></div>
+          <div class="danh-muc"><a href="Hienthicp.php?category=LSP008"><img src="Image/8.jpg" alt="hoathat"/></a><p>Hoa thật 100%</p></div>
         </div>
       </div>
 
-      <section class="goi-y-hom-nay">
+      <section class="goi-y-hom-nay" id="khu-vuc-san-pham">
         <h2>SẢN PHẨM CỦA SHOP LORENTINO<?= $category !== '' ? '- ĐÃ LỌC THEO LOẠI' : '' ?></h2>
         <div style="margin-bottom: 12px;">
           <a href="Main.php" style="text-decoration:none; color:#d4497f; font-weight:700;">Sản Phẩm</a>
         </div>
-        <div class="goi-y-grid">
+        
+        <div class="goi-y-grid" id="grid-san-pham">
           <?php if (!$featured): ?>
             <p>Không có sản phẩm phù hợp.</p>
           <?php endif; ?>
           
           <?php foreach ($featured as $sp): ?>
-          <div class="goi-y-card">
+          <div class="goi-y-card js-product-item">
             <a href="Chitietcp.php?id=<?= urlencode($sp['ma_sp']) ?>">
-    <img src="<?= h($sp['hinh_anh'] ?: 'Image/sp.jpg') ?>" alt="<?= h($sp['ten_sp']) ?>">
-</a>
+              <?php $imgPath = !empty($sp['hinh_anh']) ? 'ImageSanPham/' . $sp['hinh_anh'] : 'ImageSanPham/sp.jpg'; ?>
+              <img src="<?= h($imgPath) ?>" alt="<?= h($sp['ten_sp']) ?>">
+            </a>
             <div class="goi-y-info">
               <p><?= h($sp['ten_sp']) ?></p>
               <span class="gia"><?= format_vnd((float)$sp['gia_ban']) ?></span>
@@ -121,6 +123,9 @@ $featured = $productStmt->get_result()->fetch_all(MYSQLI_ASSOC);
           </div>
           <?php endforeach; ?>
         </div>
+        
+        <div id="js-pagination-controls" class="js-pagination"></div>
+
       </section>
 
       <div class="contact">
@@ -135,7 +140,9 @@ $featured = $productStmt->get_result()->fetch_all(MYSQLI_ASSOC);
           <i class="fa-solid fa-envelope"></i>
         </div>
       </div>
-    </div> <div class="footer-wrapper">
+    </div> 
+    
+    <div class="footer-wrapper">
       <footer class="footer-box">
         <div class="footer-container">
           <div class="footer-column">

@@ -745,5 +745,33 @@ body {
 .btn-login:hover {
   background-color: #c0392b;
 }
-
+/* ================= CSS CHO PHÂN TRANG ================= */
+.js-pagination {
+  margin: 40px 0 20px 0;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.js-page-btn {
+  padding: 8px 16px;
+  border: 2px solid #ff891b;
+  border-radius: 8px;
+  background: white;
+  color: #ff891b;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+.js-page-btn:hover {
+  background: #ffe0c2;
+  transform: translateY(-2px);
+}
+.js-page-btn.active {
+  background: #ff891b;
+  color: white;
+  box-shadow: 0 4px 10px rgba(255, 137, 27, 0.4);
+}
 
