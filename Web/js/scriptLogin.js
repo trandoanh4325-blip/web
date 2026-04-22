@@ -29,7 +29,7 @@
                 loginBtn.disabled = false;
 
 
-                if (emailInput === 'hoangdanghau@gmail.com' && passwordInput === '12345') {
+                if (emailInput === 'Admin@gmail.com' && passwordInput === '12345') {
                     // Thành công
                     showToast('Thành công', 'Đăng nhập thành công! Đang chuyển hướng...', 'success');
                     
